@@ -30,6 +30,12 @@
   --color-exchange-lse: #8b5cf6;
   --color-exchange-crypto: #06b6d4;
 
+  /* Theme accent colours */
+  --color-theme-debasement: #10b981;
+  --color-theme-technology: #6366f1;
+  --color-theme-energy: #f59e0b;
+  --color-theme-digital: #06b6d4;
+
   /* Volatility colours */
   --color-volatility-low: #10b981;
   --color-volatility-medium: #f59e0b;
