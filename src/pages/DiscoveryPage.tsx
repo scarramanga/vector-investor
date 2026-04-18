@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
 import { profiles, capitalBandLabels } from '../data/profiles';
