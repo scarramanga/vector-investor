@@ -110,7 +110,7 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
 // Serve static React build in production
 const distPath = path.resolve(__dirname, '..', 'dist');
 app.use(express.static(distPath));
-app.get('*', (_req: express.Request, res: express.Response) => {
+app.get('{*path}', (_req: express.Request, res: express.Response) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
