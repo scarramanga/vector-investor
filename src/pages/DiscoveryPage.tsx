@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
 import { profiles, capitalBandLabels } from '../data/profiles';
@@ -24,6 +25,10 @@ export default function DiscoveryPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const vectorProfile = (location.state as { profile?: VectorProfile } | null)?.profile;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!vectorProfile) {
     navigate('/', { replace: true });
