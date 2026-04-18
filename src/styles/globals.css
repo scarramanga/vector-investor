@@ -69,6 +69,16 @@ body {
   }
 }
 
+/* AllocationBar segment grow animation */
+@keyframes barGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 /* Mobile responsive — Result page */
 @media (max-width: 640px) {
   .result-container {
@@ -89,5 +99,30 @@ body {
 
   .action-row button {
     width: 100%;
+  }
+}
+
+/* Mobile responsive — Discovery page */
+@media (max-width: 640px) {
+  .discovery-container {
+    padding: 24px 16px !important;
+  }
+
+  .bucket-row {
+    flex-direction: column !important;
+  }
+
+  .instrument-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px !important;
+    padding-bottom: 8px;
+  }
+
+  .instrument-grid > * {
+    flex: 0 0 75% !important;
+    scroll-snap-align: start;
   }
 }

@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
 import { profiles, capitalOverlays, capitalBandLabels } from '../data/profiles';
 import type { CapitalOverlay } from '../data/profiles';
+import { allocationSuggestions, getAllocationKey } from '../data/discovery';
 import ProfileHeader from '../components/result/ProfileHeader';
 import RecognitionCard from '../components/result/RecognitionCard';
 import ReframeCard from '../components/result/ReframeCard';
@@ -13,7 +14,8 @@ import BridgeCard from '../components/result/BridgeCard';
 function generateDownloadContent(
   profile: VectorProfile,
   profileContent: typeof profiles[keyof typeof profiles],
-  overlay: CapitalOverlay
+  overlay: CapitalOverlay,
+  allocation: { foundation: number; growth: number; conviction: number } | undefined
 ): string {
   const personaLabel = formatPersonaLabel(profile.persona);
   const capitalLabel = capitalBandLabels[profile.capitalBand];
@@ -48,6 +50,13 @@ ${overlay.description}
 WHERE TO START IN STACKMOTIVE
 ${overlay.firstAction}
 
+SUGGESTED BUCKET ALLOCATION
+Foundation: ${allocation?.foundation ?? '—'}%
+Growth: ${allocation?.growth ?? '—'}%
+Conviction: ${allocation?.conviction ?? '—'}%
+
+This allocation is a starting point for thinking, not a prescription.
+
 ---
 Vector is part of the Sovereign Signal ecosystem.
 Learn more at thesovsignal.substack.com
@@ -77,7 +86,9 @@ export default function ResultPage() {
 
   function handleDownload() {
     if (!vectorProfile || !profileContent || !overlay) return;
-    const content = generateDownloadContent(vectorProfile, profileContent, overlay);
+    const allocationKey = getAllocationKey(vectorProfile.persona, vectorProfile.capitalBand);
+    const allocation = allocationSuggestions[allocationKey];
+    const content = generateDownloadContent(vectorProfile, profileContent, overlay, allocation);
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -196,6 +207,39 @@ export default function ResultPage() {
           animationDelay={900}
         />
 
+        {/* Discovery CTA */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            animation: `fadeSlideUp 0.6s ease both`,
+            animationDelay: '1050ms',
+          }}
+        >
+          <button
+            onClick={() => navigate('/discovery', { state: { profile: vectorProfile } })}
+            style={{
+              padding: '14px 28px',
+              fontSize: '15px',
+              fontWeight: 600,
+              color: 'var(--color-text-primary)',
+              backgroundColor: 'var(--color-surface)',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border)';
+            }}
+          >
+            See what this looks like as a portfolio →
+          </button>
+        </div>
+
         {/* Section 8 — Action row */}
         <div
           className="action-row"
@@ -204,7 +248,7 @@ export default function ResultPage() {
             gap: '12px',
             justifyContent: 'center',
             animation: `fadeSlideUp 0.6s ease both`,
-            animationDelay: '1050ms',
+            animationDelay: '1200ms',
           }}
         >
           <button
