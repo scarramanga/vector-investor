@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
@@ -107,12 +108,14 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
   }
 });
 
-// Serve static React build in production
+// Serve static React build in production (only if dist exists)
 const distPath = path.resolve(__dirname, '..', 'dist');
-app.use(express.static(distPath));
-app.get('{*path}', (_req: express.Request, res: express.Response) => {
-  res.sendFile(path.join(distPath, 'index.html'));
-});
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('{*path}', (_req: express.Request, res: express.Response) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`[proxy] Vector API proxy running on port ${PORT}`);
