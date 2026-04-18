@@ -46,7 +46,14 @@ export async function fetchInstrumentCommentary(
       return null;
     }
 
-    const parsed: unknown = JSON.parse(data.content);
+    // Strip markdown fences if Claude wraps the JSON
+    let jsonStr = data.content;
+    const fenceMatch = jsonStr.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+    if (fenceMatch) {
+      jsonStr = fenceMatch[1];
+    }
+
+    const parsed: unknown = JSON.parse(jsonStr);
     if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
       return parsed as Record<string, string>;
     }
