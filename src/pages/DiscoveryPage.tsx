@@ -1,53 +1,21 @@
 import { useLayoutEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import type { VectorProfile } from '../types';
-import type { VectorAnswerPayload } from '../types/vector';
-import { profiles, capitalBandLabels } from '../data/profiles';
-import { buildAnswerPayload } from '../data/scoring';
 import {
   buckets,
   themes,
   instruments,
-  allocationSuggestions,
-  getAllocationKey,
 } from '../data/discovery';
 import DiscoveryHeader from '../components/discovery/DiscoveryHeader';
-import AllocationBar from '../components/discovery/AllocationBar';
 import BucketCard from '../components/discovery/BucketCard';
 import ThemeCard from '../components/discovery/ThemeCard';
 import BadgeLegend from '../components/discovery/BadgeLegend';
 
-function formatPersonaLabel(persona: string): string {
-  return persona
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
-
 export default function DiscoveryPage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const state = location.state as { profile?: VectorProfile; answerPayload?: VectorAnswerPayload } | null;
-  const vectorProfile = state?.profile;
-  const answerPayload = state?.answerPayload ?? (vectorProfile ? buildAnswerPayload(vectorProfile) : null);
-
   useLayoutEffect(() => {
     window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
   }, []);
-
-  if (!vectorProfile) {
-    navigate('/', { replace: true });
-    return null;
-  }
-
-  const profileContent = profiles[vectorProfile.persona];
-  const bandLabel = capitalBandLabels[vectorProfile.capitalBand];
-  const personaLabel = formatPersonaLabel(vectorProfile.persona);
-  const allocationKey = getAllocationKey(vectorProfile.persona, vectorProfile.capitalBand);
-  const allocation = allocationSuggestions[allocationKey];
 
   return (
     <div
@@ -68,19 +36,31 @@ export default function DiscoveryPage() {
         }}
       >
         {/* Section 1 — DiscoveryHeader */}
-        <DiscoveryHeader
-          personaLabel={personaLabel}
-          capitalBandLabel={bandLabel}
-          accentColor={profileContent.accentColor}
-        />
+        <DiscoveryHeader />
+
+        {/* Framing statement */}
+        <p
+          style={{
+            fontSize: '13px',
+            color: 'var(--color-text-secondary)',
+            lineHeight: 1.7,
+            textAlign: 'center',
+            maxWidth: '600px',
+            margin: '0 auto',
+          }}
+        >
+          The following is a reference guide to investment themes and the instruments commonly
+          associated with them. This content is the same for every user. It is not based on your
+          quiz answers and is not a recommendation. These are the building blocks that informed
+          investors use when constructing portfolios. If you want to research any of these
+          instruments further, StackMotive shows you what institutional money is doing in each
+          space.
+        </p>
 
         {/* Badge legend */}
         <BadgeLegend />
 
-        {/* Section 2 — AllocationBar */}
-        {allocation && <AllocationBar allocation={allocation} />}
-
-        {/* Section 3 — Bucket cards */}
+        {/* Bucket cards */}
         <div
           className="bucket-row"
           style={{
@@ -88,21 +68,15 @@ export default function DiscoveryPage() {
             gap: '16px',
           }}
         >
-          {buckets.map((bucket) => {
-            const percentage = allocation
-              ? allocation[bucket.id]
-              : 0;
-            return (
-              <BucketCard
-                key={bucket.id}
-                bucket={bucket}
-                percentage={percentage}
-              />
-            );
-          })}
+          {buckets.map((bucket) => (
+            <BucketCard
+              key={bucket.id}
+              bucket={bucket}
+            />
+          ))}
         </div>
 
-        {/* Section 4 — Theme cards */}
+        {/* Theme cards */}
         {themes.map((theme, i) => {
           const themeInstruments = instruments.filter((inst) =>
             inst.themes.includes(theme.id)
@@ -112,11 +86,9 @@ export default function DiscoveryPage() {
               key={theme.id}
               theme={theme}
               instruments={themeInstruments}
-              persona={vectorProfile.persona}
-              accentColor={profileContent.accentColor}
+              accentColor='var(--color-primary)'
               defaultExpanded={false}
               animationDelay={i * 100}
-              answerPayload={answerPayload}
             />
           );
         })}

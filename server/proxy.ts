@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
@@ -25,25 +26,23 @@ const anthropic = API_KEY ? new Anthropic({ apiKey: API_KEY }) : null;
 
 const TIMEOUT_MS: Record<string, number> = {
   profile: 8000,
-  discovery: 6000,
 };
 
 interface GenerateRequest {
-  type: 'profile' | 'discovery';
+  type: 'profile';
   payload: Record<string, unknown>;
-  theme?: string;
 }
 
 app.post('/api/generate', async (req: express.Request, res: express.Response): Promise<void> => {
-  const { type, payload, theme } = req.body as GenerateRequest;
+  const { type, payload } = req.body as GenerateRequest;
 
   if (!type || !payload) {
     res.status(400).json({ error: 'Missing type or payload', fallback: true });
     return;
   }
 
-  if (type === 'discovery' && !theme) {
-    res.status(400).json({ error: 'Missing theme for discovery type', fallback: true });
+  if (type !== 'profile') {
+    res.status(400).json({ error: 'Unsupported type', fallback: true });
     return;
   }
 
@@ -52,14 +51,8 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
     return;
   }
 
-  const systemPrompt = buildSystemPrompt(type);
-  let userMessage: string;
-
-  if (type === 'profile') {
-    userMessage = `Here is the user's complete Vector answer data:\n\n${JSON.stringify(payload, null, 2)}`;
-  } else {
-    userMessage = `Here is the user's complete Vector answer data and the theme to generate instrument commentary for:\n\nAnswer Data:\n${JSON.stringify(payload, null, 2)}\n\nTheme: ${theme}`;
-  }
+  const systemPrompt = buildSystemPrompt();
+  const userMessage = `Here is the user's complete Vector answer data:\n\n${JSON.stringify(payload, null, 2)}`;
 
   const timeoutMs = TIMEOUT_MS[type] || 8000;
   const controller = new AbortController();
@@ -107,12 +100,14 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
   }
 });
 
-// Serve static React build in production
+// Serve static React build in production (only if dist exists)
 const distPath = path.resolve(__dirname, '..', 'dist');
-app.use(express.static(distPath));
-app.get('{*path}', (_req: express.Request, res: express.Response) => {
-  res.sendFile(path.join(distPath, 'index.html'));
-});
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('{*path}', (_req: express.Request, res: express.Response) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`[proxy] Vector API proxy running on port ${PORT}`);

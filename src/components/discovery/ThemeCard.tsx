@@ -1,8 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import type { PersonaType } from '../../types';
+import { useState, useEffect } from 'react';
 import type { Theme, Instrument, ThemeId } from '../../data/discovery';
-import type { VectorAnswerPayload } from '../../types/vector';
-import { fetchInstrumentCommentary } from '../../services/vectorAI';
 import InstrumentCard from './InstrumentCard';
 import StackMotiveHook from './StackMotiveHook';
 
@@ -16,49 +13,25 @@ const themeColors: Record<ThemeId, string> = {
 interface ThemeCardProps {
   theme: Theme;
   instruments: Instrument[];
-  persona: PersonaType;
   accentColor: string;
   defaultExpanded?: boolean;
   animationDelay: number;
-  answerPayload?: VectorAnswerPayload | null;
 }
 
 export default function ThemeCard({
   theme,
   instruments,
-  persona,
   accentColor,
   defaultExpanded = false,
   animationDelay,
-  answerPayload,
 }: ThemeCardProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
-  const [dynamicTheses, setDynamicTheses] = useState<Record<string, string> | null>(null);
-  const [isLoadingTheses, setIsLoadingTheses] = useState(false);
-  const hasFetchedRef = useRef(false);
 
   // Sync expanded state when defaultExpanded prop changes (e.g. after HMR or re-render)
   useEffect(() => {
     setExpanded(defaultExpanded);
   }, [defaultExpanded]);
   const themeColor = themeColors[theme.id];
-
-  const handleExpand = useCallback(() => {
-    const willExpand = !expanded;
-    setExpanded(willExpand);
-
-    if (willExpand && !hasFetchedRef.current && answerPayload) {
-      hasFetchedRef.current = true;
-      setIsLoadingTheses(true);
-
-      fetchInstrumentCommentary(answerPayload, theme.id).then((result) => {
-        if (result) {
-          setDynamicTheses(result);
-        }
-        setIsLoadingTheses(false);
-      });
-    }
-  }, [expanded, answerPayload, theme.id]);
 
   return (
     <div
@@ -96,19 +69,6 @@ export default function ThemeCard({
         {theme.tagline}
       </p>
 
-      {/* Persona context */}
-      <p
-        style={{
-          fontSize: '12px',
-          fontStyle: 'italic',
-          color: 'var(--color-text-muted)',
-          marginBottom: '16px',
-          lineHeight: 1.5,
-        }}
-      >
-        {theme.personaContext[persona]}
-      </p>
-
       {/* StackMotive hook */}
       <div style={{ marginBottom: '16px' }}>
         <StackMotiveHook text={theme.stackmotiveHook} color={themeColor} fontSize={12} />
@@ -116,7 +76,7 @@ export default function ThemeCard({
 
       {/* Expand/collapse toggle */}
       <button
-        onClick={handleExpand}
+        onClick={() => setExpanded(!expanded)}
         style={{
           background: 'none',
           border: 'none',
@@ -155,8 +115,6 @@ export default function ThemeCard({
               accentColor={accentColor}
               themeColor={themeColor}
               animationDelay={i * 75}
-              dynamicThesis={dynamicTheses?.[instrument.ticker] ?? null}
-              isLoadingThesis={isLoadingTheses}
             />
           ))}
         </div>

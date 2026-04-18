@@ -30,17 +30,8 @@ Paragraph 2, Reframe. Based on their specific combination of answers, offer the 
 
 Length: 150 to 250 words total across both paragraphs. No more. Do not use headings, bullet points, or lists. Write in flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Do not use em dashes.`;
 
-const CALL_2_TASK_CONTEXT = `You are generating a personalised one-sentence thesis for each instrument in a conviction theme within Vector by Sovereign Signal. You have received the user's answer set, persona, capital band, and the theme with its instruments.
-
-For each instrument provided, write exactly one sentence explaining why this instrument is relevant to someone with this specific worldview and situation. Reference their answers where natural, including their time horizon, conviction driver, and macro awareness level. Each sentence should feel like it was written for this person, not copied from a brochure.
-
-Return the output as a JSON object with ticker symbols as keys and thesis sentences as values. Do not give financial advice. Do not recommend buying anything. Frame everything as "someone who thinks this way might find it useful to understand..." Do not use em dashes. Do not use exclamation marks. Plain language throughout.
-
-Return ONLY the JSON object, no markdown fences, no additional text.`;
-
-export function buildSystemPrompt(type: 'profile' | 'discovery'): string {
+export function buildSystemPrompt(): string {
   const voiceAndTone = loadVoiceAndTone();
-  const taskContext = type === 'profile' ? CALL_1_TASK_CONTEXT : CALL_2_TASK_CONTEXT;
 
-  return `${voiceAndTone}\n\n---\n\n${taskContext}`;
+  return `${voiceAndTone}\n\n---\n\n${CALL_1_TASK_CONTEXT}`;
 }

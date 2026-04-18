@@ -2,10 +2,9 @@ import type { Bucket } from '../../data/discovery';
 
 interface BucketCardProps {
   bucket: Bucket;
-  percentage: number;
 }
 
-export default function BucketCard({ bucket, percentage }: BucketCardProps) {
+export default function BucketCard({ bucket }: BucketCardProps) {
   return (
     <div
       style={{
@@ -18,37 +17,16 @@ export default function BucketCard({ bucket, percentage }: BucketCardProps) {
         padding: '20px',
       }}
     >
-      <div
+      <p
         style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          fontSize: '16px',
+          fontWeight: 600,
+          color: bucket.color,
           marginBottom: '8px',
         }}
       >
-        <p
-          style={{
-            fontSize: '16px',
-            fontWeight: 600,
-            color: bucket.color,
-          }}
-        >
-          {bucket.name}
-        </p>
-        <span
-          style={{
-            display: 'inline-block',
-            padding: '2px 10px',
-            borderRadius: 'var(--radius-full)',
-            backgroundColor: `color-mix(in srgb, ${bucket.color} 15%, transparent)`,
-            fontSize: '12px',
-            fontWeight: 600,
-            color: bucket.color,
-          }}
-        >
-          {percentage}%
-        </span>
-      </div>
+        {bucket.name}
+      </p>
       <p
         style={{
           fontSize: '13px',
