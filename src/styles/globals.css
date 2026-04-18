@@ -56,3 +56,38 @@ body {
 #root {
   min-height: 100vh;
 }
+
+/* Entrance animations */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsive — Result page */
+@media (max-width: 640px) {
+  .result-container {
+    padding: 24px 16px !important;
+  }
+
+  .profile-headline {
+    font-size: 24px !important;
+  }
+
+  .bridge-cta-button {
+    width: 100%;
+  }
+
+  .action-row {
+    flex-direction: column !important;
+  }
+
+  .action-row button {
+    width: 100%;
+  }
+}
