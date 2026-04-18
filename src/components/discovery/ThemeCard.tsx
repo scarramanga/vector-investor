@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { PersonaType } from '../../types';
 import type { Theme, Instrument, ThemeId } from '../../data/discovery';
 import InstrumentCard from './InstrumentCard';
@@ -29,6 +29,12 @@ export default function ThemeCard({
   animationDelay,
 }: ThemeCardProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
+
+  // Sync expanded state when defaultExpanded prop changes (e.g. after HMR or re-render)
+  useEffect(() => {
+    setExpanded(defaultExpanded);
+  }, [defaultExpanded]);
+
   const themeColor = themeColors[theme.id];
 
   return (

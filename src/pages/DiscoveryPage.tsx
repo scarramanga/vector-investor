@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
 import { profiles, capitalBandLabels } from '../data/profiles';
@@ -27,8 +27,11 @@ export default function DiscoveryPage() {
   const navigate = useNavigate();
   const vectorProfile = (location.state as { profile?: VectorProfile } | null)?.profile;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }, []);
 
   if (!vectorProfile) {
