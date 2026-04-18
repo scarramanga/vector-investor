@@ -23,6 +23,18 @@
   --profile-swamped: #10b981;
   --profile-blind-spot: #8b5cf6;
 
+  /* Exchange colours */
+  --color-exchange-asx: #f59e0b;
+  --color-exchange-nzx: #10b981;
+  --color-exchange-nyse: #6366f1;
+  --color-exchange-lse: #8b5cf6;
+  --color-exchange-crypto: #06b6d4;
+
+  /* Volatility colours */
+  --color-volatility-low: #10b981;
+  --color-volatility-medium: #f59e0b;
+  --color-volatility-high: #ef4444;
+
   /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;

@@ -5,10 +5,10 @@ import InstrumentCard from './InstrumentCard';
 import StackMotiveHook from './StackMotiveHook';
 
 const themeColors: Record<ThemeId, string> = {
-  debasement: '#10b981',
-  technology: '#6366f1',
-  energy: '#f59e0b',
-  digital: '#06b6d4',
+  debasement: 'var(--color-exchange-nzx)',
+  technology: 'var(--color-exchange-nyse)',
+  energy: 'var(--color-exchange-asx)',
+  digital: 'var(--color-exchange-crypto)',
 };
 
 interface ThemeCardProps {

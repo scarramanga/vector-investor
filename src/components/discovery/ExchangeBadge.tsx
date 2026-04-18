@@ -1,11 +1,11 @@
 import type { ExchangeId } from '../../data/discovery';
 
 const exchangeColors: Record<ExchangeId, string> = {
-  ASX: '#f59e0b',
-  NZX: '#10b981',
-  NYSE: '#6366f1',
-  LSE: '#8b5cf6',
-  CRYPTO: '#06b6d4',
+  ASX: 'var(--color-exchange-asx)',
+  NZX: 'var(--color-exchange-nzx)',
+  NYSE: 'var(--color-exchange-nyse)',
+  LSE: 'var(--color-exchange-lse)',
+  CRYPTO: 'var(--color-exchange-crypto)',
 };
 
 interface ExchangeBadgeProps {

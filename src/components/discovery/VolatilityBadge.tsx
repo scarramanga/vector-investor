@@ -1,9 +1,9 @@
 import type { VolatilityLevel } from '../../data/discovery';
 
 const volatilityColors: Record<VolatilityLevel, string> = {
-  Low: '#10b981',
-  Medium: '#f59e0b',
-  High: 'var(--color-danger)',
+  Low: 'var(--color-volatility-low)',
+  Medium: 'var(--color-volatility-medium)',
+  High: 'var(--color-volatility-high)',
 };
 
 interface VolatilityBadgeProps {
