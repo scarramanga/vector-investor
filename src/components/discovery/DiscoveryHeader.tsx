@@ -1,14 +1,4 @@
-interface DiscoveryHeaderProps {
-  personaLabel: string;
-  capitalBandLabel: string;
-  accentColor: string;
-}
-
-export default function DiscoveryHeader({
-  personaLabel,
-  capitalBandLabel,
-  accentColor,
-}: DiscoveryHeaderProps) {
+export default function DiscoveryHeader() {
   return (
     <div
       style={{
@@ -27,17 +17,17 @@ export default function DiscoveryHeader({
           marginBottom: '8px',
         }}
       >
-        VIEWING AS
+        INSTRUMENT REFERENCE GUIDE
       </p>
       <p
         style={{
           fontSize: '16px',
           fontWeight: 600,
-          color: accentColor,
+          color: 'var(--color-primary)',
           marginBottom: '8px',
         }}
       >
-        {personaLabel} · {capitalBandLabel}
+        Themes, Buckets and Instruments
       </p>
       <p
         style={{
@@ -46,7 +36,7 @@ export default function DiscoveryHeader({
           lineHeight: 1.5,
         }}
       >
-        All themes and instruments are shown. Your profile shapes where to start.
+        A reference library of investment themes and the instruments commonly associated with them.
       </p>
     </div>
   );

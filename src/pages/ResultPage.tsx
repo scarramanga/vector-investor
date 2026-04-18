@@ -255,7 +255,7 @@ export default function ResultPage() {
           }}
         >
           <button
-            onClick={() => navigate('/discovery', { state: { profile: vectorProfile, answerPayload } })}
+            onClick={() => navigate('/discovery')}
             style={{
               padding: '14px 28px',
               fontSize: '15px',
@@ -274,7 +274,7 @@ export default function ResultPage() {
               e.currentTarget.style.borderColor = 'var(--color-border)';
             }}
           >
-            See what this looks like as a portfolio →
+            Explore the instrument reference guide →
           </button>
         </div>
 

@@ -8,8 +8,6 @@ interface InstrumentCardProps {
   accentColor: string;
   themeColor: string;
   animationDelay: number;
-  dynamicThesis?: string | null;
-  isLoadingThesis?: boolean;
 }
 
 export default function InstrumentCard({
@@ -17,10 +15,7 @@ export default function InstrumentCard({
   accentColor,
   themeColor,
   animationDelay,
-  dynamicThesis,
-  isLoadingThesis = false,
 }: InstrumentCardProps) {
-  const thesisText = dynamicThesis || instrument.thesis;
   return (
     <div
       style={{
@@ -69,23 +64,16 @@ export default function InstrumentCard({
       </p>
 
       {/* Thesis */}
-      {isLoadingThesis && !dynamicThesis ? (
-        <div style={{ marginBottom: '12px' }}>
-          <div className="thesis-shimmer" style={{ marginBottom: '6px' }} />
-          <div className="thesis-shimmer" style={{ width: '75%' }} />
-        </div>
-      ) : (
-        <p
-          style={{
-            fontSize: '12px',
-            color: 'var(--color-text-secondary)',
-            lineHeight: 1.5,
-            marginBottom: '12px',
-          }}
-        >
-          {thesisText}
-        </p>
-      )}
+      <p
+        style={{
+          fontSize: '12px',
+          color: 'var(--color-text-secondary)',
+          lineHeight: 1.5,
+          marginBottom: '12px',
+        }}
+      >
+        {instrument.thesis}
+      </p>
 
       {/* Access row */}
       <div
