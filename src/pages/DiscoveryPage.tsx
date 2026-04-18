@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
 import { profiles, capitalBandLabels } from '../data/profiles';
@@ -12,6 +13,7 @@ import DiscoveryHeader from '../components/discovery/DiscoveryHeader';
 import AllocationBar from '../components/discovery/AllocationBar';
 import BucketCard from '../components/discovery/BucketCard';
 import ThemeCard from '../components/discovery/ThemeCard';
+import BadgeLegend from '../components/discovery/BadgeLegend';
 
 function formatPersonaLabel(persona: string): string {
   return persona
@@ -24,6 +26,13 @@ export default function DiscoveryPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const vectorProfile = (location.state as { profile?: VectorProfile } | null)?.profile;
+
+  useLayoutEffect(() => {
+    window.history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
 
   if (!vectorProfile) {
     navigate('/', { replace: true });
@@ -60,6 +69,9 @@ export default function DiscoveryPage() {
           capitalBandLabel={bandLabel}
           accentColor={profileContent.accentColor}
         />
+
+        {/* Badge legend */}
+        <BadgeLegend />
 
         {/* Section 2 — AllocationBar */}
         {allocation && <AllocationBar allocation={allocation} />}
@@ -98,7 +110,7 @@ export default function DiscoveryPage() {
               instruments={themeInstruments}
               persona={vectorProfile.persona}
               accentColor={profileContent.accentColor}
-              defaultExpanded={i === 0}
+              defaultExpanded={false}
               animationDelay={i * 100}
             />
           );
