@@ -13,6 +13,7 @@ import DiscoveryHeader from '../components/discovery/DiscoveryHeader';
 import AllocationBar from '../components/discovery/AllocationBar';
 import BucketCard from '../components/discovery/BucketCard';
 import ThemeCard from '../components/discovery/ThemeCard';
+import BadgeLegend from '../components/discovery/BadgeLegend';
 
 function formatPersonaLabel(persona: string): string {
   return persona
@@ -66,6 +67,9 @@ export default function DiscoveryPage() {
           accentColor={profileContent.accentColor}
         />
 
+        {/* Badge legend */}
+        <BadgeLegend />
+
         {/* Section 2 — AllocationBar */}
         {allocation && <AllocationBar allocation={allocation} />}
 
@@ -103,7 +107,7 @@ export default function DiscoveryPage() {
               instruments={themeInstruments}
               persona={vectorProfile.persona}
               accentColor={profileContent.accentColor}
-              defaultExpanded={i === 0}
+              defaultExpanded={false}
               animationDelay={i * 100}
             />
           );
