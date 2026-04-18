@@ -1,14 +1,18 @@
 interface ReframeCardProps {
   reframe: string;
+  dynamicContent?: string | null;
   accentColor: string;
   animationDelay: number;
 }
 
 export default function ReframeCard({
   reframe,
+  dynamicContent,
   accentColor,
   animationDelay,
 }: ReframeCardProps) {
+  const displayText = dynamicContent || reframe;
+
   return (
     <div
       style={{
@@ -26,7 +30,7 @@ export default function ReframeCard({
           fontStyle: 'italic',
         }}
       >
-        {reframe}
+        {displayText}
       </p>
     </div>
   );

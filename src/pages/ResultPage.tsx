@@ -1,8 +1,11 @@
+import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
 import { profiles, capitalOverlays, capitalBandLabels } from '../data/profiles';
 import type { CapitalOverlay } from '../data/profiles';
 import { allocationSuggestions, getAllocationKey } from '../data/discovery';
+import { buildAnswerPayload } from '../data/scoring';
+import { fetchProfileNarrative } from '../services/vectorAI';
 import ProfileHeader from '../components/result/ProfileHeader';
 import RecognitionCard from '../components/result/RecognitionCard';
 import ReframeCard from '../components/result/ReframeCard';
@@ -10,6 +13,7 @@ import OrientationCard from '../components/result/OrientationCard';
 import CapitalBandBadge from '../components/result/CapitalBandBadge';
 import EducationCards from '../components/result/EducationCards';
 import BridgeCard from '../components/result/BridgeCard';
+import SkeletonCard from '../components/result/SkeletonCard';
 
 function generateDownloadContent(
   profile: VectorProfile,
@@ -74,6 +78,31 @@ export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const vectorProfile = (location.state as { profile?: VectorProfile } | null)?.profile;
+  const [isLoadingNarrative, setIsLoadingNarrative] = useState(true);
+  const [dynamicRecognition, setDynamicRecognition] = useState<string | null>(null);
+  const [dynamicReframe, setDynamicReframe] = useState<string | null>(null);
+
+  const answerPayload = useMemo(
+    () => (vectorProfile ? buildAnswerPayload(vectorProfile) : null),
+    [vectorProfile],
+  );
+
+  useEffect(() => {
+    if (!answerPayload) return;
+
+    fetchProfileNarrative(answerPayload).then((content) => {
+      if (content) {
+        const paragraphs = content.split('\n\n').filter((p) => p.trim().length > 0);
+        if (paragraphs.length >= 2) {
+          setDynamicRecognition(paragraphs[0]);
+          setDynamicReframe(paragraphs[1]);
+        } else if (paragraphs.length === 1) {
+          setDynamicRecognition(paragraphs[0]);
+        }
+      }
+      setIsLoadingNarrative(false);
+    });
+  }, [answerPayload]);
 
   if (!vectorProfile) {
     navigate('/', { replace: true });
@@ -126,19 +155,28 @@ export default function ResultPage() {
           animationDelay={0}
         />
 
-        {/* Section 2 — RecognitionCard */}
-        <RecognitionCard
-          recognition={profileContent.recognition}
-          accentColor={profileContent.accentColor}
-          animationDelay={150}
-        />
-
-        {/* Section 3 — ReframeCard */}
-        <ReframeCard
-          reframe={profileContent.reframe}
-          accentColor={profileContent.accentColor}
-          animationDelay={300}
-        />
+        {/* Section 2 & 3 — RecognitionCard + ReframeCard (or Skeleton) */}
+        {isLoadingNarrative ? (
+          <SkeletonCard
+            accentColor={profileContent.accentColor}
+            animationDelay={150}
+          />
+        ) : (
+          <>
+            <RecognitionCard
+              recognition={profileContent.recognition}
+              dynamicContent={dynamicRecognition}
+              accentColor={profileContent.accentColor}
+              animationDelay={150}
+            />
+            <ReframeCard
+              reframe={profileContent.reframe}
+              dynamicContent={dynamicReframe}
+              accentColor={profileContent.accentColor}
+              animationDelay={300}
+            />
+          </>
+        )}
 
         {/* Section 4 — OrientationCard */}
         <OrientationCard
@@ -217,7 +255,7 @@ export default function ResultPage() {
           }}
         >
           <button
-            onClick={() => navigate('/discovery', { state: { profile: vectorProfile } })}
+            onClick={() => navigate('/discovery', { state: { profile: vectorProfile, answerPayload } })}
             style={{
               padding: '14px 28px',
               fontSize: '15px',

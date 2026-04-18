@@ -1,14 +1,18 @@
 interface RecognitionCardProps {
   recognition: string;
+  dynamicContent?: string | null;
   accentColor: string;
   animationDelay: number;
 }
 
 export default function RecognitionCard({
   recognition,
+  dynamicContent,
   accentColor,
   animationDelay,
 }: RecognitionCardProps) {
+  const displayText = dynamicContent || recognition;
+
   return (
     <div
       style={{
@@ -38,7 +42,7 @@ export default function RecognitionCard({
           lineHeight: 1.7,
         }}
       >
-        {recognition}
+        {displayText}
       </p>
     </div>
   );

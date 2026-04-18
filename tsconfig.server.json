@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2023",
+    "module": "nodenext",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "outDir": "./dist-server",
+    "rootDir": "./server",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true
+  },
+  "include": ["server"]
+}

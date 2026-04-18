@@ -1,7 +1,9 @@
 import { useLayoutEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { VectorProfile } from '../types';
+import type { VectorAnswerPayload } from '../types/vector';
 import { profiles, capitalBandLabels } from '../data/profiles';
+import { buildAnswerPayload } from '../data/scoring';
 import {
   buckets,
   themes,
@@ -25,7 +27,9 @@ function formatPersonaLabel(persona: string): string {
 export default function DiscoveryPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const vectorProfile = (location.state as { profile?: VectorProfile } | null)?.profile;
+  const state = location.state as { profile?: VectorProfile; answerPayload?: VectorAnswerPayload } | null;
+  const vectorProfile = state?.profile;
+  const answerPayload = state?.answerPayload ?? (vectorProfile ? buildAnswerPayload(vectorProfile) : null);
 
   useLayoutEffect(() => {
     window.history.scrollRestoration = 'manual';
@@ -112,6 +116,7 @@ export default function DiscoveryPage() {
               accentColor={profileContent.accentColor}
               defaultExpanded={false}
               animationDelay={i * 100}
+              answerPayload={answerPayload}
             />
           );
         })}
