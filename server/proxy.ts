@@ -26,10 +26,11 @@ const anthropic = API_KEY ? new Anthropic({ apiKey: API_KEY }) : null;
 
 const TIMEOUT_MS: Record<string, number> = {
   profile: 8000,
+  pdf: 10000,
 };
 
 interface GenerateRequest {
-  type: 'profile';
+  type: 'profile' | 'pdf';
   payload: Record<string, unknown>;
 }
 
@@ -41,7 +42,7 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
     return;
   }
 
-  if (type !== 'profile') {
+  if (type !== 'profile' && type !== 'pdf') {
     res.status(400).json({ error: 'Unsupported type', fallback: true });
     return;
   }
@@ -51,7 +52,7 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
     return;
   }
 
-  const systemPrompt = buildSystemPrompt();
+  const systemPrompt = buildSystemPrompt(type);
   const userMessage = `Here is the user's complete Vector answer data:\n\n${JSON.stringify(payload, null, 2)}`;
 
   const timeoutMs = TIMEOUT_MS[type] || 8000;

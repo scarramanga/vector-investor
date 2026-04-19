@@ -28,3 +28,25 @@ export async function fetchProfileNarrative(
     return null;
   }
 }
+
+export async function fetchPdfNarrative(
+  payload: VectorAnswerPayload,
+): Promise<string | null> {
+  try {
+    const res = await fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'pdf', payload }),
+    });
+
+    const data: GenerateResponse = await res.json();
+
+    if (data.fallback || !data.content) {
+      return null;
+    }
+
+    return data.content;
+  } catch {
+    return null;
+  }
+}

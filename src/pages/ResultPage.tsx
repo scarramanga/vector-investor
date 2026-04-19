@@ -5,7 +5,7 @@ import type { VectorProfile } from '../types';
 import { profiles, capitalOverlays, capitalBandLabels, personaEducationCards, educationConcepts } from '../data/profiles';
 import type { CapitalOverlay } from '../data/profiles';
 import { buildAnswerPayload } from '../data/scoring';
-import { fetchProfileNarrative } from '../services/vectorAI';
+import { fetchProfileNarrative, fetchPdfNarrative } from '../services/vectorAI';
 import ProfileHeader from '../components/result/ProfileHeader';
 import RecognitionCard from '../components/result/RecognitionCard';
 import ReframeCard from '../components/result/ReframeCard';
@@ -85,14 +85,14 @@ function generateProfilePDF(
   // --- Profile summary row ---
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setTextColor(148, 163, 184);
+  doc.setTextColor(51, 51, 51);
   doc.text('PROFILE', marginLeft, y);
   doc.text('CAPITAL POSITION', marginLeft + 60, y);
   doc.text('STACKMOTIVE TIER', marginLeft + 120, y);
   y += 6;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
-  doc.setTextColor(241, 245, 249);
+  doc.setTextColor(26, 26, 26);
   doc.text(personaLabel, marginLeft, y);
   doc.text(capitalLabel, marginLeft + 60, y);
   doc.text(overlay.stackmotiveTier, marginLeft + 120, y);
@@ -107,7 +107,7 @@ function generateProfilePDF(
   // --- Persona headline ---
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
-  doc.setTextColor(99, 102, 241);
+  doc.setTextColor(0, 0, 0);
   const headlineLines = doc.splitTextToSize(profileContent.headline, contentWidth) as string[];
   for (const line of headlineLines) {
     checkPageBreak(7);
@@ -119,34 +119,34 @@ function generateProfilePDF(
   // --- Recognition ---
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setTextColor(148, 163, 184);
+  doc.setTextColor(51, 51, 51);
   checkPageBreak(6);
   doc.text('WHO YOU ARE', marginLeft, y);
   y += 7;
   doc.setFont('helvetica', 'normal');
-  drawWrappedText(recognition, marginLeft, 10, contentWidth, 5, [241, 245, 249]);
+  drawWrappedText(recognition, marginLeft, 10, contentWidth, 5, [26, 26, 26]);
   y += 6;
 
   // --- Reframe ---
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setTextColor(148, 163, 184);
+  doc.setTextColor(51, 51, 51);
   checkPageBreak(6);
   doc.text('THE REFRAME', marginLeft, y);
   y += 7;
   doc.setFont('helvetica', 'normal');
-  drawWrappedText(reframe, marginLeft, 10, contentWidth, 5, [241, 245, 249]);
+  drawWrappedText(reframe, marginLeft, 10, contentWidth, 5, [26, 26, 26]);
   y += 6;
 
   // --- Capital position ---
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10);
-  doc.setTextColor(148, 163, 184);
+  doc.setTextColor(51, 51, 51);
   checkPageBreak(6);
   doc.text('YOUR CAPITAL POSITION', marginLeft, y);
   y += 7;
   doc.setFont('helvetica', 'normal');
-  drawWrappedText(overlay.description, marginLeft, 10, contentWidth, 5, [241, 245, 249]);
+  drawWrappedText(overlay.description, marginLeft, 10, contentWidth, 5, [26, 26, 26]);
   y += 4;
 
   // Time horizon, friction point, desired outcome
@@ -158,7 +158,7 @@ function generateProfilePDF(
   };
   const payload = buildAnswerPayload(profile);
   doc.setFontSize(9);
-  doc.setTextColor(148, 163, 184);
+  doc.setTextColor(51, 51, 51);
   checkPageBreak(5);
   doc.text('Time horizon: ' + (timeHorizonMap[payload.timeHorizon] ?? payload.timeHorizon), marginLeft, y);
   y += 4.5;
@@ -180,7 +180,7 @@ function generateProfilePDF(
   if (concepts.length > 0) {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(10);
-    doc.setTextColor(148, 163, 184);
+    doc.setTextColor(51, 51, 51);
     checkPageBreak(6);
     doc.text('TOP THREE RELEVANT CONCEPTS', marginLeft, y);
     y += 8;
@@ -188,12 +188,12 @@ function generateProfilePDF(
     for (const concept of concepts) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(10);
-      doc.setTextColor(241, 245, 249);
+      doc.setTextColor(0, 0, 0);
       checkPageBreak(6);
       doc.text(concept.name, marginLeft, y);
       y += 5.5;
       doc.setFont('helvetica', 'normal');
-      drawWrappedText(concept.description, marginLeft, 9, contentWidth, 4.5, [148, 163, 184]);
+      drawWrappedText(concept.description, marginLeft, 9, contentWidth, 4.5, [26, 26, 26]);
       y += 4;
     }
     y += 4;
@@ -206,7 +206,7 @@ function generateProfilePDF(
   doc.line(marginLeft, footerY - 4, pageWidth - marginRight, footerY - 4);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
-  doc.setTextColor(71, 85, 105);
+  doc.setTextColor(102, 102, 102);
   doc.text('Vector is an educational and orientation tool. Nothing in this document constitutes financial advice.', marginLeft, footerY);
   doc.text('www.stackmotiveapp.com  |  thesovsignal.substack.com', marginLeft, footerY + 4);
 
@@ -227,6 +227,7 @@ export default function ResultPage() {
   const [isLoadingNarrative, setIsLoadingNarrative] = useState(true);
   const [dynamicRecognition, setDynamicRecognition] = useState<string | null>(null);
   const [dynamicReframe, setDynamicReframe] = useState<string | null>(null);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   const answerPayload = useMemo(
     () => (vectorProfile ? buildAnswerPayload(vectorProfile) : null),
@@ -259,11 +260,26 @@ export default function ResultPage() {
   const overlay = capitalOverlays[vectorProfile.capitalBand];
   const bandLabel = capitalBandLabels[vectorProfile.capitalBand];
 
-  function handleDownload() {
-    if (!vectorProfile || !profileContent || !overlay) return;
-    const recognition = dynamicRecognition ?? profileContent.recognition;
-    const reframe = dynamicReframe ?? profileContent.reframe;
-    generateProfilePDF(vectorProfile, profileContent, overlay, recognition, reframe);
+  async function handleDownload() {
+    if (!vectorProfile || !profileContent || !overlay || !answerPayload) return;
+    setIsGeneratingPdf(true);
+    try {
+      const pdfContent = await fetchPdfNarrative(answerPayload);
+      let recognition = profileContent.recognition;
+      let reframe = profileContent.reframe;
+      if (pdfContent) {
+        const paragraphs = pdfContent.split('\n\n').filter((p) => p.trim().length > 0);
+        if (paragraphs.length >= 2) {
+          recognition = paragraphs[0];
+          reframe = paragraphs.slice(1).join('\n\n');
+        } else if (paragraphs.length === 1) {
+          recognition = paragraphs[0];
+        }
+      }
+      generateProfilePDF(vectorProfile, profileContent, overlay, recognition, reframe);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
   }
 
   return (
@@ -450,25 +466,27 @@ export default function ResultPage() {
           </button>
           <button
             onClick={handleDownload}
+            disabled={isGeneratingPdf}
             style={{
               padding: '12px 24px',
               fontSize: '14px',
               fontWeight: 500,
-              color: 'var(--color-text-primary)',
+              color: isGeneratingPdf ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
               backgroundColor: 'var(--color-surface)',
               border: '1px solid var(--color-border)',
               borderRadius: 'var(--radius-md)',
-              cursor: 'pointer',
+              cursor: isGeneratingPdf ? 'wait' : 'pointer',
               transition: 'all 0.2s ease',
+              opacity: isGeneratingPdf ? 0.7 : 1,
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+              if (!isGeneratingPdf) e.currentTarget.style.borderColor = 'var(--color-text-muted)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--color-border)';
             }}
           >
-            Download Profile
+            {isGeneratingPdf ? 'Generating your profile...' : 'Download Profile'}
           </button>
         </div>
       </div>
