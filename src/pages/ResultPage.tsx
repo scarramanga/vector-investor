@@ -393,25 +393,29 @@ export default function ResultPage() {
         >
           <button
             onClick={() => navigate('/discovery')}
+            className="discovery-cta"
             style={{
-              padding: '14px 28px',
-              fontSize: '15px',
+              width: '100%',
+              maxWidth: '480px',
+              padding: '16px 32px',
+              fontSize: '16px',
               fontWeight: 600,
-              color: 'var(--color-text-primary)',
-              backgroundColor: 'var(--color-surface)',
-              border: '1px solid var(--color-border)',
+              color: '#ffffff',
+              backgroundColor: profileContent.accentColor,
+              border: 'none',
               borderRadius: 'var(--radius-md)',
               cursor: 'pointer',
               transition: 'all 0.2s ease',
+              letterSpacing: '0.01em',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+              e.currentTarget.style.opacity = '0.9';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-border)';
+              e.currentTarget.style.opacity = '1';
             }}
           >
-            Explore the instrument reference guide \u2192
+            Explore the instrument reference guide →
           </button>
         </div>
 
