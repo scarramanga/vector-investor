@@ -4,10 +4,27 @@ import {
   themes,
   instruments,
 } from '../data/discovery';
+import { strategies } from '../data/strategies';
 import DiscoveryHeader from '../components/discovery/DiscoveryHeader';
 import BucketCard from '../components/discovery/BucketCard';
 import ThemeCard from '../components/discovery/ThemeCard';
 import BadgeLegend from '../components/discovery/BadgeLegend';
+import StrategyCard from '../components/discovery/StrategyCard';
+
+const bucketEnrichment: Record<string, { allocationRange: string; instrumentCategories: string }> = {
+  foundation: {
+    allocationRange: 'Typical range: 30\u201360% of a portfolio',
+    instrumentCategories: 'Gold ETFs, inflation-linked bonds, cash equivalents, stablecoins (as cash management)',
+  },
+  growth: {
+    allocationRange: 'Typical range: 30\u201350% of a portfolio',
+    instrumentCategories: 'International equity ETFs, quality domestic equities, infrastructure funds',
+  },
+  conviction: {
+    allocationRange: 'Typical range: 5\u201320% of a portfolio',
+    instrumentCategories: 'Gold miners, technology equities, energy equities, digital assets, thematic ETFs',
+  },
+};
 
 export default function DiscoveryPage() {
   useLayoutEffect(() => {
@@ -60,6 +77,21 @@ export default function DiscoveryPage() {
         {/* Badge legend */}
         <BadgeLegend />
 
+        {/* Bucket allocation context */}
+        <p
+          style={{
+            fontSize: '13px',
+            color: 'var(--color-text-secondary)',
+            lineHeight: 1.7,
+            textAlign: 'center',
+            maxWidth: '600px',
+            margin: '0 auto',
+          }}
+        >
+          Portfolio strategists generally work within these ranges, adjusted for time horizon
+          and risk tolerance. These are industry norms, not recommendations.
+        </p>
+
         {/* Bucket cards */}
         <div
           className="bucket-row"
@@ -68,11 +100,66 @@ export default function DiscoveryPage() {
             gap: '16px',
           }}
         >
-          {buckets.map((bucket) => (
-            <BucketCard
-              key={bucket.id}
-              bucket={bucket}
-            />
+          {buckets.map((bucket) => {
+            const enrichment = bucketEnrichment[bucket.id];
+            return (
+              <BucketCard
+                key={bucket.id}
+                bucket={bucket}
+                allocationRange={enrichment.allocationRange}
+                instrumentCategories={enrichment.instrumentCategories}
+              />
+            );
+          })}
+        </div>
+
+        {/* Crypto colour note */}
+        <div
+          style={{
+            borderTop: '1px solid var(--color-border)',
+            paddingTop: '20px',
+          }}
+        >
+          <p
+            style={{
+              fontSize: '13px',
+              color: 'var(--color-text-secondary)',
+              lineHeight: 1.7,
+            }}
+          >
+            Digital assets (shown in cyan) appear across buckets rather than in a dedicated
+            category. Bitcoin, for example, functions as a Foundation asset (store of value,
+            fixed supply) and a Conviction asset (digital infrastructure thesis) simultaneously.
+            This dual nature is a feature of the asset class, not an omission in the framework.
+          </p>
+        </div>
+
+        {/* Strategy education section */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <p
+            style={{
+              fontSize: '18px',
+              fontWeight: 700,
+              color: 'var(--color-text-primary)',
+            }}
+          >
+            How investors structure these ideas
+          </p>
+          <p
+            style={{
+              fontSize: '14px',
+              color: 'var(--color-text-secondary)',
+              lineHeight: 1.7,
+            }}
+          >
+            There is no single correct way to build a portfolio. But there are well-established
+            frameworks that investors have used for decades to translate conviction into structure.
+            The following five strategies are among the most widely taught and practised. None is
+            a recommendation. Each represents a different philosophy about how to balance risk,
+            conviction, and diversification.
+          </p>
+          {strategies.map((strategy) => (
+            <StrategyCard key={strategy.id} strategy={strategy} />
           ))}
         </div>
 
