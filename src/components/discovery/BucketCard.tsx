@@ -2,9 +2,11 @@ import type { Bucket } from '../../data/discovery';
 
 interface BucketCardProps {
   bucket: Bucket;
+  allocationRange: string;
+  instrumentCategories: string;
 }
 
-export default function BucketCard({ bucket }: BucketCardProps) {
+export default function BucketCard({ bucket, allocationRange, instrumentCategories }: BucketCardProps) {
   return (
     <div
       style={{
@@ -32,9 +34,29 @@ export default function BucketCard({ bucket }: BucketCardProps) {
           fontSize: '13px',
           color: 'var(--color-text-muted)',
           lineHeight: 1.5,
+          marginBottom: '10px',
         }}
       >
         {bucket.purpose}
+      </p>
+      <p
+        style={{
+          fontSize: '13px',
+          color: 'var(--color-text-secondary)',
+          lineHeight: 1.5,
+          marginBottom: '6px',
+        }}
+      >
+        {allocationRange}
+      </p>
+      <p
+        style={{
+          fontSize: '13px',
+          color: 'var(--color-text-secondary)',
+          lineHeight: 1.5,
+        }}
+      >
+        {instrumentCategories}
       </p>
     </div>
   );
