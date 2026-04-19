@@ -7,7 +7,7 @@ interface StackMotiveHookProps {
 export default function StackMotiveHook({ text, color, fontSize = 11 }: StackMotiveHookProps) {
   return (
     <a
-      href="https://stackmotive.com"
+      href="https://app.stackmotiveapp.com"
       target="_blank"
       rel="noopener noreferrer"
       style={{

@@ -66,7 +66,7 @@ export default function BridgeCard({
         }}
       >
         <a
-          href="https://stackmotive.com"
+          href="https://www.stackmotiveapp.com"
           target="_blank"
           rel="noopener noreferrer"
           className="bridge-cta-button"
