@@ -70,12 +70,12 @@ export const questions: Question[] = [
   {
     id: 7,
     layer: 2,
-    text: "If you had to describe where your wealth is concentrated most heavily, which feels most accurate?",
+    text: "Which best describes where you are in your financial life right now?",
     options: [
-      { letter: 'A', text: "Property is my primary asset. It's where most of my net worth lives.", capitalSignal: 'concentrated' },
-      { letter: 'B', text: "It's reasonably spread — some property, some investments, some retirement savings.", capitalSignal: 'established' },
-      { letter: 'C', text: "Most of it is in managed or retirement funds that I don't actively control.", capitalSignal: 'building' },
-      { letter: 'D', text: "I'm still building — I don't have significant concentration anywhere yet.", capitalSignal: 'emerging' }
+      { letter: 'A', text: "Early in my career. My primary asset is time and I am focused on building from a small base." },
+      { letter: 'B', text: "Mid-career. I am earning well and actively building wealth through savings and investments." },
+      { letter: 'C', text: "Established. I have built meaningful wealth and I am focused on optimising and growing what I have." },
+      { letter: 'D', text: "Approaching or in retirement. Preservation and income matter as much as growth, possibly more." }
     ]
   },
   {
@@ -108,7 +108,8 @@ export const questions: Question[] = [
       { letter: 'A', text: "Nothing significant changed — my money sat where it was and I let it run.", personaSignal: 'comfortable-blind-spot' },
       { letter: 'B', text: "I made at least one active decision — bought something, moved something, changed an allocation.", personaSignal: 'gut-trader' },
       { letter: 'C', text: "I researched and considered changes but didn't end up doing anything materially different.", personaSignal: 'swamped-analyst' },
-      { letter: 'D', text: "I'm relatively new to this — twelve months ago I wasn't really thinking about it the way I am now.", personaSignal: 'awakening' }
+      { letter: 'D', text: "I'm relatively new to this — twelve months ago I wasn't really thinking about it the way I am now.", personaSignal: 'awakening' },
+      { letter: 'E', text: "My investments are reviewed and managed by a financial adviser. Changes are made based on their recommendations.", personaSignal: 'comfortable-blind-spot' }
     ]
   },
   {
@@ -119,7 +120,8 @@ export const questions: Question[] = [
       { letter: 'A', text: "A general sense of what seems sensible based on what I've read or heard from others.", personaSignal: 'comfortable-blind-spot' },
       { letter: 'B', text: "A specific view I hold about where the world is heading and what that means for capital.", personaSignal: 'awakening' },
       { letter: 'C', text: "Analysis — I look at data, compare options, and try to make the most informed decision I can.", personaSignal: 'swamped-analyst' },
-      { letter: 'D', text: "Instinct — I've developed a feel for what seems right even if I can't always articulate why.", personaSignal: 'gut-trader' }
+      { letter: 'D', text: "Instinct — I've developed a feel for what seems right even if I can't always articulate why.", personaSignal: 'gut-trader' },
+      { letter: 'E', text: "Advice from a professional who manages my portfolio. I rely on their expertise and recommendations.", personaSignal: 'comfortable-blind-spot' }
     ]
   },
   {

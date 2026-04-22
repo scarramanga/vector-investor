@@ -86,7 +86,7 @@ export default function AllocationBar({ allocation }: AllocationBarProps) {
           lineHeight: 1.5,
         }}
       >
-        A suggested starting point for someone with your profile. Not a prescription — a framework.
+        A starting point for someone with this profile. Not a prescription — a framework.
       </p>
     </div>
   );

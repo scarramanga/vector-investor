@@ -1,11 +1,12 @@
 import type { PersonaType, CapitalBand } from './index';
 
-export type AnswerLetter = 'A' | 'B' | 'C' | 'D';
+export type AnswerLetter = 'A' | 'B' | 'C' | 'D' | 'E';
 
 export type TimeHorizon = 'long' | 'medium' | 'short' | 'undefined';
 export type MacroAwareness = 'high' | 'moderate' | 'low' | 'none';
-export type ActionHistory = 'inactive' | 'active' | 'research_only' | 'new';
-export type ConvictionDriver = 'social' | 'thesis' | 'analysis' | 'instinct';
+export type ActionHistory = 'inactive' | 'active' | 'research_only' | 'new' | 'adviser_managed';
+export type ConvictionDriver = 'social' | 'thesis' | 'analysis' | 'instinct' | 'adviser_led';
+export type LifeStage = 'early_career' | 'mid_career' | 'established' | 'preservation';
 
 export interface VectorAnswerPayload {
   answers: Record<`q${number}`, AnswerLetter>;
@@ -17,4 +18,6 @@ export interface VectorAnswerPayload {
   macroAwareness: MacroAwareness;
   actionHistory: ActionHistory;
   convictionDriver: ConvictionDriver;
+  lifeStage: LifeStage;
+  adviserManaged: boolean;
 }
