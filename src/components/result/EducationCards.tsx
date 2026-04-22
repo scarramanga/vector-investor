@@ -1,5 +1,5 @@
 import type { PersonaType } from '../../types';
-import { personaEducationCards, educationConcepts } from '../../data/profiles';
+import { personaEducationCards, educationConcepts, conceptLinks } from '../../data/profiles';
 
 interface EducationCardsProps {
   persona: PersonaType;
@@ -67,7 +67,9 @@ export default function EducationCards({
                 {concept.description}
               </p>
               <a
-                href="#"
+                href={conceptLinks[name] || 'https://thesovsignal.substack.com/about'}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   fontSize: '12px',
                   color: accentColor,

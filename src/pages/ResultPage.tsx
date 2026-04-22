@@ -74,9 +74,9 @@ function generateProfilePDF(
 
   // Subtitle
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
+  doc.setFontSize(24);
   doc.setTextColor(148, 163, 184);
-  doc.text('Investor Profile Report', marginLeft, 28);
+  doc.text('Investor Profile Report', marginLeft, 30);
 
   // Date
   doc.setFontSize(9);
@@ -162,7 +162,7 @@ function generateProfilePDF(
   const timeHorizonMap: Record<string, string> = {
     long: '10+ years',
     medium: '3\u201310 years',
-    short: 'Under 3 years',
+    short: 'Shorter term with preservation focus',
     undefined: 'Not specified',
   };
   const payload = buildAnswerPayload(profile);
@@ -227,7 +227,15 @@ function generateProfilePDF(
   doc.text('Vector is an educational and orientation tool. Nothing in this document constitutes financial advice.', marginLeft, footerY);
   doc.text('www.stackmotiveapp.com  |  thesovsignal.substack.com', marginLeft, footerY + 4);
 
-  doc.save('vector-profile-' + profile.persona + '-' + profile.capitalBand + '.pdf');
+  const blob = doc.output('blob');
+  const blobUrl = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = blobUrl;
+  link.download = 'vector-profile-' + profile.persona + '-' + profile.capitalBand + '.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
 }
 
 function formatPersonaLabel(persona: string): string {
@@ -333,6 +341,17 @@ export default function ResultPage() {
           capitalBandLabel={bandLabel}
           animationDelay={0}
         />
+        <p
+          style={{
+            fontSize: '16px',
+            color: 'var(--color-text-secondary)',
+            marginTop: '-24px',
+            animation: 'fadeSlideUp 0.6s ease both',
+            animationDelay: '50ms',
+          }}
+        >
+          {formatPersonaLabel(vectorProfile.persona)}
+        </p>
 
         {/* Section 2 & 3 — RecognitionCard + ReframeCard (or Skeleton) */}
         {isLoadingNarrative ? (
@@ -373,9 +392,10 @@ export default function ResultPage() {
         >
           <p
             style={{
-              fontSize: '11px',
+              fontSize: '14px',
               textTransform: 'uppercase',
-              letterSpacing: '0.1em',
+              letterSpacing: '2px',
+              fontWeight: 600,
               color: 'var(--color-text-muted)',
               marginBottom: '16px',
             }}
@@ -473,28 +493,6 @@ export default function ResultPage() {
           }}
         >
           <button
-            onClick={() => navigate('/')}
-            style={{
-              padding: '12px 24px',
-              fontSize: '14px',
-              fontWeight: 500,
-              color: 'var(--color-text-secondary)',
-              backgroundColor: 'transparent',
-              border: '1px solid var(--color-border)',
-              borderRadius: 'var(--radius-md)',
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-border)';
-            }}
-          >
-            Start Over
-          </button>
-          <button
             onClick={handleDownload}
             disabled={isGeneratingPdf}
             style={{
@@ -516,7 +514,29 @@ export default function ResultPage() {
               e.currentTarget.style.borderColor = 'var(--color-border)';
             }}
           >
-            {isGeneratingPdf ? 'Generating your profile...' : 'Download Profile'}
+            {isGeneratingPdf ? 'Generating your profile...' : 'Download Investor Profile Report'}
+          </button>
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              padding: '12px 24px',
+              fontSize: '14px',
+              fontWeight: 500,
+              color: 'var(--color-text-secondary)',
+              backgroundColor: 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: 'var(--radius-md)',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--color-border)';
+            }}
+          >
+            Start Over
           </button>
         </div>
       </div>
