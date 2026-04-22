@@ -10,24 +10,24 @@ export default function DiscoveryHeader() {
     >
       <p
         style={{
-          fontSize: '10px',
-          textTransform: 'uppercase',
-          letterSpacing: '0.1em',
-          color: 'var(--color-text-muted)',
-          marginBottom: '8px',
-        }}
-      >
-        INSTRUMENT REFERENCE GUIDE
-      </p>
-      <p
-        style={{
-          fontSize: '16px',
-          fontWeight: 600,
+          fontSize: '24px',
+          fontWeight: 700,
           color: 'var(--color-primary)',
           marginBottom: '8px',
         }}
       >
         Themes, Buckets and Instruments
+      </p>
+      <p
+        style={{
+          fontSize: '11px',
+          textTransform: 'uppercase',
+          letterSpacing: '2px',
+          color: 'var(--color-text-muted)',
+          marginBottom: '8px',
+        }}
+      >
+        INSTRUMENT REFERENCE GUIDE
       </p>
       <p
         style={{

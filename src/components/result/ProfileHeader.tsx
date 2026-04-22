@@ -23,12 +23,14 @@ export default function ProfileHeader({
       }}
     >
       <p
+        className="vector-profile-heading"
         style={{
-          fontSize: '11px',
+          fontSize: '28px',
+          fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
           color: 'var(--color-text-muted)',
-          marginBottom: '24px',
+          marginBottom: '16px',
         }}
       >
         YOUR VECTOR PROFILE

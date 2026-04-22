@@ -35,17 +35,28 @@ export function calculateProfile(answers: Answer[]): VectorProfile {
     .sort(([, a], [, b]) => b - a)[0][0]) as PersonaType;
 
   // Determine capital band
-  // Concentrated + high capital signals = sovereign-concentrated
-  const isConcentrated = capitalScores['concentrated'] >= 2;
-  const isEstablishedPlus = capitalScores['established'] >= 1 || capitalScores['concentrated'] >= 1;
-
+  // Q6-D (illiquid wealth) is the Concentrated signal — override Q3 regardless
   let capitalBand: CapitalBand;
-  if (isConcentrated && isEstablishedPlus) {
-    capitalBand = 'sovereign-concentrated';
+  const q6Answer = answers.find(a => a.questionId === 6);
+  const q6IsD = q6Answer?.selectedLetter === 'D';
+
+  if (q6IsD) {
+    // Q6-D always produces Concentrated; if Q3 also signals concentrated, promote to sovereign-concentrated
+    const q3Answer = answers.find(a => a.questionId === 3);
+    const q3IsConcentrated = q3Answer?.capitalSignal === 'concentrated';
+    capitalBand = q3IsConcentrated ? 'sovereign-concentrated' : 'concentrated';
   } else {
-    capitalBand = (Object.entries(capitalScores)
-      .filter(([key]) => key !== 'sovereign-concentrated' && key !== 'sovereign-capital')
-      .sort(([, a], [, b]) => b - a)[0][0]) as CapitalBand;
+    // Standard scoring: Concentrated + high capital signals = sovereign-concentrated
+    const isConcentrated = capitalScores['concentrated'] >= 2;
+    const isEstablishedPlus = capitalScores['established'] >= 1 || capitalScores['concentrated'] >= 1;
+
+    if (isConcentrated && isEstablishedPlus) {
+      capitalBand = 'sovereign-concentrated';
+    } else {
+      capitalBand = (Object.entries(capitalScores)
+        .filter(([key]) => key !== 'sovereign-concentrated' && key !== 'sovereign-capital')
+        .sort(([, a], [, b]) => b - a)[0][0]) as CapitalBand;
+    }
   }
 
   return { persona, capitalBand, answers };

@@ -92,7 +92,7 @@ export default function BridgeCard({
           {bridgeCTA}
         </a>
         <a
-          href="https://thesovsignal.substack.com"
+          href="https://thesovsignal.substack.com/about"
           target="_blank"
           rel="noopener noreferrer"
           style={{
