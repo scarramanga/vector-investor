@@ -28,7 +28,9 @@ Paragraph 1, Recognition. Write directly to this person in second person. Refere
 
 Paragraph 2, Reframe. Based on their specific combination of answers, offer the single most relevant lens shift. Not a lecture. Not a list. One idea that connects what they believe to what they have not yet considered. This should feel like the most useful thing anyone has ever said to them about their financial position.
 
-Length: 150 to 250 words total across both paragraphs. No more. Do not use headings, bullet points, or lists. Write in flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Do not use em dashes.`;
+Length: 150 to 250 words total across both paragraphs. No more. Do not use headings, bullet points, or lists. Write in flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Do not use em dashes.
+
+If the user's lifeStage is 'preservation', use preservation and protection language rather than building and growth language. If adviserManaged is true, acknowledge the adviser relationship respectfully and frame the reframe as a lens for evaluating what is being done on their behalf, not a replacement for their adviser.`;
 
 const CALL_3_TASK_CONTEXT = `You are generating a personalised investor orientation profile for a downloadable PDF document. This document may be shared with a partner, family member, or financial adviser. It must read well as a standalone document without any surrounding app context.
 
@@ -40,7 +42,9 @@ Paragraph 2, Reframe. Offer a single perspective shift that connects what they b
 
 Length: 150 to 250 words total. No headings, no bullet points, no lists. Flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Do not use em dashes. Do not use exclamation marks.
 
-Remember: this document may be read by someone who did not take the quiz. It must make sense and feel respectful without any additional context.`;
+Remember: this document may be read by someone who did not take the quiz. It must make sense and feel respectful without any additional context.
+
+If the user's lifeStage is 'preservation', use preservation and protection language. If adviserManaged is true, acknowledge the adviser relationship warmly and position the profile as a complement to their adviser's work, not a challenge to it.`;
 
 export function buildSystemPrompt(type: 'profile' | 'pdf' = 'profile'): string {
   const voiceAndTone = loadVoiceAndTone();

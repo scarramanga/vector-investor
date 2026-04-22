@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import type { VectorProfile } from '../types';
-import { profiles, capitalOverlays, capitalBandLabels, personaEducationCards, educationConcepts } from '../data/profiles';
+import { profiles, capitalOverlays, capitalBandLabels, personaEducationCards, educationConcepts, preservationCapitalOverlays, adviserManagedProfiles } from '../data/profiles';
 import type { CapitalOverlay } from '../data/profiles';
 import { buildAnswerPayload } from '../data/scoring';
 import { fetchProfileNarrative, fetchPdfNarrative } from '../services/vectorAI';
@@ -21,6 +21,9 @@ function generateProfilePDF(
   overlay: CapitalOverlay,
   recognition: string,
   reframe: string,
+  overlayDescription: string,
+  lifeStage: string,
+  adviserManaged: boolean,
 ): void {
   const personaLabel = formatPersonaLabel(profile.persona);
   const capitalLabel = capitalBandLabels[profile.capitalBand];
@@ -146,10 +149,16 @@ function generateProfilePDF(
   doc.text('YOUR CAPITAL POSITION', marginLeft, y);
   y += 7;
   doc.setFont('helvetica', 'normal');
-  drawWrappedText(overlay.description, marginLeft, 10, contentWidth, 5, [26, 26, 26]);
+  drawWrappedText(overlayDescription, marginLeft, 10, contentWidth, 5, [26, 26, 26]);
   y += 4;
 
-  // Time horizon, friction point, desired outcome
+  // Life stage, adviser-managed, time horizon, friction point, desired outcome
+  const lifeStageLabels: Record<string, string> = {
+    early_career: 'Early career',
+    mid_career: 'Mid-career',
+    established: 'Established',
+    preservation: 'Approaching or in retirement',
+  };
   const timeHorizonMap: Record<string, string> = {
     long: '10+ years',
     medium: '3\u201310 years',
@@ -159,6 +168,14 @@ function generateProfilePDF(
   const payload = buildAnswerPayload(profile);
   doc.setFontSize(9);
   doc.setTextColor(51, 51, 51);
+  checkPageBreak(5);
+  doc.text('Life stage: ' + (lifeStageLabels[lifeStage] ?? lifeStage), marginLeft, y);
+  y += 4.5;
+  if (adviserManaged) {
+    checkPageBreak(5);
+    doc.text('Investment approach: Adviser-managed', marginLeft, y);
+    y += 4.5;
+  }
   checkPageBreak(5);
   doc.text('Time horizon: ' + (timeHorizonMap[payload.timeHorizon] ?? payload.timeHorizon), marginLeft, y);
   y += 4.5;
@@ -259,14 +276,23 @@ export default function ResultPage() {
   const profileContent = profiles[vectorProfile.persona];
   const overlay = capitalOverlays[vectorProfile.capitalBand];
   const bandLabel = capitalBandLabels[vectorProfile.capitalBand];
+  const isPreservation = answerPayload?.lifeStage === 'preservation';
+  const isAdviserManaged = answerPayload?.adviserManaged === true;
+  const adviserContent = isAdviserManaged ? adviserManagedProfiles[vectorProfile.persona] : null;
+  const overlayDescription = isPreservation
+    ? preservationCapitalOverlays[vectorProfile.capitalBand]
+    : overlay.description;
+  const staticRecognition = adviserContent?.recognition ?? profileContent.recognition;
+  const staticReframe = adviserContent?.reframe ?? profileContent.reframe;
+  const activeBridgeText = adviserContent?.bridgeText ?? profileContent.bridgeText;
 
   async function handleDownload() {
     if (!vectorProfile || !profileContent || !overlay || !answerPayload) return;
     setIsGeneratingPdf(true);
     try {
       const pdfContent = await fetchPdfNarrative(answerPayload);
-      let recognition = profileContent.recognition;
-      let reframe = profileContent.reframe;
+      let recognition = staticRecognition;
+      let reframe = staticReframe;
       if (pdfContent) {
         const paragraphs = pdfContent.split('\n\n').filter((p) => p.trim().length > 0);
         if (paragraphs.length >= 2) {
@@ -276,7 +302,7 @@ export default function ResultPage() {
           recognition = paragraphs[0];
         }
       }
-      generateProfilePDF(vectorProfile, profileContent, overlay, recognition, reframe);
+      generateProfilePDF(vectorProfile, profileContent, overlay, recognition, reframe, overlayDescription, answerPayload.lifeStage, isAdviserManaged);
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -317,13 +343,13 @@ export default function ResultPage() {
         ) : (
           <>
             <RecognitionCard
-              recognition={profileContent.recognition}
+              recognition={staticRecognition}
               dynamicContent={dynamicRecognition}
               accentColor={profileContent.accentColor}
               animationDelay={150}
             />
             <ReframeCard
-              reframe={profileContent.reframe}
+              reframe={staticReframe}
               dynamicContent={dynamicReframe}
               accentColor={profileContent.accentColor}
               animationDelay={300}
@@ -370,7 +396,7 @@ export default function ResultPage() {
               marginBottom: '12px',
             }}
           >
-            {overlay.description}
+            {overlayDescription}
           </p>
           <p
             style={{
@@ -378,7 +404,7 @@ export default function ResultPage() {
               color: 'var(--color-text-muted)',
             }}
           >
-            Recommended tier: {overlay.stackmotiveTier}
+            StackMotive tier for this profile: {overlay.stackmotiveTier}
           </p>
         </div>
 
@@ -391,7 +417,7 @@ export default function ResultPage() {
 
         {/* Section 7 — BridgeCard */}
         <BridgeCard
-          bridgeText={profileContent.bridgeText}
+          bridgeText={activeBridgeText}
           bridgeCTA={profileContent.bridgeCTA}
           firstAction={overlay.firstAction}
           accentColor={profileContent.accentColor}

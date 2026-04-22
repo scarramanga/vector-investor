@@ -1,5 +1,5 @@
 import type { Answer, PersonaType, CapitalBand, VectorProfile } from '../types';
-import type { VectorAnswerPayload, TimeHorizon, MacroAwareness, ActionHistory, ConvictionDriver, AnswerLetter } from '../types/vector';
+import type { VectorAnswerPayload, TimeHorizon, MacroAwareness, ActionHistory, ConvictionDriver, LifeStage, AnswerLetter } from '../types/vector';
 
 const PERSONA_WEIGHTS: Record<PersonaType, number> = {
   'awakening': 0,
@@ -56,6 +56,7 @@ const TIME_HORIZON_MAP: Record<AnswerLetter, TimeHorizon> = {
   B: 'medium',
   C: 'short',
   D: 'undefined',
+  E: 'undefined',
 };
 
 const MACRO_AWARENESS_MAP: Record<AnswerLetter, MacroAwareness> = {
@@ -63,6 +64,7 @@ const MACRO_AWARENESS_MAP: Record<AnswerLetter, MacroAwareness> = {
   B: 'moderate',
   C: 'low',
   D: 'none',
+  E: 'none',
 };
 
 const ACTION_HISTORY_MAP: Record<AnswerLetter, ActionHistory> = {
@@ -70,6 +72,7 @@ const ACTION_HISTORY_MAP: Record<AnswerLetter, ActionHistory> = {
   B: 'active',
   C: 'research_only',
   D: 'new',
+  E: 'adviser_managed',
 };
 
 const CONVICTION_DRIVER_MAP: Record<AnswerLetter, ConvictionDriver> = {
@@ -77,6 +80,15 @@ const CONVICTION_DRIVER_MAP: Record<AnswerLetter, ConvictionDriver> = {
   B: 'thesis',
   C: 'analysis',
   D: 'instinct',
+  E: 'adviser_led',
+};
+
+const LIFE_STAGE_MAP: Record<AnswerLetter, LifeStage> = {
+  A: 'early_career',
+  B: 'mid_career',
+  C: 'established',
+  D: 'preservation',
+  E: 'established',
 };
 
 const FRICTION_POINT_LABELS: Record<AnswerLetter, string> = {
@@ -84,6 +96,7 @@ const FRICTION_POINT_LABELS: Record<AnswerLetter, string> = {
   B: 'Has conviction but no clear vehicle or starting point',
   C: 'Time and complexity crowd out action',
   D: 'No perceived urgency to change',
+  E: 'No perceived urgency to change',
 };
 
 const DESIRED_OUTCOME_LABELS: Record<AnswerLetter, string> = {
@@ -91,6 +104,7 @@ const DESIRED_OUTCOME_LABELS: Record<AnswerLetter, string> = {
   B: 'Wants a framework for thinking about money',
   C: 'Wants confirmation that current approach is sound',
   D: 'Wants perspective on how their situation maps to a coherent philosophy',
+  E: 'Wants perspective on how their situation maps to a coherent philosophy',
 };
 
 export function buildAnswerPayload(profile: VectorProfile): VectorAnswerPayload {
@@ -99,6 +113,7 @@ export function buildAnswerPayload(profile: VectorProfile): VectorAnswerPayload 
     answerRecord[`q${a.questionId}`] = a.selectedLetter;
   });
 
+  const q7 = answerRecord['q7'] as AnswerLetter;
   const q8 = answerRecord['q8'] as AnswerLetter;
   const q9 = answerRecord['q9'] as AnswerLetter;
   const q10 = answerRecord['q10'] as AnswerLetter;
@@ -116,5 +131,7 @@ export function buildAnswerPayload(profile: VectorProfile): VectorAnswerPayload 
     macroAwareness: MACRO_AWARENESS_MAP[q9],
     actionHistory: ACTION_HISTORY_MAP[q10],
     convictionDriver: CONVICTION_DRIVER_MAP[q11],
+    lifeStage: LIFE_STAGE_MAP[q7],
+    adviserManaged: q10 === 'E' || q11 === 'E',
   };
 }

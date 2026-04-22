@@ -10,7 +10,7 @@ export interface Question {
 }
 
 export interface Option {
-  letter: 'A' | 'B' | 'C' | 'D';
+  letter: 'A' | 'B' | 'C' | 'D' | 'E';
   text: string;
   personaSignal?: PersonaType;
   capitalSignal?: CapitalBand;
@@ -18,7 +18,7 @@ export interface Option {
 
 export interface Answer {
   questionId: number;
-  selectedLetter: 'A' | 'B' | 'C' | 'D';
+  selectedLetter: 'A' | 'B' | 'C' | 'D' | 'E';
   personaSignal?: PersonaType;
   capitalSignal?: CapitalBand;
 }

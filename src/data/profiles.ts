@@ -160,6 +160,44 @@ export const capitalOverlays: Record<CapitalBand, CapitalOverlay> = {
   }
 };
 
+export const preservationCapitalOverlays: Record<CapitalBand, string> = {
+  'emerging': 'Your deployable capital is modest, but preservation still matters at every level. The priority is ensuring what you have is protected against purchasing power erosion while you evaluate how to position it most effectively for the years ahead.',
+  'building': 'Your deployable capital sits in the $10,000 to $50,000 range. At this stage, the priority is ensuring what you have is working efficiently and protected against purchasing power erosion, not aggressive growth. A considered philosophy matters more than chasing returns.',
+  'established': 'You have meaningful capital to work with. At this stage, the conversation shifts from accumulation to positioning. Asset class mix, currency exposure, and rebalancing all matter — not to grow aggressively, but to ensure what you have retains its real value over the decade ahead.',
+  'concentrated': 'You have significant total wealth but it is concentrated — likely in property or a single asset class. The conversation is not about disrupting what you have built. It is about understanding whether that concentration is positioned to preserve your purchasing power in the current environment, and what measured diversification might look like.',
+  'sovereign-capital': 'You have meaningful deployable capital across diversified assets. At your stage, the question is not orientation but whether your current positioning preserves purchasing power and generates real returns in an environment that may look quite different from the one in which this wealth was assembled.',
+  'sovereign-concentrated': 'You have built significant wealth — likely property heavy, with managed funds running in the background. By conventional measures you have done exceptionally well. The lens worth adding is whether what you have built is positioned to protect and sustain your wealth for the decade ahead as well as it did for the decade behind.'
+};
+
+export interface AdviserManagedContent {
+  recognition: string;
+  reframe: string;
+  bridgeText: string;
+}
+
+export const adviserManagedProfiles: Record<PersonaType, AdviserManagedContent> = {
+  'awakening': {
+    recognition: 'You have a professional managing your investments, which puts you ahead of most. Something has shifted in your thinking recently — a growing sense that the environment your adviser is operating within may be changing in ways that matter. That awareness is valuable. The question Vector raises is not whether your adviser is doing a good job. It is whether the framework they are operating within reflects what you are starting to believe about the monetary environment.',
+    reframe: 'Having an adviser does not mean stepping back from understanding. The most productive adviser relationships are the ones where the client brings a framework of their own — not to override the professional, but to ask better questions. That is what orientation looks like when someone else is managing the decisions.',
+    bridgeText: 'StackMotive gives you visibility into what institutional money is doing in the spaces your portfolio is exposed to. For someone with an adviser, that is not about replacing their work. It is about having a more informed conversation about how your portfolio is positioned relative to the broader environment.'
+  },
+  'gut-trader': {
+    recognition: 'You have a professional managing your investments, but you have instincts of your own — pattern recognition, a sense of when things are moving, a conviction that the environment matters. Those instincts are not in competition with your adviser. They are a signal that you want to understand what is happening underneath the decisions being made on your behalf.',
+    reframe: 'The most effective adviser relationships are not passive ones. They are partnerships where the client brings a considered view and the adviser brings execution. Your instincts are telling you something worth listening to. The question is whether you have a framework for articulating what you are sensing — because that is what turns a gut feeling into a productive conversation with your adviser.',
+    bridgeText: 'StackMotive surfaces real-time signals and institutional flow data. For someone with an adviser, that means seeing what the broader market is doing in the spaces your portfolio is exposed to — and having the intelligence to ask informed questions about positioning.'
+  },
+  'swamped-analyst': {
+    recognition: 'You have a professional managing your investments, and you have done plenty of your own research alongside that. You understand the arguments, you have followed the debates, and you probably have views your adviser has not heard yet. The gap is not knowledge — it is knowing how to use what you know in the context of a managed relationship.',
+    reframe: 'Your research is not wasted just because someone else executes. The investors who get the most from their advisers are the ones who can articulate a coherent philosophy — not to micromanage, but to ensure the portfolio reflects what they actually believe. You already have the knowledge. What is missing is a framework for translating it into the right questions.',
+    bridgeText: 'StackMotive is built for investors who want signal not noise. For someone with an adviser, the platform provides the intelligence layer to evaluate what is already being built on your behalf — portfolio analytics, institutional flow, and real-time alerts that give you a more informed basis for conversation.'
+  },
+  'comfortable-blind-spot': {
+    recognition: 'You have a professional managing your investments, which puts you ahead of most. You have worked hard, made considered decisions, and built genuine wealth over time. The picture looks solid because it largely is. You are not here because something feels wrong. You are here because you are the kind of person who stays curious, even when things are going well — and that includes being curious about whether the framework your adviser is working within still fits the environment.',
+    reframe: 'The financial environment your adviser built your portfolio in has been shifting — quietly, gradually, in ways that do not show up in your account balance but do show up in what that balance actually buys. Having a professional in your corner does not change the question. It changes who you ask it to. And the best version of that conversation starts with your own framework for understanding the environment.',
+    bridgeText: 'StackMotive gives you visibility into your full financial picture — not just individual accounts in isolation, but the whole thing in one place, through a lens that accounts for the environment those assets are sitting in. For someone with an adviser, that kind of visibility is not about second-guessing. It is about having a more informed conversation.'
+  }
+};
+
 export const capitalBandLabels: Record<CapitalBand, string> = {
   'emerging': 'Emerging',
   'building': 'Building',
