@@ -41,7 +41,8 @@ export function calculateProfile(answers: Answer[]): VectorProfile {
   const q6IsD = q6Answer?.selectedLetter === 'D';
 
   if (q6IsD) {
-    // Q6-D always produces Concentrated; if Q3 also signals concentrated, promote to sovereign-concentrated
+    // Q6-D (illiquid wealth) always produces Concentrated or Sovereign-Concentrated
+    // This overrides the standard score-counting logic regardless of Q3 answer
     const q3Answer = answers.find(a => a.questionId === 3);
     const q3IsConcentrated = q3Answer?.capitalSignal === 'concentrated';
     capitalBand = q3IsConcentrated ? 'sovereign-concentrated' : 'concentrated';

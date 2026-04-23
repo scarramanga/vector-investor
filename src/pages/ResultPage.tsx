@@ -15,6 +15,18 @@ import EducationCards from '../components/result/EducationCards';
 import BridgeCard from '../components/result/BridgeCard';
 import SkeletonCard from '../components/result/SkeletonCard';
 
+function stripMarkdown(text: string): string {
+  return text
+    .split('\n')
+    .filter((line) => !line.match(/^#{1,6}\s/))
+    .join('\n')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/^\s*[-*]\s+/gm, '')
+    .trim();
+}
+
 function generateProfilePDF(
   profile: VectorProfile,
   profileContent: typeof profiles[keyof typeof profiles],
@@ -264,7 +276,8 @@ export default function ResultPage() {
 
     fetchProfileNarrative(answerPayload).then((content) => {
       if (content) {
-        const paragraphs = content.split('\n\n').filter((p) => p.trim().length > 0);
+        const cleaned = stripMarkdown(content);
+        const paragraphs = cleaned.split('\n\n').filter((p) => p.trim().length > 0);
         if (paragraphs.length >= 2) {
           setDynamicRecognition(paragraphs[0]);
           setDynamicReframe(paragraphs.slice(1).join('\n\n'));
@@ -302,7 +315,8 @@ export default function ResultPage() {
       let recognition = staticRecognition;
       let reframe = staticReframe;
       if (pdfContent) {
-        const paragraphs = pdfContent.split('\n\n').filter((p) => p.trim().length > 0);
+        const cleaned = stripMarkdown(pdfContent);
+        const paragraphs = cleaned.split('\n\n').filter((p) => p.trim().length > 0);
         if (paragraphs.length >= 2) {
           recognition = paragraphs[0];
           reframe = paragraphs.slice(1).join('\n\n');
