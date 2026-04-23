@@ -105,7 +105,13 @@ app.post('/api/generate', async (req: express.Request, res: express.Response): P
 const distPath = path.resolve(__dirname, '..', 'dist');
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
-  app.get('{*path}', (_req: express.Request, res: express.Response) => {
+  // SPA catch-all: only serve index.html for navigation requests (no file extension)
+  // Static assets (.js, .css, .png, etc.) are handled by express.static above
+  app.get('{*path}', (req: express.Request, res: express.Response) => {
+    if (/\.\w+$/.test(req.path)) {
+      res.status(404).end();
+      return;
+    }
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
