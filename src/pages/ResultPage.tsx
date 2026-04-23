@@ -358,7 +358,8 @@ export default function ResultPage() {
         <p
           style={{
             fontSize: '16px',
-            color: 'var(--color-text-secondary)',
+            fontWeight: 400,
+            color: 'var(--color-text-primary)',
             marginTop: '-24px',
             animation: 'fadeSlideUp 0.6s ease both',
             animationDelay: '50ms',
