@@ -42,6 +42,47 @@ export default function LandingPage() {
           Thirteen questions. Your investor profile. A framework that fits the
           world as it actually is.
         </p>
+        {/* How Vector is different */}
+        <div
+          style={{
+            maxWidth: '640px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginBottom: '3rem',
+            textAlign: 'left',
+          }}
+        >
+          <h2
+            style={{
+              fontSize: '20px',
+              fontWeight: 700,
+              color: 'var(--color-text-primary)',
+              marginBottom: '24px',
+              textAlign: 'center',
+            }}
+          >
+            How Vector is different
+          </h2>
+          {[
+            'Most financial tools start with the same question: how much risk can you tolerate? Vector starts somewhere different. It starts with what you believe.',
+            'Risk tolerance questionnaires produce a number. Vector produces a framework.',
+            'Robo-advisers slot you into a pre-built portfolio. Vector connects your worldview to how you think about your money.',
+            'Five minutes, no sign-up, no advice. Just clarity.',
+          ].map((paragraph, i) => (
+            <p
+              key={i}
+              style={{
+                fontSize: '15px',
+                lineHeight: 1.7,
+                color: 'var(--color-text-primary)',
+                marginBottom: '16px',
+              }}
+            >
+              {paragraph}
+            </p>
+          ))}
+        </div>
+
         <button
           onClick={() => navigate('/quiz')}
           style={{

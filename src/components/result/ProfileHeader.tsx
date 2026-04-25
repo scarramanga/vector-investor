@@ -1,16 +1,12 @@
-import CapitalBandBadge from './CapitalBandBadge';
-
 interface ProfileHeaderProps {
   headline: string;
   accentColor: string;
-  capitalBandLabel: string;
   animationDelay: number;
 }
 
 export default function ProfileHeader({
   headline,
   accentColor,
-  capitalBandLabel,
   animationDelay,
 }: ProfileHeaderProps) {
   return (
@@ -56,7 +52,6 @@ export default function ProfileHeader({
       >
         {headline}
       </h1>
-      <CapitalBandBadge label={capitalBandLabel} accentColor={accentColor} />
     </div>
   );
 }
