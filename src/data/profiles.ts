@@ -257,21 +257,3 @@ export const personaEducationCards: Record<PersonaType, string[]> = {
   'swamped-analyst': ['The Cost of Inaction', 'Portfolio Architecture', 'Real Returns vs Nominal Returns'],
   'comfortable-blind-spot': ['Concentration Risk', 'Real Returns vs Nominal Returns', 'The Post-1971 Monetary Architecture']
 };
-
-export const conceptLinks: Record<string, string> = {
-  'The Debasement Mechanism': 'https://thesovsignal.substack.com/about',
-  'Real Returns vs Nominal Returns': 'https://thesovsignal.substack.com/about',
-  'Experienced Inflation vs CPI': 'https://thesovsignal.substack.com/about',
-  'The Post-1971 Monetary Architecture': 'https://thesovsignal.substack.com/about',
-  'Hard Assets and Why They Matter': 'https://thesovsignal.substack.com/about',
-  'Currency Exposure and Geographic Diversification': 'https://thesovsignal.substack.com/about',
-  'Portfolio Architecture': 'https://thesovsignal.substack.com/about',
-  'Concentration Risk': 'https://thesovsignal.substack.com/about',
-  'The Index Fund in Context': 'https://thesovsignal.substack.com/about',
-  'Momentum vs Conviction': 'https://thesovsignal.substack.com/about',
-  'The Cost of Inaction': 'https://thesovsignal.substack.com/about',
-  'Time as a Portfolio Asset': 'https://thesovsignal.substack.com/about',
-  'Housing Financialisation': 'https://thesovsignal.substack.com/about',
-  'The Wealth Transfer Mechanism': 'https://thesovsignal.substack.com/about',
-  'What Institutional Investors Know That Retail Doesn\'t': 'https://thesovsignal.substack.com/about',
-};
