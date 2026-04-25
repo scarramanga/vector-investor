@@ -10,7 +10,6 @@ import ProfileHeader from '../components/result/ProfileHeader';
 import RecognitionCard from '../components/result/RecognitionCard';
 import ReframeCard from '../components/result/ReframeCard';
 import OrientationCard from '../components/result/OrientationCard';
-import CapitalBandBadge from '../components/result/CapitalBandBadge';
 import EducationCards from '../components/result/EducationCards';
 import BridgeCard from '../components/result/BridgeCard';
 import SkeletonCard from '../components/result/SkeletonCard';
@@ -352,21 +351,47 @@ export default function ResultPage() {
         <ProfileHeader
           headline={profileContent.headline}
           accentColor={profileContent.accentColor}
-          capitalBandLabel={bandLabel}
           animationDelay={0}
         />
-        <p
+        <div
           style={{
-            fontSize: '16px',
-            fontWeight: 400,
-            color: 'var(--color-text-primary)',
             marginTop: '-24px',
             animation: 'fadeSlideUp 0.6s ease both',
             animationDelay: '50ms',
+            textAlign: 'center',
           }}
         >
-          {formatPersonaLabel(vectorProfile.persona)}
-        </p>
+          <p
+            style={{
+              fontSize: '11px',
+              textTransform: 'uppercase',
+              letterSpacing: '2px',
+              color: 'var(--color-text-secondary)',
+              marginBottom: '8px',
+            }}
+          >
+            INVESTOR PROFILE SUMMARY
+          </p>
+          <p
+            style={{
+              fontSize: '14px',
+              fontWeight: 400,
+              color: 'var(--color-text-secondary)',
+              marginBottom: '4px',
+            }}
+          >
+            Capital Position: {bandLabel}
+          </p>
+          <p
+            style={{
+              fontSize: '14px',
+              fontWeight: 400,
+              color: 'var(--color-text-secondary)',
+            }}
+          >
+            Profile: {formatPersonaLabel(vectorProfile.persona)}
+          </p>
+        </div>
 
         {/* Section 2 & 3 — RecognitionCard + ReframeCard (or Skeleton) */}
         {isLoadingNarrative ? (
@@ -398,7 +423,7 @@ export default function ResultPage() {
           animationDelay={450}
         />
 
-        {/* Section 5 — CapitalBandBadge standalone section */}
+        {/* Section 5 — Capital position detail */}
         <div
           style={{
             animation: 'fadeSlideUp 0.6s ease both',
@@ -417,12 +442,6 @@ export default function ResultPage() {
           >
             YOUR CAPITAL POSITION
           </p>
-          <div style={{ marginBottom: '16px' }}>
-            <CapitalBandBadge
-              label={bandLabel}
-              accentColor={profileContent.accentColor}
-            />
-          </div>
           <p
             style={{
               fontSize: '14px',

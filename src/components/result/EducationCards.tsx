@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import type { PersonaType } from '../../types';
-import { personaEducationCards, educationConcepts, conceptLinks } from '../../data/profiles';
+import { personaEducationCards, educationConcepts } from '../../data/profiles';
+import { conceptExplanations } from '../../data/concepts';
 
 interface EducationCardsProps {
   persona: PersonaType;
@@ -13,6 +15,11 @@ export default function EducationCards({
   animationDelay,
 }: EducationCardsProps) {
   const conceptNames = personaEducationCards[persona];
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
+
+  function toggleCard(name: string) {
+    setExpandedCards((prev) => ({ ...prev, [name]: !prev[name] }));
+  }
 
   return (
     <div
@@ -36,6 +43,8 @@ export default function EducationCards({
         {conceptNames.map((name) => {
           const concept = educationConcepts[name];
           if (!concept) return null;
+          const isExpanded = expandedCards[name] ?? false;
+          const explanation = conceptExplanations[name]?.explanation;
           return (
             <div
               key={name}
@@ -66,22 +75,52 @@ export default function EducationCards({
               >
                 {concept.description}
               </p>
-              <a
-                href={conceptLinks[name] || 'https://thesovsignal.substack.com/about'}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  fontSize: '12px',
-                  color: accentColor,
-                  textDecoration: 'none',
-                  fontWeight: 500,
-                }}
-              >
-                Learn more →
-              </a>
+              {isExpanded && explanation && (
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.6,
+                    marginBottom: '12px',
+                  }}
+                >
+                  {explanation}
+                </p>
+              )}
+              {explanation && (
+                <button
+                  onClick={() => toggleCard(name)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    fontSize: '12px',
+                    color: accentColor,
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {isExpanded ? 'Show less \u2191' : 'Read more \u2192'}
+                </button>
+              )}
             </div>
           );
         })}
+      </div>
+      <div style={{ marginTop: '16px', textAlign: 'center' }}>
+        <a
+          href="https://thesovsignal.substack.com/about"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: '13px',
+            color: accentColor,
+            textDecoration: 'none',
+            fontWeight: 500,
+          }}
+        >
+          Explore these concepts on The Sovereign Signal &rarr;
+        </a>
       </div>
     </div>
   );
