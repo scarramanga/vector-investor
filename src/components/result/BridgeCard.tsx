@@ -51,10 +51,21 @@ export default function BridgeCard({
           color: 'var(--color-text-muted)',
           fontStyle: 'italic',
           lineHeight: 1.6,
-          marginBottom: '24px',
+          marginBottom: '16px',
         }}
       >
         Where to start: {firstAction}
+      </p>
+      <p
+        style={{
+          fontSize: '13px',
+          color: 'var(--color-text-secondary)',
+          fontStyle: 'italic',
+          lineHeight: 1.6,
+          marginBottom: '24px',
+        }}
+      >
+        Your Vector profile works with StackMotive. Upload it during onboarding or in any Stack AI conversation to pick up where you left off.
       </p>
       <div
         className="bridge-cta-row"
