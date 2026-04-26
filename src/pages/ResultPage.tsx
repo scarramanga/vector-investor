@@ -231,10 +231,11 @@ function generateProfilePDF(
   const footerY = pageHeight - 14;
   doc.setDrawColor(30, 30, 46);
   doc.setLineWidth(0.3);
-  doc.line(marginLeft, footerY - 4, pageWidth - marginRight, footerY - 4);
+  doc.line(marginLeft, footerY - 8, pageWidth - marginRight, footerY - 8);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8);
   doc.setTextColor(102, 102, 102);
+  doc.text('This profile can be uploaded to StackMotive. Stack AI will use it to personalise your experience.', marginLeft, footerY - 4);
   doc.text('Vector is an educational and orientation tool. Nothing in this document constitutes financial advice.', marginLeft, footerY);
   doc.text('www.stackmotiveapp.com  |  thesovsignal.substack.com', marginLeft, footerY + 4);
 
