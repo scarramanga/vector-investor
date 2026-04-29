@@ -5,6 +5,18 @@ import { getTierRecommendation } from '../../data/tierRecommendations';
 import { captureEmail, keepExistingProfile, skipCapture } from '../../services/vectorCapture';
 import type { CaptureResponse } from '../../services/vectorCapture';
 
+const PERSONA_PHILOSOPHY_MAP: Record<string, string> = {
+  'awakening': 'Macro and Hard Assets',
+  'gut-trader': 'Disruptive Growth',
+  'swamped-analyst': 'Rules-Based Systematic',
+  'comfortable-blind-spot': 'Value and Patience',
+};
+
+function getPhilosophy(persona: PersonaType, lifeStage: string | undefined): string {
+  if (lifeStage === 'preservation') return 'Capital Preservation';
+  return PERSONA_PHILOSOPHY_MAP[persona] || persona;
+}
+
 interface EmailCaptureProps {
   persona: PersonaType;
   capitalBand: CapitalBand;
@@ -49,6 +61,7 @@ export default function EmailCapture({
   const [showDualProfile, setShowDualProfile] = useState(false);
 
   const tierRec = getTierRecommendation(persona, capitalBand);
+  const philosophy = getPhilosophy(persona, answerPayload.lifeStage);
 
   function isValidEmail(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -68,6 +81,7 @@ export default function EmailCapture({
       country: country || null,
       persona,
       capitalBand,
+      philosophy,
       answers: answerPayload.answers as unknown as Record<string, unknown>,
       payload: answerPayload as unknown as Record<string, unknown>,
       tierName: tierRec.tierName,

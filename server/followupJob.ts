@@ -12,7 +12,7 @@
 import 'dotenv/config';
 import { initDatabase, getFollowUpQueue, advanceFollowUpStatus } from './db.js';
 import { lookupStackMotiveUser } from './stackmotiveApi.js';
-import { getPhilosophyLabel, generatePhilosophySignalBlock } from './macroSignals.js';
+import { generatePhilosophySignalBlock } from './macroSignals.js';
 import { sendEmail1TheMirror, sendEmail2TheGap, sendEmail3TheDecision } from './followupEmails.js';
 
 function sleep(ms: number): Promise<void> {
@@ -86,8 +86,8 @@ async function main(): Promise<void> {
   let failed = 0;
 
   for (const profile of queue) {
-    const { id, email, persona, capital_band, follow_up_status } = profile;
-    const philosophy = getPhilosophyLabel(persona);
+    const { id, email, persona, capital_band, philosophy: rawPhilosophy, follow_up_status } = profile;
+    const philosophy = rawPhilosophy || persona;
     const recommendedTier = getRecommendedTier(persona, capital_band);
 
     // Look up StackMotive account for tier/position enrichment

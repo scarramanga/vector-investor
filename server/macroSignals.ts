@@ -8,19 +8,6 @@ import Anthropic from '@anthropic-ai/sdk';
 import { fetchMacroData } from './stackmotiveApi.js';
 
 /**
- * Map persona to a human-readable investment philosophy label.
- */
-export function getPhilosophyLabel(persona: string): string {
-  const map: Record<string, string> = {
-    'awakening': 'macro awareness',
-    'gut-trader': 'momentum and conviction',
-    'swamped-analyst': 'analytical',
-    'comfortable-blind-spot': 'preservation',
-  };
-  return map[persona] || persona;
-}
-
-/**
  * Generate a philosophy-specific macro signal block using Claude.
  * Returns the generated text, or null if anything fails (API down, no key, etc.).
  */

@@ -11,6 +11,7 @@ interface CaptureRequest {
   country: string | null;
   persona: string;
   capitalBand: string;
+  philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
   tierName: string;
@@ -62,6 +63,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
         country: body.country,
         persona: body.persona,
         capitalBand: body.capitalBand,
+        philosophy: body.philosophy,
         answers: body.answers,
         payload: body.payload,
       });
@@ -72,6 +74,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
         country: body.country,
         persona: body.persona,
         capitalBand: body.capitalBand,
+        philosophy: body.philosophy,
         answers: body.answers,
         payload: body.payload,
       });

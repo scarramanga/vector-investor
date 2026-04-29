@@ -35,6 +35,7 @@ export async function initDatabase(): Promise<void> {
       country         TEXT,
       persona         TEXT NOT NULL,
       capital_band    TEXT NOT NULL,
+      philosophy      TEXT,
       answers         JSONB NOT NULL,
       payload         JSONB NOT NULL,
       email_captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -49,10 +50,14 @@ export async function initDatabase(): Promise<void> {
     );
   `);
 
-  // Migration: add unsubscribe_requested if table already existed without it
+  // Migrations: add columns if table already existed without them
   await db.query(`
     ALTER TABLE vector_profiles
     ADD COLUMN IF NOT EXISTS unsubscribe_requested BOOLEAN NOT NULL DEFAULT FALSE;
+  `);
+  await db.query(`
+    ALTER TABLE vector_profiles
+    ADD COLUMN IF NOT EXISTS philosophy TEXT;
   `);
 
   await db.query(`
@@ -103,6 +108,7 @@ export interface VectorProfileRow {
   country: string | null;
   persona: string;
   capital_band: string;
+  philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
   email_captured_at: Date;
@@ -136,16 +142,17 @@ export async function createProfile(data: {
   country: string | null;
   persona: string;
   capitalBand: string;
+  philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
 }): Promise<VectorProfileRow> {
   const db = getPool();
   // Set next_send_date to 3 days from now for first follow-up
   const result = await db.query<VectorProfileRow>(
-    `INSERT INTO vector_profiles (email, country, persona, capital_band, answers, payload, next_send_date)
-     VALUES ($1, $2, $3, $4, $5, $6, NOW() + INTERVAL '3 days')
+    `INSERT INTO vector_profiles (email, country, persona, capital_band, philosophy, answers, payload, next_send_date)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, NOW() + INTERVAL '3 days')
      RETURNING *`,
-    [data.email, data.country, data.persona, data.capitalBand, JSON.stringify(data.answers), JSON.stringify(data.payload)],
+    [data.email, data.country, data.persona, data.capitalBand, data.philosophy, JSON.stringify(data.answers), JSON.stringify(data.payload)],
   );
   return result.rows[0]!;
 }
@@ -158,6 +165,7 @@ export async function replaceProfile(existingId: number, newData: {
   country: string | null;
   persona: string;
   capitalBand: string;
+  philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
 }): Promise<VectorProfileRow> {
@@ -181,10 +189,10 @@ export async function replaceProfile(existingId: number, newData: {
 
     // Create new active profile
     const result = await client.query<VectorProfileRow>(
-      `INSERT INTO vector_profiles (email, country, persona, capital_band, answers, payload, next_send_date)
-       VALUES ($1, $2, $3, $4, $5, $6, NOW() + INTERVAL '3 days')
+      `INSERT INTO vector_profiles (email, country, persona, capital_band, philosophy, answers, payload, next_send_date)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW() + INTERVAL '3 days')
        RETURNING *`,
-      [newData.email, newData.country, newData.persona, newData.capitalBand, JSON.stringify(newData.answers), JSON.stringify(newData.payload)],
+      [newData.email, newData.country, newData.persona, newData.capitalBand, newData.philosophy, JSON.stringify(newData.answers), JSON.stringify(newData.payload)],
     );
 
     await client.query('COMMIT');
