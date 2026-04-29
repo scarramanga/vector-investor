@@ -14,6 +14,7 @@ import EducationCards from '../components/result/EducationCards';
 import BridgeCard from '../components/result/BridgeCard';
 import SkeletonCard from '../components/result/SkeletonCard';
 import EmailCapture from '../components/result/EmailCapture';
+import BrokerRecommendation from '../components/result/BrokerRecommendation';
 
 function stripMarkdown(text: string): string {
   return text
@@ -267,6 +268,8 @@ export default function ResultPage() {
   const [dynamicReframe, setDynamicReframe] = useState<string | null>(null);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [capturedEmail, setCapturedEmail] = useState<string | null>(null);
+  const [capturedCountry, setCapturedCountry] = useState<string | null>(null);
+  const [capturedPhilosophy, setCapturedPhilosophy] = useState<string | null>(null);
   const [emailCaptureComplete, setEmailCaptureComplete] = useState(false);
 
   const answerPayload = useMemo(
@@ -491,13 +494,25 @@ export default function ResultPage() {
             accentColor={profileContent.accentColor}
             answerPayload={answerPayload}
             animationDelay={1000}
-            onComplete={(_sessionToken, email) => {
+            onComplete={(_sessionToken, email, country, philosophy) => {
               setCapturedEmail(email);
+              setCapturedCountry(country);
+              setCapturedPhilosophy(philosophy);
               setEmailCaptureComplete(true);
             }}
             onSkip={() => {
               setEmailCaptureComplete(true);
             }}
+          />
+        )}
+
+        {/* Section 7.6 — Broker Recommendation (post-capture only, not for skip) */}
+        {emailCaptureComplete && capturedEmail && capturedCountry && (
+          <BrokerRecommendation
+            country={capturedCountry}
+            capitalBand={vectorProfile.capitalBand}
+            philosophy={capturedPhilosophy}
+            animationDelay={1050}
           />
         )}
 

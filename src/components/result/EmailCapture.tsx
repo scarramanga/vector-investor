@@ -25,7 +25,7 @@ interface EmailCaptureProps {
   accentColor: string;
   answerPayload: VectorAnswerPayload;
   animationDelay: number;
-  onComplete: (sessionToken: string | null, email: string | null) => void;
+  onComplete: (sessionToken: string | null, email: string | null, country: string | null, philosophy: string | null) => void;
   onSkip: () => void;
 }
 
@@ -99,7 +99,7 @@ export default function EmailCapture({
     }
 
     if (result.status === 'captured') {
-      onComplete(result.sessionToken ?? null, email.trim().toLowerCase());
+      onComplete(result.sessionToken ?? null, email.trim().toLowerCase(), country || null, philosophy);
       return;
     }
 
@@ -113,7 +113,7 @@ export default function EmailCapture({
     setIsSubmitting(false);
 
     if (result) {
-      onComplete(result.sessionToken, email.trim().toLowerCase());
+      onComplete(result.sessionToken, email.trim().toLowerCase(), country || null, philosophy);
     } else {
       setError('Something went wrong. Please try again.');
     }
@@ -127,7 +127,7 @@ export default function EmailCapture({
     });
     onSkip();
     if (result?.sessionToken) {
-      onComplete(result.sessionToken, null);
+      onComplete(result.sessionToken, null, null, null);
     }
   }
 
