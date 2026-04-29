@@ -70,12 +70,12 @@ export async function sendWelcomeEmail(data: {
           </p>
 
           <p style="font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 16px;">
-            Based on your profile, <strong>${data.tierName}</strong> is your starting point on StackMotive. You can tour the next tier up free for a day before deciding. No credit card required to start.
+            Based on your profile, <strong>${data.tierName}</strong> is your starting point on StackMotive. Each day you can preview the next tier up for free — starting at 5 minutes, growing by a minute each consecutive day you use it. If you want full access to a higher tier for the rest of this month, you can unlock it for 10% of the monthly price. No subscription change required.
           </p>
 
           <div style="text-align: center; margin: 32px 0;">
             <a href="https://www.stackmotiveapp.com" style="display: inline-block; padding: 14px 32px; font-size: 15px; font-weight: 600; color: #fff; background-color: #6366f1; border-radius: 8px; text-decoration: none;">
-              Explore StackMotive
+              Start on ${data.tierName}
             </a>
           </div>
 

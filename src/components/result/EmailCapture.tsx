@@ -368,7 +368,12 @@ export default function EmailCapture({
               fontStyle: 'italic',
             }}
           >
-            You can tour the next tier up free for a day before deciding. No credit card required to start.
+            {tierRec.tierName === 'Observer' &&
+              'You get a free 5-minute preview of Navigator every day. If you want full access to Navigator for the rest of this month, unlock it for NZD $2.90. No commitment.'}
+            {tierRec.tierName === 'Navigator' &&
+              'You get a free 5-minute preview of Operator every day. If you want full access to Operator for the rest of this month, unlock it for NZD $9.90. No commitment.'}
+            {tierRec.tierName === 'Operator' &&
+              'You get a free 5-minute preview of Sovereign every day. If you want full access to Sovereign for the rest of this month, unlock it for NZD $24.90. No commitment.'}
           </p>
         </div>
 
