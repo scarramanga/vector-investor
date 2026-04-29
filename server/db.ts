@@ -135,7 +135,9 @@ export async function findProfileByEmail(email: string): Promise<VectorProfileRo
 }
 
 /**
- * Create a new profile record
+ * Create a new profile record.
+ * Philosophy is a recommended default based on persona and life-stage, not a permanent
+ * assignment. Users can override their philosophy in StackMotive via the philosophy selection UI.
  */
 export async function createProfile(data: {
   email: string;
@@ -158,7 +160,9 @@ export async function createProfile(data: {
 }
 
 /**
- * Move existing profile to history and create new one (Edge Case 1 — user chooses new profile)
+ * Move existing profile to history and create new one (Edge Case 1 -- user chooses new profile).
+ * Philosophy is a recommended default based on persona and life-stage, not a permanent
+ * assignment. Users can override their philosophy in StackMotive via the philosophy selection UI.
  */
 export async function replaceProfile(existingId: number, newData: {
   email: string;

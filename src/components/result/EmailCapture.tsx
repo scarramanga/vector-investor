@@ -5,6 +5,8 @@ import { getTierRecommendation } from '../../data/tierRecommendations';
 import { captureEmail, keepExistingProfile, skipCapture } from '../../services/vectorCapture';
 import type { CaptureResponse } from '../../services/vectorCapture';
 
+// Philosophy is a recommended default based on persona and life-stage, not a permanent
+// assignment. Users can override their philosophy in StackMotive via the philosophy selection UI.
 const PERSONA_PHILOSOPHY_MAP: Record<string, string> = {
   'awakening': 'Macro and Hard Assets',
   'gut-trader': 'Disruptive Growth',
