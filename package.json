@@ -10,7 +10,8 @@
     "build:server": "tsc -p tsconfig.server.json",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node dist-server/proxy.js"
+    "start": "node dist-server/proxy.js",
+    "followup": "tsx server/followupJob.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",

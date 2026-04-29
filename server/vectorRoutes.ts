@@ -1,6 +1,7 @@
 import express from 'express';
-import { findProfileByEmail, createProfile, replaceProfile, createSession, cleanExpiredSessions } from './db.js';
+import { findProfileByEmail, createProfile, replaceProfile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
 import { sendWelcomeEmail } from './email.js';
+import { verifyUnsubscribeToken } from './unsubscribe.js';
 import crypto from 'node:crypto';
 
 const router = express.Router();
@@ -10,6 +11,7 @@ interface CaptureRequest {
   country: string | null;
   persona: string;
   capitalBand: string;
+  philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
   tierName: string;
@@ -61,6 +63,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
         country: body.country,
         persona: body.persona,
         capitalBand: body.capitalBand,
+        philosophy: body.philosophy,
         answers: body.answers,
         payload: body.payload,
       });
@@ -71,6 +74,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
         country: body.country,
         persona: body.persona,
         capitalBand: body.capitalBand,
+        philosophy: body.philosophy,
         answers: body.answers,
         payload: body.payload,
       });
@@ -169,6 +173,49 @@ router.post('/skip', async (req: express.Request, res: express.Response): Promis
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+/**
+ * GET /api/vector/unsubscribe?token=<signed-token>
+ * Verifies the HMAC-signed token and marks the user as unsubscribed.
+ * Returns a simple HTML confirmation page.
+ */
+router.get('/unsubscribe', async (req: express.Request, res: express.Response): Promise<void> => {
+  const token = req.query['token'] as string | undefined;
+
+  if (!token) {
+    res.status(400).send(unsubscribePage('Invalid unsubscribe link.'));
+    return;
+  }
+
+  try {
+    const email = verifyUnsubscribeToken(token);
+    if (!email) {
+      res.status(400).send(unsubscribePage('Invalid or expired unsubscribe link.'));
+      return;
+    }
+
+    const updated = await unsubscribeByEmail(email);
+    if (updated) {
+      console.log(`[vectorRoutes] Unsubscribed: ${email}`);
+      res.send(unsubscribePage('You have been unsubscribed. You will not receive any further follow-up emails from Vector.'));
+    } else {
+      res.send(unsubscribePage('No active subscription found for this email. You may have already unsubscribed.'));
+    }
+  } catch (err) {
+    console.error('[vectorRoutes] Unsubscribe error:', err);
+    res.status(500).send(unsubscribePage('Something went wrong. Please try again later.'));
+  }
+});
+
+function unsubscribePage(message: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Vector - Unsubscribe</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f8f9fa;color:#1a1a2e;}div{max-width:480px;text-align:center;padding:40px 24px;}h1{font-size:20px;margin-bottom:16px;}p{font-size:15px;line-height:1.6;color:#555;}</style>
+</head>
+<body><div><h1>Vector by Sovereign Signal</h1><p>${message}</p></div></body>
+</html>`;
+}
 
 // Clean up expired sessions periodically (every hour)
 setInterval(() => {

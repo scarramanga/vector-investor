@@ -31,6 +31,7 @@ export async function captureEmail(data: {
   country: string | null;
   persona: string;
   capitalBand: string;
+  philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
   tierName: string;
