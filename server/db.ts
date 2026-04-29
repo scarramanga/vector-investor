@@ -6,10 +6,16 @@ let pool: pg.Pool | null = null;
 
 export function getPool(): pg.Pool {
   if (!pool) {
-    const connectionString = process.env['VECTOR_DATABASE_URL'];
-    if (!connectionString) {
+    const raw = process.env['VECTOR_DATABASE_URL'];
+    if (!raw) {
       throw new Error('VECTOR_DATABASE_URL is not set');
     }
+    // Strip sslmode from the connection string so the programmatic ssl
+    // config takes precedence. Newer pg versions treat sslmode=require as
+    // verify-full which rejects DigitalOcean's self-signed CA chain.
+    const connectionString = raw.replace(/[?&]sslmode=[^&]*/g, (m, offset) =>
+      offset === raw.indexOf('?') ? '?' : '',
+    ).replace(/\?$/, '');
     pool = new Pool({
       connectionString,
       ssl: { rejectUnauthorized: false },
