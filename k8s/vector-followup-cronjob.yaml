@@ -22,8 +22,8 @@ spec:
           restartPolicy: Never
           containers:
             - name: vector-followup-job
-              image: registry.digitalocean.com/registry-docr-prod/vector-frontend:latest
-              command: ["npx", "tsx", "server/followupJob.ts"]
+              image: registry.digitalocean.com/docr-prod/vector-frontend:latest
+              command: ["node", "dist-server/followupJob.js"]
               envFrom:
                 - secretRef:
                     name: vector-secrets
