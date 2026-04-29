@@ -13,6 +13,7 @@ import OrientationCard from '../components/result/OrientationCard';
 import EducationCards from '../components/result/EducationCards';
 import BridgeCard from '../components/result/BridgeCard';
 import SkeletonCard from '../components/result/SkeletonCard';
+import EmailCapture from '../components/result/EmailCapture';
 
 function stripMarkdown(text: string): string {
   return text
@@ -265,6 +266,8 @@ export default function ResultPage() {
   const [dynamicRecognition, setDynamicRecognition] = useState<string | null>(null);
   const [dynamicReframe, setDynamicReframe] = useState<string | null>(null);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [capturedEmail, setCapturedEmail] = useState<string | null>(null);
+  const [emailCaptureComplete, setEmailCaptureComplete] = useState(false);
 
   const answerPayload = useMemo(
     () => (vectorProfile ? buildAnswerPayload(vectorProfile) : null),
@@ -477,7 +480,26 @@ export default function ResultPage() {
           firstAction={overlay.firstAction}
           accentColor={profileContent.accentColor}
           animationDelay={900}
+          vectorEmail={capturedEmail}
         />
+
+        {/* Section 7.5 — Email Capture */}
+        {!emailCaptureComplete && answerPayload && (
+          <EmailCapture
+            persona={vectorProfile.persona}
+            capitalBand={vectorProfile.capitalBand}
+            accentColor={profileContent.accentColor}
+            answerPayload={answerPayload}
+            animationDelay={1000}
+            onComplete={(_sessionToken, email) => {
+              setCapturedEmail(email);
+              setEmailCaptureComplete(true);
+            }}
+            onSkip={() => {
+              setEmailCaptureComplete(true);
+            }}
+          />
+        )}
 
         {/* Discovery CTA */}
         <div

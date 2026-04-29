@@ -4,6 +4,7 @@ interface BridgeCardProps {
   firstAction: string;
   accentColor: string;
   animationDelay: number;
+  vectorEmail?: string | null;
 }
 
 export default function BridgeCard({
@@ -12,7 +13,11 @@ export default function BridgeCard({
   firstAction,
   accentColor,
   animationDelay,
+  vectorEmail,
 }: BridgeCardProps) {
+  const stackMotiveUrl = vectorEmail
+    ? `https://www.stackmotiveapp.com?vector_email=${encodeURIComponent(vectorEmail)}`
+    : 'https://www.stackmotiveapp.com';
   return (
     <div
       style={{
@@ -77,7 +82,7 @@ export default function BridgeCard({
         }}
       >
         <a
-          href="https://www.stackmotiveapp.com"
+          href={stackMotiveUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="bridge-cta-button"
