@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { buildUnsubscribeUrl } from './unsubscribe.js';
 
 let resend: Resend | null = null;
 
@@ -47,11 +48,13 @@ export async function sendWelcomeEmail(data: {
 
   const personaLabel = formatPersonaLabel(data.persona);
   const bandLabel = capitalBandLabel(data.capitalBand);
+  const unsubscribeUrl = buildUnsubscribeUrl(data.email);
 
   try {
     await client.emails.send({
       from: 'Vector by Sovereign Signal <vector@sovereignassets.org>',
       to: [data.email],
+      bcc: ['andy@sovereignassets.org'],
       subject: `Your Vector Profile: ${personaLabel}`,
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 24px; color: #1a1a2e;">
@@ -85,7 +88,7 @@ export async function sendWelcomeEmail(data: {
             Vector is an educational and orientation tool. Nothing in this email constitutes financial advice.
           </p>
           <p style="font-size: 12px; color: #999;">
-            You are receiving this because you completed the Vector investor orientation quiz. To unsubscribe from follow-up emails, reply to this email with "unsubscribe".
+            You are receiving this because you completed the Vector investor orientation quiz. To unsubscribe, <a href="${unsubscribeUrl}" style="color: #999;">click here</a> or reply to this email with "unsubscribe".
           </p>
         </div>
       `,

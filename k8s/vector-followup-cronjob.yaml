@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: vector-followup-job
+  namespace: vector-prod
+  labels:
+    app: vector-followup-job
+spec:
+  schedule: "0 21 * * *"  # 9am NZT (21:00 UTC)
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 600
+      template:
+        metadata:
+          labels:
+            app: vector-followup-job
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: vector-followup-job
+              image: registry.digitalocean.com/registry-docr-prod/vector-frontend:latest
+              command: ["npx", "tsx", "server/followupJob.ts"]
+              envFrom:
+                - secretRef:
+                    name: vector-secrets
+              env:
+                - name: NODE_ENV
+                  value: production
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 500m
+                  memory: 256Mi

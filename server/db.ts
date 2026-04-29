@@ -43,9 +43,16 @@ export async function initDatabase(): Promise<void> {
       next_send_date  TIMESTAMPTZ,
       vector_integrated BOOLEAN NOT NULL DEFAULT FALSE,
       is_active       BOOLEAN NOT NULL DEFAULT TRUE,
+      unsubscribe_requested BOOLEAN NOT NULL DEFAULT FALSE,
       created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+  `);
+
+  // Migration: add unsubscribe_requested if table already existed without it
+  await db.query(`
+    ALTER TABLE vector_profiles
+    ADD COLUMN IF NOT EXISTS unsubscribe_requested BOOLEAN NOT NULL DEFAULT FALSE;
   `);
 
   await db.query(`
@@ -104,6 +111,7 @@ export interface VectorProfileRow {
   next_send_date: Date | null;
   vector_integrated: boolean;
   is_active: boolean;
+  unsubscribe_requested: boolean;
   created_at: Date;
   updated_at: Date;
 }
@@ -233,4 +241,70 @@ export async function findSession(sessionToken: string): Promise<{
 export async function cleanExpiredSessions(): Promise<void> {
   const db = getPool();
   await db.query("DELETE FROM vector_sessions WHERE created_at < NOW() - INTERVAL '72 hours'");
+}
+
+/**
+ * Get all profiles due for follow-up email processing.
+ * Returns active profiles where next_send_date has passed and status is not
+ * completed, unsubscribed, or already at day14_sent.
+ */
+export async function getFollowUpQueue(): Promise<VectorProfileRow[]> {
+  const db = getPool();
+  const result = await db.query<VectorProfileRow>(
+    `SELECT * FROM vector_profiles
+     WHERE is_active = TRUE
+       AND unsubscribe_requested = FALSE
+       AND follow_up_status IN ('queued', 'day3_sent', 'day7_sent')
+       AND next_send_date <= NOW()
+     ORDER BY next_send_date ASC`,
+  );
+  return result.rows;
+}
+
+/**
+ * Advance follow-up status after a successful send.
+ * @param daysUntilNext - number of days until the next follow-up, or null to clear
+ */
+export async function advanceFollowUpStatus(
+  profileId: number,
+  newStatus: string,
+  daysUntilNext: number | null,
+): Promise<void> {
+  const db = getPool();
+  if (daysUntilNext === null) {
+    await db.query(
+      `UPDATE vector_profiles
+       SET follow_up_status = $1,
+           next_send_date = NULL,
+           updated_at = NOW()
+       WHERE id = $2`,
+      [newStatus, profileId],
+    );
+  } else {
+    await db.query(
+      `UPDATE vector_profiles
+       SET follow_up_status = $1,
+           next_send_date = NOW() + ($2 || ' days')::INTERVAL,
+           updated_at = NOW()
+       WHERE id = $3`,
+      [newStatus, String(daysUntilNext), profileId],
+    );
+  }
+}
+
+/**
+ * Mark a profile as unsubscribed by email.
+ */
+export async function unsubscribeByEmail(email: string): Promise<boolean> {
+  const db = getPool();
+  const result = await db.query(
+    `UPDATE vector_profiles
+     SET unsubscribe_requested = TRUE,
+         follow_up_status = 'unsubscribed',
+         updated_at = NOW()
+     WHERE email = $1 AND is_active = TRUE
+     RETURNING id`,
+    [email],
+  );
+  return (result.rowCount ?? 0) > 0;
 }
