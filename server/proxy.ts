@@ -6,6 +6,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
 import { buildSystemPrompt } from './promptBuilder.js';
+import { initDatabase } from './db.js';
+import vectorRoutes from './vectorRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,6 +15,9 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Vector email capture and profile routes
+app.use('/api/vector', vectorRoutes);
 
 const PORT = parseInt(process.env['PORT'] || '3001', 10);
 const API_KEY = process.env['VECTOR_ANTHROPIC_API_KEY'] || '';
@@ -116,8 +121,24 @@ if (fs.existsSync(distPath)) {
   });
 }
 
+// Initialise database and start server
+const DB_URL = process.env['VECTOR_DATABASE_URL'];
+if (DB_URL) {
+  initDatabase()
+    .then(() => {
+      console.log('[proxy] Database initialised');
+    })
+    .catch((err) => {
+      console.error('[proxy] Database initialisation failed:', err);
+      console.warn('[proxy] Vector capture endpoints will not work without a database');
+    });
+} else {
+  console.warn('[proxy] VECTOR_DATABASE_URL is not set. Vector capture endpoints will not work.');
+}
+
 app.listen(PORT, () => {
   console.log(`[proxy] Vector API proxy running on port ${PORT}`);
   console.log(`[proxy] Model: ${MODEL}`);
   console.log(`[proxy] API key configured: ${!!API_KEY}`);
+  console.log(`[proxy] Database configured: ${!!DB_URL}`);
 });
