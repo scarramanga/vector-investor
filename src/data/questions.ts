@@ -42,7 +42,8 @@ export const questions: Question[] = [
       { letter: 'A', text: "I don't really invest actively — my money is in retirement savings or property and that feels like enough.", personaSignal: 'comfortable-blind-spot' },
       { letter: 'B', text: "I've bought some shares or ETFs, maybe some crypto — I act when something feels right.", personaSignal: 'gut-trader' },
       { letter: 'C', text: "I research a lot but I find it hard to commit. There's always more to know.", personaSignal: 'swamped-analyst' },
-      { letter: 'D', text: "I've been meaning to do something differently but I haven't found the right framework yet.", personaSignal: 'awakening' }
+      { letter: 'D', text: "I've been meaning to do something differently but I haven't found the right framework yet.", personaSignal: 'awakening' },
+      { letter: 'E', text: "I invest deliberately and have an existing process, but I'm questioning whether my framework is complete.", personaSignal: 'swamped-analyst' }
     ]
   },
   {

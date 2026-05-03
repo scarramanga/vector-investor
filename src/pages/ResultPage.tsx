@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import type { VectorProfile } from '../types';
 import { profiles, capitalOverlays, capitalBandLabels, personaEducationCards, educationConcepts, preservationCapitalOverlays, adviserManagedProfiles } from '../data/profiles';
-import type { CapitalOverlay } from '../data/profiles';
+import { getTierRecommendation } from '../data/tierRecommendations';
+
 import { buildAnswerPayload } from '../data/scoring';
 import { fetchProfileNarrative, fetchPdfNarrative } from '../services/vectorAI';
 import ProfileHeader from '../components/result/ProfileHeader';
@@ -31,7 +32,6 @@ function stripMarkdown(text: string): string {
 function generateProfilePDF(
   profile: VectorProfile,
   profileContent: typeof profiles[keyof typeof profiles],
-  overlay: CapitalOverlay,
   recognition: string,
   reframe: string,
   overlayDescription: string,
@@ -111,7 +111,7 @@ function generateProfilePDF(
   doc.setTextColor(26, 26, 26);
   doc.text(personaLabel, marginLeft, y);
   doc.text(capitalLabel, marginLeft + 60, y);
-  doc.text(overlay.stackmotiveTier, marginLeft + 120, y);
+  doc.text(getTierRecommendation(profile.persona, profile.capitalBand).tierName, marginLeft + 120, y);
   y += 10;
 
   // Divider
@@ -330,7 +330,7 @@ export default function ResultPage() {
           recognition = paragraphs[0];
         }
       }
-      generateProfilePDF(vectorProfile, profileContent, overlay, recognition, reframe, overlayDescription, answerPayload.lifeStage, isAdviserManaged);
+      generateProfilePDF(vectorProfile, profileContent, recognition, reframe, overlayDescription, answerPayload.lifeStage, isAdviserManaged);
     } finally {
       setIsGeneratingPdf(false);
     }
@@ -452,7 +452,7 @@ export default function ResultPage() {
           <p
             style={{
               fontSize: '14px',
-              color: 'var(--color-text-secondary)',
+              color: 'var(--color-text-primary)',
               lineHeight: 1.7,
               marginBottom: '12px',
             }}
@@ -465,7 +465,7 @@ export default function ResultPage() {
               color: 'var(--color-text-muted)',
             }}
           >
-            StackMotive tier for this profile: {overlay.stackmotiveTier}
+            StackMotive tier for this profile: {getTierRecommendation(vectorProfile.persona, vectorProfile.capitalBand).tierName}
           </p>
         </div>
 
