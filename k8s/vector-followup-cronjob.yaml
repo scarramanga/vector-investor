@@ -6,7 +6,8 @@ metadata:
   labels:
     app: vector-followup-job
 spec:
-  schedule: "0 21 * * *"  # 9am NZT (21:00 UTC)
+  schedule: "0 9 * * *"
+  timeZone: "Pacific/Auckland"
   concurrencyPolicy: Forbid
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
