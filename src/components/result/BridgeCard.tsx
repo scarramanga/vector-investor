@@ -52,8 +52,8 @@ export default function BridgeCard({
       </p>
       <p
         style={{
-          fontSize: '13px',
-          color: 'var(--color-text-muted)',
+          fontSize: '14px',
+          color: 'var(--color-text-secondary)',
           fontStyle: 'italic',
           lineHeight: 1.6,
           marginBottom: '16px',

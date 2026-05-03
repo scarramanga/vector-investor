@@ -20,7 +20,6 @@ export interface CapitalOverlay {
   band: CapitalBand;
   label: string;
   description: string;
-  stackmotiveTier: string;
   firstAction: string;
 }
 
@@ -120,42 +119,36 @@ export const capitalOverlays: Record<CapitalBand, CapitalOverlay> = {
     band: 'emerging',
     label: 'Emerging',
     description: 'Your primary asset right now is time. Small, consistent, philosophically coherent positions compound in ways that matter enormously over a long horizon. The first decision matters less than the framework and habit underneath it.',
-    stackmotiveTier: 'Observer',
     firstAction: 'Build your first watchlist around the asset classes you\'ve just been introduced to. See what institutional money is doing in those spaces — for free, with no commitment.'
   },
   'building': {
     band: 'building',
     label: 'Building',
     description: 'You have enough capital to diversify meaningfully across three or four asset classes. Decisions are starting to compound. A philosophy before a portfolio is the right sequence at this stage.',
-    stackmotiveTier: 'Navigator',
     firstAction: 'Run your existing positions through the confluence engine. Find out whether the signals underneath your decisions confirm what you\'ve been thinking.'
   },
   'established': {
     band: 'established',
     label: 'Established',
     description: 'Real portfolio construction decisions are now relevant. Asset class mix, currency exposure, rebalancing — these all matter at your capital level. A coherent framework is worth more here than it is at any earlier stage.',
-    stackmotiveTier: 'Operator',
     firstAction: 'Set alerts on positions you\'ve been watching. Let StackMotive tell you when something changes instead of monitoring it yourself.'
   },
   'concentrated': {
     band: 'concentrated',
     label: 'Concentrated',
     description: 'You have significant total wealth but it\'s concentrated — likely in property or a single asset class. The conversation isn\'t about starting from scratch. It\'s about understanding what that concentration means in the current environment and what pathways toward diversification look like without disrupting what you\'ve built.',
-    stackmotiveTier: 'Operator',
     firstAction: 'Build your portfolio manually in StackMotive — property included. See your full picture in one place for the first time. No decisions required. Just visibility.'
   },
   'sovereign-capital': {
     band: 'sovereign-capital',
     label: 'Sovereign Capital',
     description: 'You have meaningful deployable capital across diversified assets. The question at your level isn\'t orientation — it\'s whether your existing portfolio reflects a coherent philosophy about the current monetary environment, or whether it was assembled without one.',
-    stackmotiveTier: 'Sovereign',
     firstAction: 'Upload your full portfolio to StackMotive. The intelligence layer will surface what the institutional data says about your current positioning.'
   },
   'sovereign-concentrated': {
     band: 'sovereign-concentrated',
     label: 'Sovereign — Concentrated',
     description: 'You\'ve built significant wealth — likely property heavy, with managed funds running in the background. By conventional measures you\'ve done exceptionally well. The lens worth adding isn\'t about what you\'ve done. It\'s about whether what you\'ve built is positioned for the decade ahead as well as it was for the decade behind.',
-    stackmotiveTier: 'Sovereign',
     firstAction: 'Build your full picture in StackMotive — property, managed funds, and liquid positions together. Confidence comes from visibility. Start there.'
   }
 };
