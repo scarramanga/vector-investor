@@ -18,6 +18,12 @@ spec:
       containers:
         - name: vector-frontend
           image: registry.digitalocean.com/registry-docr-prod/vector-frontend:latest
+          env:
+            - name: STACKMOTIVE_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vector-secrets
+                  key: STACKMOTIVE_TOKEN
           ports:
             - containerPort: 80
           resources:
