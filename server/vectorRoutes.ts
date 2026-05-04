@@ -1,6 +1,7 @@
 import express from 'express';
 import { findProfileByEmail, createProfile, replaceProfile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
 import { sendWelcomeEmail } from './email.js';
+import { ingestVectorProfile } from './stackmotiveApi.js';
 import { verifyUnsubscribeToken } from './unsubscribe.js';
 import crypto from 'node:crypto';
 
@@ -86,6 +87,18 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       persona: body.persona,
       capitalBand: body.capitalBand,
       payload: body.payload,
+    });
+
+    // Ingest profile into StackMotive (non-blocking — don't fail the capture response)
+    ingestVectorProfile({
+      email,
+      vector_persona: body.persona,
+      vector_capital_band: body.capitalBand,
+      vector_philosophy: body.philosophy ?? null,
+      vector_recommended_tier: body.tierName,
+      vector_country: body.country ?? null,
+    }).catch((err) => {
+      console.error('[vectorRoutes] Ingest error:', err);
     });
 
     // Send welcome email (non-blocking — don't fail the request if email fails)
