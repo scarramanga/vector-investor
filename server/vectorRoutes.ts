@@ -101,12 +101,13 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       console.error('[vectorRoutes] Ingest error:', err);
     });
 
-    // Send welcome email (non-blocking — don't fail the request if email fails)
+    // Send welcome email with PDF attachment (non-blocking — don't fail the request if email fails)
     sendWelcomeEmail({
       email,
       persona: body.persona,
       capitalBand: body.capitalBand,
       tierName: body.tierName,
+      payload: body.payload,
     }).catch((err) => {
       console.error('[vectorRoutes] Welcome email error:', err);
     });

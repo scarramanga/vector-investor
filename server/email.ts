@@ -1,5 +1,7 @@
 import { Resend } from 'resend';
 import { buildUnsubscribeUrl } from './unsubscribe.js';
+import { generateProfilePdf } from './pdfGenerator.js';
+import type { PdfInput } from './pdfGenerator.js';
 
 let resend: Resend | null = null;
 
@@ -39,6 +41,7 @@ export async function sendWelcomeEmail(data: {
   persona: string;
   capitalBand: string;
   tierName: string;
+  payload?: Record<string, unknown>;
 }): Promise<boolean> {
   const client = getResend();
   if (!client) {
@@ -50,12 +53,43 @@ export async function sendWelcomeEmail(data: {
   const bandLabel = capitalBandLabel(data.capitalBand);
   const unsubscribeUrl = buildUnsubscribeUrl(data.email);
 
+  // Generate PDF attachment if payload is available
+  let pdfBase64: string | null = null;
+  if (data.payload) {
+    try {
+      const pdfInput: PdfInput = {
+        persona: data.persona,
+        capitalBand: data.capitalBand,
+        tierName: data.tierName,
+        payload: data.payload,
+      };
+      pdfBase64 = await generateProfilePdf(pdfInput);
+      if (pdfBase64) {
+        console.log(`[email] PDF attachment generated for ${data.email}`);
+      } else {
+        console.warn(`[email] PDF generation returned null for ${data.email} — sending without attachment`);
+      }
+    } catch (pdfErr) {
+      console.error(`[email] PDF generation failed for ${data.email}:`, pdfErr);
+    }
+  }
+
   try {
     await client.emails.send({
       from: 'Vector by Sovereign Signal <vector@sovereignassets.org>',
       to: [data.email],
       bcc: ['andy@sovereignassets.org'],
       subject: `Your Vector Profile: ${personaLabel}`,
+      ...(pdfBase64
+        ? {
+            attachments: [
+              {
+                filename: 'Your-Vector-Investor-Profile.pdf',
+                content: pdfBase64,
+              },
+            ],
+          }
+        : {}),
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 24px; color: #1a1a2e;">
           <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 8px;">Your Vector Profile</h1>
@@ -94,7 +128,7 @@ export async function sendWelcomeEmail(data: {
       `,
     });
 
-    console.log(`[email] Welcome email sent to ${data.email}`);
+    console.log(`[email] Welcome email sent to ${data.email}${pdfBase64 ? ' (with PDF attachment)' : ' (without PDF attachment)'}`);
     return true;
   } catch (err) {
     console.error('[email] Failed to send welcome email:', err);
