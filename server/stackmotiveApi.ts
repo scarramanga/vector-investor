@@ -49,6 +49,48 @@ export async function lookupStackMotiveUser(email: string): Promise<StackMotiveU
   }
 }
 
+/**
+ * Ingest a Vector profile into StackMotive so the /welcome page can find it.
+ * Non-blocking — logs success or failure but never throws.
+ */
+export async function ingestVectorProfile(data: {
+  email: string;
+  vector_persona: string;
+  vector_capital_band: string;
+  vector_philosophy: string | null;
+  vector_recommended_tier: string;
+  vector_country: string | null;
+}): Promise<boolean> {
+  const token = process.env['STACKMOTIVE_TOKEN'];
+  if (!token) {
+    console.warn('[stackmotive] STACKMOTIVE_TOKEN is not set. Skipping ingest.');
+    return false;
+  }
+
+  try {
+    const res = await fetch(`${STACKMOTIVE_BASE}/api/vector/ingest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(10000),
+    });
+
+    if (!res.ok) {
+      console.error(`[stackmotive] Ingest failed for ${data.email}: ${res.status} ${res.statusText}`);
+      return false;
+    }
+
+    console.log(`[stackmotive] Ingest successful for ${data.email}`);
+    return true;
+  } catch (err) {
+    console.error(`[stackmotive] Ingest error for ${data.email}:`, err);
+    return false;
+  }
+}
+
 export interface MacroData {
   cpi: unknown;
   treasury: unknown;
