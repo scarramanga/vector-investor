@@ -59,11 +59,11 @@ function formatPersonaLabel(persona: string): string {
 async function fetchAiContent(
   payload: Record<string, unknown>,
 ): Promise<{ recognition: string; reframe: string } | null> {
-  const apiKey = process.env['VECTOR_ANTHROPIC_API_KEY'] || '';
+  const apiKey = (process.env['VECTOR_ANTHROPIC_API_KEY'] || '').trim();
   const model = process.env['VECTOR_CLAUDE_MODEL'] || 'claude-haiku-4-5-20251001';
 
   if (!apiKey) {
-    console.warn('[pdfGenerator] VECTOR_ANTHROPIC_API_KEY not set. Using static content.');
+    console.warn('[pdfGenerator] VECTOR_ANTHROPIC_API_KEY not set or empty. Using static content.');
     return null;
   }
 
@@ -121,7 +121,7 @@ export async function generateProfilePdf(input: PdfInput): Promise<string | null
   const persona = input.persona as PersonaType;
   const capitalBand = input.capitalBand as CapitalBand;
   const payload = input.payload;
-  const tierName = input.tierName;
+  const tierName = input.tierName || '';
 
   const lifeStage = (payload['lifeStage'] as string) || '';
   const adviserManaged = payload['adviserManaged'] === true;
@@ -192,12 +192,14 @@ export async function generateProfilePdf(input: PdfInput): Promise<string | null
       lineHeight: number,
       color: [number, number, number],
     ): void {
+      const safeText = String(text ?? '');
+      if (!safeText) return;
       doc.setFontSize(fontSize);
       doc.setTextColor(color[0], color[1], color[2]);
-      const lines = doc.splitTextToSize(text, maxWidth) as string[];
+      const lines = doc.splitTextToSize(safeText, maxWidth) as string[];
       for (const line of lines) {
         checkPageBreak(lineHeight);
-        doc.text(line, x, y);
+        doc.text(String(line ?? ''), x, y);
         y += lineHeight;
       }
     }
@@ -264,10 +266,10 @@ export async function generateProfilePdf(input: PdfInput): Promise<string | null
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
-    const headlineLines = doc.splitTextToSize(headline, contentWidth) as string[];
+    const headlineLines = doc.splitTextToSize(headline || '', contentWidth) as string[];
     for (const line of headlineLines) {
       checkPageBreak(7);
-      doc.text(line, marginLeft, y);
+      doc.text(String(line ?? ''), marginLeft, y);
       y += 7;
     }
     y += 6;
