@@ -469,31 +469,16 @@ export default function ResultPage() {
           </p>
         </div>
 
-        {/* Section 6 — EducationCards */}
-        <EducationCards
-          persona={vectorProfile.persona}
-          accentColor={profileContent.accentColor}
-          animationDelay={750}
-        />
-
-        {/* Section 7 — BridgeCard */}
-        <BridgeCard
-          bridgeText={activeBridgeText}
-          bridgeCTA={profileContent.bridgeCTA}
-          firstAction={overlay.firstAction}
-          accentColor={profileContent.accentColor}
-          animationDelay={900}
-          vectorEmail={capturedEmail}
-        />
-
-        {/* Section 7.5 — Email Capture */}
-        {!emailCaptureComplete && answerPayload && (
+        {/* Section 6 — Email Capture */}
+        {answerPayload && (
           <EmailCapture
             persona={vectorProfile.persona}
             capitalBand={vectorProfile.capitalBand}
             accentColor={profileContent.accentColor}
             answerPayload={answerPayload}
-            animationDelay={1000}
+            animationDelay={700}
+            capturedEmail={capturedEmail}
+            emailCaptureComplete={emailCaptureComplete}
             onComplete={(_sessionToken, email, country, philosophy) => {
               setCapturedEmail(email);
               setCapturedCountry(country);
@@ -506,7 +491,24 @@ export default function ResultPage() {
           />
         )}
 
-        {/* Section 7.6 — Broker Recommendation (post-capture only, not for skip) */}
+        {/* Section 7 — EducationCards */}
+        <EducationCards
+          persona={vectorProfile.persona}
+          accentColor={profileContent.accentColor}
+          animationDelay={850}
+        />
+
+        {/* Section 8 — BridgeCard */}
+        <BridgeCard
+          bridgeText={activeBridgeText}
+          bridgeCTA={profileContent.bridgeCTA}
+          firstAction={overlay.firstAction}
+          accentColor={profileContent.accentColor}
+          animationDelay={1000}
+          vectorEmail={capturedEmail}
+        />
+
+        {/* Section 8.5 — Broker Recommendation (post-capture only, not for skip) */}
         {emailCaptureComplete && capturedEmail && capturedCountry && (
           <BrokerRecommendation
             country={capturedCountry}
