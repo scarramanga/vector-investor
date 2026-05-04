@@ -16,7 +16,7 @@ export default function BridgeCard({
   vectorEmail,
 }: BridgeCardProps) {
   const stackMotiveUrl = vectorEmail
-    ? `https://www.stackmotiveapp.com?vector_email=${encodeURIComponent(vectorEmail)}`
+    ? `https://app.stackmotiveapp.com/welcome?vector_email=${encodeURIComponent(vectorEmail)}`
     : 'https://www.stackmotiveapp.com';
   return (
     <div

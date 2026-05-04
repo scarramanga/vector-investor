@@ -25,6 +25,8 @@ interface EmailCaptureProps {
   accentColor: string;
   answerPayload: VectorAnswerPayload;
   animationDelay: number;
+  capturedEmail?: string | null;
+  emailCaptureComplete?: boolean;
   onComplete: (sessionToken: string | null, email: string | null, country: string | null, philosophy: string | null) => void;
   onSkip: () => void;
 }
@@ -52,6 +54,8 @@ export default function EmailCapture({
   accentColor,
   answerPayload,
   animationDelay,
+  capturedEmail,
+  emailCaptureComplete,
   onComplete,
   onSkip,
 }: EmailCaptureProps) {
@@ -129,6 +133,71 @@ export default function EmailCapture({
     if (result?.sessionToken) {
       onComplete(result.sessionToken, null, null, null);
     }
+    window.location.href = 'https://www.stackmotiveapp.com';
+  }
+
+  // Post-capture confirmation state
+  if (emailCaptureComplete && capturedEmail) {
+    return (
+      <div
+        style={{
+          animation: `fadeSlideUp 0.6s ease both`,
+          animationDelay: `${animationDelay}ms`,
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            borderRadius: 'var(--radius-lg)',
+            border: '1px solid var(--color-border)',
+            padding: '32px 24px',
+            textAlign: 'center',
+          }}
+        >
+          <p
+            style={{
+              fontSize: '15px',
+              color: 'var(--color-text-secondary)',
+              lineHeight: 1.7,
+              marginBottom: '24px',
+            }}
+          >
+            Your profile report is on its way. Check your inbox.
+          </p>
+          <a
+            href={`https://app.stackmotiveapp.com/welcome?vector_email=${encodeURIComponent(capturedEmail)}`}
+            style={{
+              display: 'inline-block',
+              width: '100%',
+              padding: '14px 24px',
+              fontSize: '15px',
+              fontWeight: 600,
+              color: 'var(--color-text-primary)',
+              backgroundColor: accentColor,
+              border: 'none',
+              borderRadius: 'var(--radius-md)',
+              textDecoration: 'none',
+              textAlign: 'center',
+              transition: 'opacity 0.2s ease',
+              boxSizing: 'border-box',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '0.9';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+          >
+            Go to StackMotive
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  // After skip — render nothing
+  if (emailCaptureComplete) {
+    return null;
   }
 
   // Edge Case 1 — Dual-profile UI
