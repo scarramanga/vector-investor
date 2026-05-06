@@ -23,7 +23,7 @@ export default function OrientationCard({
           fontSize: '11px',
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-secondary)',
           marginBottom: '20px',
         }}
       >

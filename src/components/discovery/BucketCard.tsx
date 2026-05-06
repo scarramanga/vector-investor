@@ -32,7 +32,7 @@ export default function BucketCard({ bucket, allocationRange, instrumentCategori
       <p
         style={{
           fontSize: '13px',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-primary)',
           lineHeight: 1.5,
           marginBottom: '10px',
         }}

@@ -56,7 +56,7 @@ export default function AllocationBar({ allocation }: AllocationBarProps) {
           <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-success)' }}>
             Foundation
           </p>
-          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '11px', color: 'var(--color-text-primary)' }}>
             {allocation.foundation}%
           </p>
         </div>
@@ -64,7 +64,7 @@ export default function AllocationBar({ allocation }: AllocationBarProps) {
           <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-primary)' }}>
             Growth
           </p>
-          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '11px', color: 'var(--color-text-primary)' }}>
             {allocation.growth}%
           </p>
         </div>
@@ -72,7 +72,7 @@ export default function AllocationBar({ allocation }: AllocationBarProps) {
           <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-warning)' }}>
             Conviction
           </p>
-          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+          <p style={{ fontSize: '11px', color: 'var(--color-text-primary)' }}>
             {allocation.conviction}%
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function AllocationBar({ allocation }: AllocationBarProps) {
       <p
         style={{
           fontSize: '12px',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-primary)',
           textAlign: 'center',
           marginTop: '16px',
           lineHeight: 1.5,

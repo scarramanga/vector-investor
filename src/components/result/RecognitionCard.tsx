@@ -29,7 +29,7 @@ export default function RecognitionCard({
           fontSize: '10px',
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-secondary)',
           marginBottom: '16px',
         }}
       >

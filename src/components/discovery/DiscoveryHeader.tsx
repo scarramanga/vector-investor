@@ -23,7 +23,7 @@ export default function DiscoveryHeader() {
           fontSize: '11px',
           textTransform: 'uppercase',
           letterSpacing: '2px',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-secondary)',
           marginBottom: '8px',
         }}
       >
@@ -32,7 +32,7 @@ export default function DiscoveryHeader() {
       <p
         style={{
           fontSize: '12px',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-primary)',
           lineHeight: 1.5,
         }}
       >

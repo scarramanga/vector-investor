@@ -193,7 +193,7 @@ export default function DiscoveryPage() {
           <p
             style={{
               fontSize: '11px',
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-secondary)',
               lineHeight: 1.6,
             }}
           >

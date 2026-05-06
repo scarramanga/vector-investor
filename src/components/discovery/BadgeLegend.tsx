@@ -26,7 +26,7 @@ export default function BadgeLegend() {
         <span
           style={{
             fontSize: '11px',
-            color: 'var(--color-text-muted)',
+            color: 'var(--color-text-secondary)',
           }}
         >
           Exchange:
@@ -39,7 +39,7 @@ export default function BadgeLegend() {
         <span
           style={{
             fontSize: '11px',
-            color: 'var(--color-text-muted)',
+            color: 'var(--color-text-primary)',
             marginLeft: '4px',
           }}
         >
@@ -59,7 +59,7 @@ export default function BadgeLegend() {
         <span
           style={{
             fontSize: '11px',
-            color: 'var(--color-text-muted)',
+            color: 'var(--color-text-secondary)',
           }}
         >
           Volatility:
@@ -70,7 +70,7 @@ export default function BadgeLegend() {
         <span
           style={{
             fontSize: '11px',
-            color: 'var(--color-text-muted)',
+            color: 'var(--color-text-primary)',
             marginLeft: '4px',
           }}
         >
