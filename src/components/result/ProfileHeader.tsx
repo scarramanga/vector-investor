@@ -25,7 +25,7 @@ export default function ProfileHeader({
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-secondary)',
           marginBottom: '16px',
         }}
       >

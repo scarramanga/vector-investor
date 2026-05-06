@@ -443,7 +443,7 @@ export default function ResultPage() {
               textTransform: 'uppercase',
               letterSpacing: '2px',
               fontWeight: 600,
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-secondary)',
               marginBottom: '16px',
             }}
           >
@@ -462,7 +462,7 @@ export default function ResultPage() {
           <p
             style={{
               fontSize: '12px',
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-primary)',
             }}
           >
             StackMotive tier for this profile: {getTierRecommendation(vectorProfile.persona, vectorProfile.capitalBand).tierName}
@@ -573,7 +573,7 @@ export default function ResultPage() {
               padding: '12px 24px',
               fontSize: '14px',
               fontWeight: 500,
-              color: isGeneratingPdf ? 'var(--color-text-muted)' : 'var(--color-text-primary)',
+              color: isGeneratingPdf ? 'var(--color-text-secondary)' : 'var(--color-text-primary)',
               backgroundColor: 'var(--color-surface)',
               border: '1px solid var(--color-border)',
               borderRadius: 'var(--radius-md)',
@@ -582,7 +582,7 @@ export default function ResultPage() {
               opacity: isGeneratingPdf ? 0.7 : 1,
             }}
             onMouseEnter={(e) => {
-              if (!isGeneratingPdf) e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+              if (!isGeneratingPdf) e.currentTarget.style.borderColor = 'var(--color-text-secondary)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--color-border)';
@@ -604,7 +604,7 @@ export default function ResultPage() {
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-text-muted)';
+              e.currentTarget.style.borderColor = 'var(--color-text-secondary)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.borderColor = 'var(--color-border)';

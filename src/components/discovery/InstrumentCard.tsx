@@ -88,7 +88,7 @@ export default function InstrumentCard({
         <span
           style={{
             fontSize: '11px',
-            color: 'var(--color-text-muted)',
+            color: 'var(--color-text-secondary)',
           }}
         >
           Available on:

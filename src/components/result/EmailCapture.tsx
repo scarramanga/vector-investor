@@ -222,7 +222,7 @@ export default function EmailCapture({
               fontSize: '11px',
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-secondary)',
               marginBottom: '16px',
             }}
           >
@@ -248,7 +248,7 @@ export default function EmailCapture({
                 padding: '16px',
               }}
             >
-              <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '4px' }}>
+              <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>
                 Original profile — {new Date(existingProfile.createdAt).toLocaleDateString()}
               </p>
               <p style={{ fontSize: '14px', color: 'var(--color-text-primary)', fontWeight: 500 }}>
@@ -264,7 +264,7 @@ export default function EmailCapture({
                 padding: '16px',
               }}
             >
-              <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '4px' }}>
+              <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '4px' }}>
                 New profile — today
               </p>
               <p style={{ fontSize: '14px', color: 'var(--color-text-primary)', fontWeight: 500 }}>
@@ -390,7 +390,7 @@ export default function EmailCapture({
             style={{
               display: 'block',
               fontSize: '13px',
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-secondary)',
               marginBottom: '6px',
             }}
           >
@@ -403,7 +403,7 @@ export default function EmailCapture({
               width: '100%',
               padding: '12px 16px',
               fontSize: '15px',
-              color: country ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+              color: country ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
               backgroundColor: 'var(--color-bg)',
               border: '1px solid var(--color-border)',
               borderRadius: 'var(--radius-md)',
@@ -448,7 +448,7 @@ export default function EmailCapture({
           <p
             style={{
               fontSize: '13px',
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-primary)',
               lineHeight: 1.6,
               fontStyle: 'italic',
             }}
@@ -499,7 +499,7 @@ export default function EmailCapture({
               border: 'none',
               padding: 0,
               fontSize: '13px',
-              color: 'var(--color-text-muted)',
+              color: 'var(--color-text-primary)',
               cursor: 'pointer',
               textDecoration: 'none',
             }}

@@ -34,7 +34,7 @@ export default function BridgeCard({
           fontSize: '10px',
           textTransform: 'uppercase',
           letterSpacing: '0.1em',
-          color: 'var(--color-text-muted)',
+          color: 'var(--color-text-secondary)',
           marginBottom: '16px',
         }}
       >
@@ -53,7 +53,7 @@ export default function BridgeCard({
       <p
         style={{
           fontSize: '14px',
-          color: 'var(--color-text-secondary)',
+          color: 'var(--color-text-primary)',
           fontStyle: 'italic',
           lineHeight: 1.6,
           marginBottom: '16px',
@@ -64,7 +64,7 @@ export default function BridgeCard({
       <p
         style={{
           fontSize: '13px',
-          color: 'var(--color-text-secondary)',
+          color: 'var(--color-text-primary)',
           fontStyle: 'italic',
           lineHeight: 1.6,
           marginBottom: '24px',
@@ -106,18 +106,6 @@ export default function BridgeCard({
           }}
         >
           {bridgeCTA}
-        </a>
-        <a
-          href="https://thesovsignal.substack.com/about"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            fontSize: '12px',
-            color: 'var(--color-text-muted)',
-            textDecoration: 'none',
-          }}
-        >
-          Learn more about The Sovereign Signal →
         </a>
       </div>
     </div>
