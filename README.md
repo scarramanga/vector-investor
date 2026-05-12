@@ -71,3 +71,32 @@ export default defineConfig([
   },
 ])
 ```
+
+## Deploying to production
+
+The `vector-frontend` container image is published to DigitalOcean Container Registry (DOCR) under `registry.digitalocean.com/docr-prod/vector-frontend`. The same image is consumed by two workloads in the `vector-prod` namespace: the `vector-frontend` Deployment and the `vector-followup-job` CronJob. Both manifests must reference the same image tag.
+
+Production images are pinned to the **short git SHA** at build time (not `:latest`). This makes rollouts deterministic and rollbacks unambiguous.
+
+> **Warning — order of operations matters.** The SHA in the manifest must match the SHA of an image that has already been built and pushed to DOCR. Always build and push **first**, then update the manifests, then apply. If the manifests are updated and applied before the image is pushed, `kubectl rollout status` will hang on `ImagePullBackOff`.
+
+### Build & deploy
+
+```bash
+SHA=$(git rev-parse --short HEAD)
+
+# 1. Build and push the image (do this BEFORE editing manifests)
+docker build --platform linux/amd64 \
+  -t registry.digitalocean.com/docr-prod/vector-frontend:$SHA .
+docker push registry.digitalocean.com/docr-prod/vector-frontend:$SHA
+
+# 2. Update both manifests to reference the new tag
+#      k8s/deployment.yaml              -> image: ...:$SHA
+#      k8s/vector-followup-cronjob.yaml -> image: ...:$SHA
+# Commit the manifest change to the same PR as any code change.
+
+# 3. Apply
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/vector-followup-cronjob.yaml
+kubectl rollout status deployment vector-frontend -n vector-prod
+```
