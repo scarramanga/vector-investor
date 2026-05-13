@@ -97,6 +97,14 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       vector_philosophy: body.philosophy ?? null,
       vector_recommended_tier: body.tierName,
       vector_country: body.country ?? null,
+      vector_time_horizon: body.payload['timeHorizon'] as string,
+      vector_friction_point: body.payload['frictionPoint'] as string,
+      vector_desired_outcome: body.payload['desiredOutcome'] as string,
+      vector_macro_awareness: body.payload['macroAwareness'] as string,
+      vector_action_history: body.payload['actionHistory'] as string,
+      vector_conviction_driver: body.payload['convictionDriver'] as string,
+      vector_life_stage: body.payload['lifeStage'] as string,
+      vector_adviser_managed: body.payload['adviserManaged'] as boolean,
     }).catch((err) => {
       console.error('[vectorRoutes] Ingest error:', err);
     });
