@@ -60,6 +60,14 @@ export async function ingestVectorProfile(data: {
   vector_philosophy: string | null;
   vector_recommended_tier: string;
   vector_country: string | null;
+  vector_time_horizon: string;
+  vector_friction_point: string;
+  vector_desired_outcome: string;
+  vector_macro_awareness: string;
+  vector_action_history: string;
+  vector_conviction_driver: string;
+  vector_life_stage: string;
+  vector_adviser_managed: boolean;
 }): Promise<boolean> {
   const token = process.env['STACKMOTIVE_TOKEN'];
   if (!token) {
