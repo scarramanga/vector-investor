@@ -492,7 +492,7 @@ export default function ResultPage() {
         )}
 
         {/* Section 6.5 - What happens next (post-capture only) */}
-        {emailCaptureComplete && capturedEmail && (
+        {emailCaptureComplete && capturedEmail && capturedCountry && (
           <div
             style={{
               animation: 'fadeSlideUp 0.6s ease both',
