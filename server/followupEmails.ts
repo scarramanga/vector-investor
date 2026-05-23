@@ -95,8 +95,8 @@ export async function sendEmail1TheMirror(data: {
     ${p('Here is what those signals are showing right now.')}
     ${signalHtml}
     ${p('This is the kind of intelligence StackMotive surfaces every morning, filtered to your philosophy. Not a firehose. Not generic market news. The specific signals that matter to the way you think.')}
-    ${p(`If you want to see it in context of your own holdings, your starting point on StackMotive is ${data.tier}.`)}
-    ${ctaButton(`Start on ${data.tier}`)}
+    ${p('If you want to see it in context of your own holdings, StackMotive filters every signal through your philosophy and your positions.')}
+    ${ctaButton('Explore StackMotive')}
     ${p('You can also reply to this email if you have questions. It comes to me directly.')}
     ${signoff(unsubscribeUrl)}
   `);
@@ -144,13 +144,13 @@ export async function sendEmail2TheGap(data: {
       ${p('That is what StackMotive does.')}
       ${p('Your holdings can be loaded five ways. Stack AI conversation -- just tell it what you hold. Sharesies CSV export. A screenshot of your portfolio. IBKR direct connection. Manual entry. Most people are done in under five minutes.')}
       ${p('Once your positions are in, your morning briefing runs every day before markets open. You check it once. You know what matters. You get on with your day.')}
-      ${ctaButton(`Start on ${data.tier}`)}
+      ${ctaButton('Explore StackMotive')}
       ${signoff(unsubscribeUrl)}
     `;
   } else if (!data.smUser.has_positions) {
     // StackMotive account, no positions
     body = `
-      ${p(`A week ago you mapped as ${personaLabel} on Vector. You are on ${data.smUser.tier} on StackMotive.`)}
+      ${p(`A week ago you mapped as ${personaLabel} on Vector. You signed up for StackMotive.`)}
       ${p(`The platform cannot do its job until your holdings are in it. It is not about features -- it is about seeing your complete picture in one place, filtered through your ${data.philosophy} lens.`)}
       ${p('Your holdings can be loaded five ways. Stack AI conversation -- just tell it what you hold. Sharesies CSV export. A screenshot of your portfolio. IBKR direct connection. Manual entry. Most people are done in under five minutes.')}
       ${p('Once your positions are in, your morning briefing runs every day before markets open. You check it once. You know what matters. You get on with your day.')}
@@ -159,9 +159,8 @@ export async function sendEmail2TheGap(data: {
   } else {
     // StackMotive account, has positions
     body = `
-      ${p(`A week ago you mapped as ${personaLabel} on Vector. You are on ${data.smUser.tier} on StackMotive with positions loaded.`)}
+      ${p(`A week ago you mapped as ${personaLabel} on Vector. You are on StackMotive with positions loaded.`)}
       ${p('The alert system removes the need to watch the market constantly. Price movements, volume spikes, confluence signals, stop loss triggers. Set your parameters, the platform watches.')}
-      ${p('Each day you can preview the next tier up for free -- starting at 5 minutes, growing by a minute each consecutive day you use it. If you want full access to a higher tier for the rest of this month, you can unlock it for 10% of the monthly price. No subscription change required.')}
       ${signoff(unsubscribeUrl)}
     `;
   }
@@ -206,7 +205,7 @@ export async function sendEmail3TheDecision(data: {
     // No StackMotive account
     body = `
       ${p('Two weeks since you completed Vector.')}
-      ${p(`Your profile is still there. ${personaLabel}, ${data.philosophy} lens, ${data.tier} as your starting point. The intelligence it maps to is running every day.`)}
+      ${p(`Your profile is still there. ${personaLabel}, ${data.philosophy} lens. The intelligence it maps to is running every day.`)}
       ${p('One direct question: what is in the way?')}
       ${p('If it is time, Stack AI can load your portfolio in a conversation. Five minutes. You tell it what you hold, it does the rest.')}
       ${p('If it is uncertainty about whether StackMotive is the right fit for how you invest, reply to this email and I will give you an honest answer. Not a sales pitch. If it is not right for you I will tell you that too.')}
