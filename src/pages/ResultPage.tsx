@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import type { VectorProfile } from '../types';
 import { profiles, capitalOverlays, capitalBandLabels, personaEducationCards, educationConcepts, preservationCapitalOverlays, adviserManagedProfiles } from '../data/profiles';
-import { getTierRecommendation } from '../data/tierRecommendations';
 
 import { buildAnswerPayload } from '../data/scoring';
 import { fetchProfileNarrative, fetchPdfNarrative } from '../services/vectorAI';
@@ -104,14 +103,12 @@ function generateProfilePDF(
   doc.setTextColor(51, 51, 51);
   doc.text('PROFILE', marginLeft, y);
   doc.text('CAPITAL POSITION', marginLeft + 60, y);
-  doc.text('STACKMOTIVE TIER', marginLeft + 120, y);
   y += 6;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(11);
   doc.setTextColor(26, 26, 26);
   doc.text(personaLabel, marginLeft, y);
   doc.text(capitalLabel, marginLeft + 60, y);
-  doc.text(getTierRecommendation(profile.persona, profile.capitalBand).tierName, marginLeft + 120, y);
   y += 10;
 
   // Divider
@@ -458,14 +455,6 @@ export default function ResultPage() {
             }}
           >
             {overlayDescription}
-          </p>
-          <p
-            style={{
-              fontSize: '12px',
-              color: 'var(--color-text-primary)',
-            }}
-          >
-            StackMotive tier for this profile: {getTierRecommendation(vectorProfile.persona, vectorProfile.capitalBand).tierName}
           </p>
         </div>
 
