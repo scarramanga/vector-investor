@@ -425,43 +425,6 @@ export default function EmailCapture({
           </select>
         </div>
 
-        {/* Tier recommendation */}
-        <div
-          style={{
-            backgroundColor: 'var(--color-bg)',
-            borderRadius: 'var(--radius-md)',
-            padding: '16px',
-            marginBottom: '24px',
-          }}
-        >
-          <p
-            style={{
-              fontSize: '14px',
-              color: 'var(--color-text-secondary)',
-              lineHeight: 1.6,
-              marginBottom: '8px',
-            }}
-          >
-            Based on your profile, <strong style={{ color: 'var(--color-text-primary)' }}>{tierRec.description}</strong> is
-            your starting point on StackMotive.
-          </p>
-          <p
-            style={{
-              fontSize: '13px',
-              color: 'var(--color-text-primary)',
-              lineHeight: 1.6,
-              fontStyle: 'italic',
-            }}
-          >
-            {tierRec.tierName === 'Observer' &&
-              'You get a free 5-minute preview of Navigator every day. If you want full access to Navigator for the rest of this month, unlock it for NZD $2.90. No commitment.'}
-            {tierRec.tierName === 'Navigator' &&
-              'You get a free 5-minute preview of Operator every day. If you want full access to Operator for the rest of this month, unlock it for NZD $9.90. No commitment.'}
-            {tierRec.tierName === 'Operator' &&
-              'You get a free 5-minute preview of Sovereign every day. If you want full access to Sovereign for the rest of this month, unlock it for NZD $24.90. No commitment.'}
-          </p>
-        </div>
-
         {/* Submit button */}
         <button
           onClick={() => handleSubmit()}
