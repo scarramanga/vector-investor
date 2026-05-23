@@ -98,21 +98,16 @@ export async function sendWelcomeEmail(data: {
           <div style="background: #f8f9fa; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
             <p style="font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #666; margin-bottom: 12px;">INVESTOR PROFILE SUMMARY</p>
             <p style="font-size: 16px; margin-bottom: 4px;"><strong>Profile:</strong> ${personaLabel}</p>
-            <p style="font-size: 16px; margin-bottom: 4px;"><strong>Capital Position:</strong> ${bandLabel}</p>
-            <p style="font-size: 16px;"><strong>Recommended Tier:</strong> ${data.tierName}</p>
+            <p style="font-size: 16px;"><strong>Capital Position:</strong> ${bandLabel}</p>
           </div>
 
           <p style="font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 16px;">
             Thank you for completing Vector. Your profile report is attached to this email or available for download on the results screen.
           </p>
 
-          <p style="font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 16px;">
-            Based on your profile, <strong>${data.tierName}</strong> is your starting point on StackMotive. Each day you can preview the next tier up for free — starting at 5 minutes, growing by a minute each consecutive day you use it. If you want full access to a higher tier for the rest of this month, you can unlock it for 10% of the monthly price. No subscription change required.
-          </p>
-
           <div style="text-align: center; margin: 32px 0;">
             <a href="https://www.stackmotiveapp.com" style="display: inline-block; padding: 14px 32px; font-size: 15px; font-weight: 600; color: #fff; background-color: #6366f1; border-radius: 8px; text-decoration: none;">
-              Start on ${data.tierName}
+              Get started on StackMotive
             </a>
           </div>
 
