@@ -491,7 +491,7 @@ export default function ResultPage() {
           />
         )}
 
-        {/* Section 6.5 — What happens next (post-capture only) */}
+        {/* Section 6.5 - What happens next (post-capture only) */}
         {emailCaptureComplete && capturedEmail && (
           <div
             style={{
@@ -531,7 +531,7 @@ export default function ResultPage() {
                     lineHeight: 1.7,
                   }}
                 >
-                  Your Vector profile — persona, philosophy, and capital band — is sent to
+                  Your Vector profile (persona, philosophy, and capital band) is sent to
                   StackMotive automatically. When you sign up, StackMotive uses it to orient your
                   experience from day one.
                 </p>
