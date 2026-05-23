@@ -491,6 +491,129 @@ export default function ResultPage() {
           />
         )}
 
+        {/* Section 6.5 - What happens next (post-capture only) */}
+        {emailCaptureComplete && capturedEmail && capturedCountry && (
+          <div
+            style={{
+              animation: 'fadeSlideUp 0.6s ease both',
+              animationDelay: '750ms',
+            }}
+          >
+            <p
+              style={{
+                fontSize: '14px',
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                fontWeight: 600,
+                color: 'var(--color-text-secondary)',
+                marginBottom: '24px',
+              }}
+            >
+              WHAT HAPPENS NEXT
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Step 1. Your profile arrives in StackMotive
+                </p>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  Your Vector profile (persona, philosophy, and capital band) is sent to
+                  StackMotive automatically. When you sign up, StackMotive uses it to orient your
+                  experience from day one.
+                </p>
+              </div>
+
+              <div>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Step 2. Foundry builds your Conviction Register
+                </p>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  As you engage with StackMotive, Foundry tracks which signals speak to your
+                  declared philosophy. Over time it builds a Conviction Register, a structured
+                  record of where your thesis is strengthening, where it is being tested, and
+                  where it has gaps.
+                </p>
+              </div>
+
+              <div>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Step 3. Your Investment Constitution takes shape
+                </p>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  When your Conviction Register has enough depth, StackMotive can draft an
+                  Investment Constitution, a formal document capturing your thesis, your
+                  qualifying criteria for each theme, and your governance principles for capital
+                  allocation.
+                </p>
+              </div>
+
+              <div>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--color-text-primary)',
+                    marginBottom: '6px',
+                  }}
+                >
+                  Step 4. Execution follows conviction
+                </p>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: 'var(--color-text-secondary)',
+                    lineHeight: 1.7,
+                  }}
+                >
+                  At Operator tier and above, your Constitution connects to execution parameters.
+                  Your conviction depth drives suggested position-level rules. You review, tune,
+                  and confirm before anything goes live.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Section 7 — EducationCards */}
         <EducationCards
           persona={vectorProfile.persona}
