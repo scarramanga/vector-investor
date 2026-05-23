@@ -121,7 +121,6 @@ export async function generateProfilePdf(input: PdfInput): Promise<string | null
   const persona = input.persona as PersonaType;
   const capitalBand = input.capitalBand as CapitalBand;
   const payload = input.payload;
-  const tierName = input.tierName || '';
 
   const lifeStage = (payload['lifeStage'] as string) || '';
   const adviserManaged = payload['adviserManaged'] === true;
@@ -246,14 +245,12 @@ export async function generateProfilePdf(input: PdfInput): Promise<string | null
     doc.setTextColor(51, 51, 51);
     doc.text('PROFILE', marginLeft, y);
     doc.text('CAPITAL POSITION', marginLeft + 60, y);
-    doc.text('STACKMOTIVE TIER', marginLeft + 120, y);
     y += 6;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(11);
     doc.setTextColor(26, 26, 26);
     doc.text(personaLabel, marginLeft, y);
     doc.text(capitalLabel, marginLeft + 60, y);
-    doc.text(tierName, marginLeft + 120, y);
     y += 10;
 
     // Divider
