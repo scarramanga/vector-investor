@@ -133,7 +133,11 @@ export default function EmailCapture({
     if (result?.sessionToken) {
       onComplete(result.sessionToken, null, null, null);
     }
-    window.location.href = 'https://www.stackmotiveapp.com';
+    const trimmedEmail = email.trim().toLowerCase();
+    const welcomeUrl = trimmedEmail
+      ? `https://app.stackmotiveapp.com/welcome?vector_email=${encodeURIComponent(trimmedEmail)}`
+      : 'https://app.stackmotiveapp.com/welcome';
+    window.location.href = welcomeUrl;
   }
 
   // Post-capture confirmation state
