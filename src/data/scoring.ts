@@ -147,3 +147,120 @@ export function buildAnswerPayload(profile: VectorProfile): VectorAnswerPayload 
     adviserManaged: q10 === 'E' || q11 === 'E',
   };
 }
+
+// ---------------------------------------------------------------------------
+// Independent philosophy scoring
+// ---------------------------------------------------------------------------
+
+type PhilosophyScores = Record<string, number>;
+
+const PHILOSOPHIES = [
+  'Capital Preservation',
+  'Value and Patience',
+  'Rules-Based Systematic',
+  'Macro and Hard Assets',
+  'Disruptive Growth',
+] as const;
+
+const ZERO_SCORES: PhilosophyScores = {
+  'Capital Preservation': 0,
+  'Value and Patience': 0,
+  'Rules-Based Systematic': 0,
+  'Macro and Hard Assets': 0,
+  'Disruptive Growth': 0,
+};
+
+const TIME_HORIZON_SCORES: Record<string, PhilosophyScores> = {
+  long:      { 'Value and Patience': 2, 'Disruptive Growth': 2, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  medium:    { 'Value and Patience': 1, 'Disruptive Growth': 1, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+  short:     { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 2 },
+  undefined: { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+};
+
+const MACRO_AWARENESS_SCORES: Record<string, PhilosophyScores> = {
+  high:     { 'Value and Patience': 0, 'Disruptive Growth': 1, 'Macro and Hard Assets': 3, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+  moderate: { 'Value and Patience': 0, 'Disruptive Growth': 1, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+  low:      { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 1, 'Capital Preservation': 1 },
+  none:     { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 1 },
+};
+
+const CONVICTION_DRIVER_SCORES: Record<string, PhilosophyScores> = {
+  social:      { 'Value and Patience': 2, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 1 },
+  thesis:      { 'Value and Patience': 0, 'Disruptive Growth': 2, 'Macro and Hard Assets': 3, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  analysis:    { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 3, 'Capital Preservation': 0 },
+  instinct:    { 'Value and Patience': 0, 'Disruptive Growth': 3, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  adviser_led: { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 1, 'Capital Preservation': 3 },
+};
+
+const DESIRED_OUTCOME_SCORES: Record<string, PhilosophyScores> = {
+  'Wants a clear starting point':                                                  { 'Value and Patience': 0, 'Disruptive Growth': 1, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 2, 'Capital Preservation': 0 },
+  'Wants a framework for thinking about money':                                    { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 2, 'Capital Preservation': 0 },
+  'Wants confirmation that current approach is sound':                             { 'Value and Patience': 2, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 1 },
+  'Wants perspective on how their situation maps to a coherent philosophy':        { 'Value and Patience': 0, 'Disruptive Growth': 1, 'Macro and Hard Assets': 2, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+};
+
+const LIFE_STAGE_SCORES: Record<string, PhilosophyScores> = {
+  early_career: { 'Value and Patience': 0, 'Disruptive Growth': 2, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  mid_career:   { 'Value and Patience': 1, 'Disruptive Growth': 1, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+  established:  { 'Value and Patience': 2, 'Disruptive Growth': 0, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 1, 'Capital Preservation': 1 },
+};
+
+const FRICTION_POINT_SCORES: Record<string, PhilosophyScores> = {
+  'Knowledge gap is the primary blocker':                  { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  'Has conviction but no clear vehicle or starting point': { 'Value and Patience': 0, 'Disruptive Growth': 1, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  'Time and complexity crowd out action':                  { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+  'No perceived urgency to change':                        { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 1 },
+};
+
+const ACTION_HISTORY_SCORES: Record<string, PhilosophyScores> = {
+  inactive:      { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 1 },
+  active:        { 'Value and Patience': 0, 'Disruptive Growth': 1, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  research_only: { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 1, 'Capital Preservation': 0 },
+  new:           { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+};
+
+const Q2_SCORES: Record<string, PhilosophyScores> = {
+  A: { 'Value and Patience': 2, 'Disruptive Growth': 0, 'Macro and Hard Assets': 0, 'Rules-Based Systematic': 0, 'Capital Preservation': 1 },
+  B: { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 2, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  C: { 'Value and Patience': 1, 'Disruptive Growth': 0, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+  D: { 'Value and Patience': 0, 'Disruptive Growth': 0, 'Macro and Hard Assets': 1, 'Rules-Based Systematic': 0, 'Capital Preservation': 0 },
+};
+
+function addScores(totals: PhilosophyScores, layer: PhilosophyScores | undefined): void {
+  if (!layer) return;
+  for (const key of PHILOSOPHIES) {
+    totals[key] += layer[key] ?? 0;
+  }
+}
+
+export function calculatePhilosophy(payload: VectorAnswerPayload): string {
+  if (payload.adviserManaged) return 'Capital Preservation';
+  if (payload.lifeStage === 'preservation') return 'Capital Preservation';
+
+  const scores: PhilosophyScores = { ...ZERO_SCORES };
+
+  addScores(scores, TIME_HORIZON_SCORES[payload.timeHorizon]);
+  addScores(scores, MACRO_AWARENESS_SCORES[payload.macroAwareness]);
+  addScores(scores, CONVICTION_DRIVER_SCORES[payload.convictionDriver]);
+  addScores(scores, DESIRED_OUTCOME_SCORES[payload.desiredOutcome]);
+  addScores(scores, LIFE_STAGE_SCORES[payload.lifeStage]);
+  addScores(scores, FRICTION_POINT_SCORES[payload.frictionPoint]);
+  addScores(scores, ACTION_HISTORY_SCORES[payload.actionHistory]);
+
+  const q2 = payload.answers['q2' as keyof typeof payload.answers];
+  if (q2) {
+    addScores(scores, Q2_SCORES[q2]);
+  }
+
+  let best: typeof PHILOSOPHIES[number] = PHILOSOPHIES[0];
+  let bestScore = scores[best];
+  for (let i = 1; i < PHILOSOPHIES.length; i++) {
+    const p = PHILOSOPHIES[i];
+    if (scores[p] > bestScore) {
+      best = p;
+      bestScore = scores[p];
+    }
+  }
+
+  return best;
+}
