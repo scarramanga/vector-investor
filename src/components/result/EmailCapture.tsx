@@ -2,22 +2,9 @@ import { useState } from 'react';
 import type { PersonaType, CapitalBand } from '../../types';
 import type { VectorAnswerPayload } from '../../types/vector';
 import { getTierRecommendation } from '../../data/tierRecommendations';
+import { calculatePhilosophy } from '../../data/scoring';
 import { captureEmail, keepExistingProfile, skipCapture } from '../../services/vectorCapture';
 import type { CaptureResponse } from '../../services/vectorCapture';
-
-// Philosophy is a recommended default based on persona and life-stage, not a permanent
-// assignment. Users can override their philosophy in StackMotive via the philosophy selection UI.
-const PERSONA_PHILOSOPHY_MAP: Record<string, string> = {
-  'awakening': 'Macro and Hard Assets',
-  'gut-trader': 'Disruptive Growth',
-  'swamped-analyst': 'Rules-Based Systematic',
-  'comfortable-blind-spot': 'Value and Patience',
-};
-
-function getPhilosophy(persona: PersonaType, lifeStage: string | undefined): string {
-  if (lifeStage === 'preservation') return 'Capital Preservation';
-  return PERSONA_PHILOSOPHY_MAP[persona] || persona;
-}
 
 interface EmailCaptureProps {
   persona: PersonaType;
@@ -67,7 +54,7 @@ export default function EmailCapture({
   const [showDualProfile, setShowDualProfile] = useState(false);
 
   const tierRec = getTierRecommendation(persona, capitalBand);
-  const philosophy = getPhilosophy(persona, answerPayload.lifeStage);
+  const philosophy = calculatePhilosophy(answerPayload);
 
   function isValidEmail(value: string): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
