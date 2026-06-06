@@ -5,6 +5,7 @@ import { getTierRecommendation } from '../../data/tierRecommendations';
 import { calculatePhilosophy } from '../../data/scoring';
 import { captureEmail, keepExistingProfile, skipCapture } from '../../services/vectorCapture';
 import type { CaptureResponse } from '../../services/vectorCapture';
+import { trackEmailCaptured } from '../../services/analytics';
 
 interface EmailCaptureProps {
   persona: PersonaType;
@@ -90,6 +91,7 @@ export default function EmailCapture({
     }
 
     if (result.status === 'captured') {
+      trackEmailCaptured(persona);
       onComplete(result.sessionToken ?? null, email.trim().toLowerCase(), country || null, philosophy);
       return;
     }

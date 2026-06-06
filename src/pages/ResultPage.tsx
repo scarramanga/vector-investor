@@ -6,6 +6,7 @@ import { profiles, capitalOverlays, capitalBandLabels, personaEducationCards, ed
 
 import { buildAnswerPayload } from '../data/scoring';
 import { fetchProfileNarrative, fetchPdfNarrative } from '../services/vectorAI';
+import { trackQuizCompleted } from '../services/analytics';
 import ProfileHeader from '../components/result/ProfileHeader';
 import RecognitionCard from '../components/result/RecognitionCard';
 import ReframeCard from '../components/result/ReframeCard';
@@ -273,6 +274,12 @@ export default function ResultPage() {
     () => (vectorProfile ? buildAnswerPayload(vectorProfile) : null),
     [vectorProfile],
   );
+
+  useEffect(() => {
+    if (vectorProfile) {
+      trackQuizCompleted(vectorProfile.persona, vectorProfile.capitalBand);
+    }
+  }, [vectorProfile]);
 
   useEffect(() => {
     if (!answerPayload) return;

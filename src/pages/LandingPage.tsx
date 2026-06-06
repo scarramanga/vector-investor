@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/layout/PageWrapper';
+import { trackQuizStarted } from '../services/analytics';
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ export default function LandingPage() {
         </div>
 
         <button
-          onClick={() => navigate('/quiz')}
+          onClick={() => { trackQuizStarted(); navigate('/quiz'); }}
           style={{
             padding: '0.875rem 2.5rem',
             fontSize: '1rem',
