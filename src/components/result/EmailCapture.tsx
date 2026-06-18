@@ -3,7 +3,7 @@ import type { PersonaType, CapitalBand } from '../../types';
 import type { VectorAnswerPayload } from '../../types/vector';
 import { getTierRecommendation } from '../../data/tierRecommendations';
 import { calculatePhilosophy } from '../../data/scoring';
-import { captureEmail, keepExistingProfile, skipCapture } from '../../services/vectorCapture';
+import { captureEmail, keepExistingProfile } from '../../services/vectorCapture';
 import type { CaptureResponse } from '../../services/vectorCapture';
 import { trackEmailCaptured } from '../../services/analytics';
 
@@ -45,7 +45,7 @@ export default function EmailCapture({
   capturedEmail,
   emailCaptureComplete,
   onComplete,
-  onSkip,
+  onSkip: _onSkip,
 }: EmailCaptureProps) {
   const [email, setEmail] = useState('');
   const [country, setCountry] = useState<Country | ''>('');
@@ -110,23 +110,6 @@ export default function EmailCapture({
     } else {
       setError('Something went wrong. Please try again.');
     }
-  }
-
-  async function handleSkip() {
-    const result = await skipCapture({
-      persona,
-      capitalBand,
-      payload: answerPayload as unknown as Record<string, unknown>,
-    });
-    onSkip();
-    if (result?.sessionToken) {
-      onComplete(result.sessionToken, null, null, null);
-    }
-    const trimmedEmail = email.trim().toLowerCase();
-    const welcomeUrl = trimmedEmail
-      ? `https://app.stackmotiveapp.com/welcome?vector_email=${encodeURIComponent(trimmedEmail)}`
-      : 'https://app.stackmotiveapp.com/welcome';
-    window.location.href = welcomeUrl;
   }
 
   // Post-capture confirmation state
@@ -343,8 +326,9 @@ export default function EmailCapture({
             marginBottom: '24px',
           }}
         >
-          Want us to send you your profile report and keep you updated with intelligence relevant to
-          your philosophy? Enter your email below. No spam. Unsubscribe any time.
+          Your profile is ready to load into StackMotive. Enter your email and the platform will know
+          your philosophy, your capital position, and your conviction framework before you ask your
+          first question.
         </p>
 
         {/* Email input */}
@@ -446,23 +430,7 @@ export default function EmailCapture({
           </p>
         )}
 
-        {/* Skip link */}
-        <div style={{ textAlign: 'center' }}>
-          <button
-            onClick={handleSkip}
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              fontSize: '13px',
-              color: 'var(--color-text-primary)',
-              cursor: 'pointer',
-              textDecoration: 'none',
-            }}
-          >
-            No thanks, take me to StackMotive
-          </button>
-        </div>
+
       </div>
     </div>
   );
