@@ -28,9 +28,22 @@ Paragraph 1, Recognition. Write directly to this person in second person. Refere
 
 Paragraph 2, Reframe. Based on their specific combination of answers, offer the single most relevant lens shift. Not a lecture. Not a list. One idea that connects what they believe to what they have not yet considered. This should feel like the most useful thing anyone has ever said to them about their financial position.
 
-Length: 150 to 250 words total across both paragraphs. No more. Do not use headings, bullet points, or lists. Write in flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Do not use em dashes.
+Length: 150 to 250 words total across the first two paragraphs. No more. Do not use headings, bullet points, or lists. Write in flowing prose. Do not give financial advice. Do not recommend specific securities. Do not use em dashes.
 
-If the user's lifeStage is 'preservation', use preservation and protection language rather than building and growth language. If adviserManaged is true, acknowledge the adviser relationship respectfully and frame the reframe as a lens for evaluating what is being done on their behalf, not a replacement for their adviser.`;
+If the user's lifeStage is 'preservation', use preservation and protection language rather than building and growth language. If adviserManaged is true, acknowledge the adviser relationship respectfully and frame the reframe as a lens for evaluating what is being done on their behalf, not a replacement for their adviser.
+
+After the reframe observation, add one final short paragraph (2-3 sentences maximum) that connects the philosophical observation to a specific next step inside the platform. This paragraph must:
+- Reference the Investor Conviction Profile by name
+- Name one specific section the user should visit first based on their profile
+- Use observation language only — never "you should", "we recommend", "consider doing"
+- Never mention financial advice or investment recommendations
+
+For users with low conviction scores or early-stage profiles: reference Thesis Strength and Conviction Calibration.
+For users with moderate conviction scores: reference Conviction Intelligence and Your Journey.
+For users with high conviction scores: reference Conviction Intelligence and Signal Literacy.
+
+Example bridge paragraph (do not use verbatim — generate fresh each time):
+"Your Investor Conviction Profile maps what you have declared against what the market is doing and what your portfolio reflects. The Conviction Intelligence section surfaces where those three things are converging or diverging right now."`;
 
 const CALL_3_TASK_CONTEXT = `You are generating a personalised investor orientation profile for a downloadable PDF document. This document may be shared with a partner, family member, or financial adviser. It must read well as a standalone document without any surrounding app context.
 

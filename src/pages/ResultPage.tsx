@@ -427,14 +427,24 @@ export default function ResultPage() {
           </>
         )}
 
-        {/* Section 4 — OrientationCard */}
+        {/* Section 4 — BridgeCard (platform next step) */}
+        <BridgeCard
+          bridgeText={activeBridgeText}
+          bridgeCTA={profileContent.bridgeCTA}
+          firstAction={overlay.firstAction}
+          accentColor={profileContent.accentColor}
+          animationDelay={400}
+          vectorEmail={capturedEmail}
+        />
+
+        {/* Section 5 — OrientationCard */}
         <OrientationCard
           points={profileContent.orientation}
           accentColor={profileContent.accentColor}
           animationDelay={450}
         />
 
-        {/* Section 5 — Capital position detail */}
+        {/* Section 6 — Capital position detail */}
         <div
           style={{
             animation: 'fadeSlideUp 0.6s ease both',
@@ -615,16 +625,6 @@ export default function ResultPage() {
           persona={vectorProfile.persona}
           accentColor={profileContent.accentColor}
           animationDelay={850}
-        />
-
-        {/* Section 8 — BridgeCard */}
-        <BridgeCard
-          bridgeText={activeBridgeText}
-          bridgeCTA={profileContent.bridgeCTA}
-          firstAction={overlay.firstAction}
-          accentColor={profileContent.accentColor}
-          animationDelay={1000}
-          vectorEmail={capturedEmail}
         />
 
         {/* Section 8.5 — Broker Recommendation (post-capture only, not for skip) */}
