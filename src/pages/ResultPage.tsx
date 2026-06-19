@@ -437,18 +437,40 @@ export default function ResultPage() {
           vectorEmail={capturedEmail}
         />
 
-        {/* Section 5 — OrientationCard */}
+        {/* Section 5 — Email Capture */}
+        {answerPayload && (
+          <EmailCapture
+            persona={vectorProfile.persona}
+            capitalBand={vectorProfile.capitalBand}
+            accentColor={profileContent.accentColor}
+            answerPayload={answerPayload}
+            animationDelay={450}
+            capturedEmail={capturedEmail}
+            emailCaptureComplete={emailCaptureComplete}
+            onComplete={(_sessionToken, email, country, philosophy) => {
+              setCapturedEmail(email);
+              setCapturedCountry(country);
+              setCapturedPhilosophy(philosophy);
+              setEmailCaptureComplete(true);
+            }}
+            onSkip={() => {
+              setEmailCaptureComplete(true);
+            }}
+          />
+        )}
+
+        {/* Section 6 — OrientationCard */}
         <OrientationCard
           points={profileContent.orientation}
           accentColor={profileContent.accentColor}
-          animationDelay={450}
+          animationDelay={550}
         />
 
-        {/* Section 6 — Capital position detail */}
+        {/* Section 7 — Capital position detail */}
         <div
           style={{
             animation: 'fadeSlideUp 0.6s ease both',
-            animationDelay: '600ms',
+            animationDelay: '650ms',
           }}
         >
           <p
@@ -475,29 +497,7 @@ export default function ResultPage() {
           </p>
         </div>
 
-        {/* Section 6 — Email Capture */}
-        {answerPayload && (
-          <EmailCapture
-            persona={vectorProfile.persona}
-            capitalBand={vectorProfile.capitalBand}
-            accentColor={profileContent.accentColor}
-            answerPayload={answerPayload}
-            animationDelay={700}
-            capturedEmail={capturedEmail}
-            emailCaptureComplete={emailCaptureComplete}
-            onComplete={(_sessionToken, email, country, philosophy) => {
-              setCapturedEmail(email);
-              setCapturedCountry(country);
-              setCapturedPhilosophy(philosophy);
-              setEmailCaptureComplete(true);
-            }}
-            onSkip={() => {
-              setEmailCaptureComplete(true);
-            }}
-          />
-        )}
-
-        {/* Section 6.5 - What happens next (post-capture only) */}
+        {/* Section 7.5 - What happens next (post-capture only) */}
         {emailCaptureComplete && capturedEmail && (
           <div
             style={{
@@ -620,7 +620,7 @@ export default function ResultPage() {
           </div>
         )}
 
-        {/* Section 7 — EducationCards */}
+        {/* Section 8 — EducationCards */}
         <EducationCards
           persona={vectorProfile.persona}
           accentColor={profileContent.accentColor}
