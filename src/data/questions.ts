@@ -31,7 +31,8 @@ export const questions: Question[] = [
       { letter: 'A', text: "Mostly in property — my home or investment properties.", capitalSignal: 'concentrated' },
       { letter: 'B', text: "Spread across a few things — retirement savings, some investments, maybe some cash.", capitalSignal: 'established' },
       { letter: 'C', text: "Mainly in a retirement or managed fund that largely runs itself.", capitalSignal: 'building' },
-      { letter: 'D', text: "I have some savings and I'm building — but I wouldn't say I have a portfolio yet.", capitalSignal: 'emerging' }
+      { letter: 'D', text: "I have some savings and I'm building — but I wouldn't say I have a portfolio yet.", capitalSignal: 'emerging' },
+      { letter: 'E', text: "In a pension or retirement fund that's substantial — but the investment decisions are made for me, not by me.", capitalSignal: 'established' }
     ]
   },
   {
