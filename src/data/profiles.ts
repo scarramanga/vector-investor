@@ -8,7 +8,6 @@ export interface ProfileContent {
   reframe: string;
   orientation: OrientationPoint[];
   bridgeText: string;
-  bridgeCTA: string;
 }
 
 export interface OrientationPoint {
@@ -45,7 +44,6 @@ export const profiles: Record<PersonaType, ProfileContent> = {
       }
     ],
     bridgeText: 'StackMotive is built for investors who want institutional-grade intelligence without institutional access. If you\'re ready to start building a portfolio that reflects what you actually believe about the world — or even just to understand what that might look like — it\'s worth exploring.',
-    bridgeCTA: 'Explore StackMotive →'
   },
   'gut-trader': {
     persona: 'gut-trader',
@@ -68,7 +66,6 @@ export const profiles: Record<PersonaType, ProfileContent> = {
       }
     ],
     bridgeText: 'StackMotive is built for investors who are already active and want the intelligence layer to match. Real-time signals, institutional flow data, portfolio analytics that show you what you\'re actually holding and how it\'s positioned — not just what you paid for it. If you\'re going to back your instincts, back them with the best information available.',
-    bridgeCTA: 'Explore StackMotive →'
   },
   'swamped-analyst': {
     persona: 'swamped-analyst',
@@ -91,7 +88,6 @@ export const profiles: Record<PersonaType, ProfileContent> = {
       }
     ],
     bridgeText: 'StackMotive is built for investors who want signal not noise. The platform surfaces what matters — institutional flow, real-time alerts, portfolio analytics — without requiring you to process everything yourself. For someone who has been drowning in information, that filter is the point. You bring the framework. StackMotive brings the intelligence.',
-    bridgeCTA: 'Explore StackMotive →'
   },
   'comfortable-blind-spot': {
     persona: 'comfortable-blind-spot',
@@ -110,7 +106,6 @@ export const profiles: Record<PersonaType, ProfileContent> = {
       }
     ],
     bridgeText: 'StackMotive is used by investors who want to see their full financial picture clearly — not just individual accounts in isolation, but the whole thing in one place, through a lens that accounts for the environment those assets are sitting in. For someone at your stage, that kind of visibility isn\'t about finding problems. It\'s about confidence.',
-    bridgeCTA: 'Explore StackMotive →'
   }
 };
 

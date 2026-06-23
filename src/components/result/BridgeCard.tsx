@@ -1,23 +1,16 @@
 interface BridgeCardProps {
   bridgeText: string;
-  bridgeCTA: string;
   firstAction: string;
   accentColor: string;
   animationDelay: number;
-  vectorEmail?: string | null;
 }
 
 export default function BridgeCard({
   bridgeText,
-  bridgeCTA,
   firstAction,
   accentColor,
   animationDelay,
-  vectorEmail,
 }: BridgeCardProps) {
-  const stackMotiveUrl = vectorEmail
-    ? `https://app.stackmotiveapp.com/welcome?vector_email=${encodeURIComponent(vectorEmail)}`
-    : 'https://www.stackmotiveapp.com';
   return (
     <div
       style={{
@@ -67,47 +60,10 @@ export default function BridgeCard({
           color: 'var(--color-text-primary)',
           fontStyle: 'italic',
           lineHeight: 1.6,
-          marginBottom: '24px',
         }}
       >
         Your Vector profile works with StackMotive. Upload it during onboarding or in any Stack AI conversation to pick up where you left off.
       </p>
-      <div
-        className="bridge-cta-row"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '12px',
-        }}
-      >
-        <a
-          href={stackMotiveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bridge-cta-button"
-          style={{
-            display: 'inline-block',
-            padding: '14px 32px',
-            fontSize: '15px',
-            fontWeight: 600,
-            color: 'var(--color-text-primary)',
-            backgroundColor: 'var(--color-primary)',
-            borderRadius: 'var(--radius-md)',
-            textDecoration: 'none',
-            textAlign: 'center',
-            transition: 'opacity 0.2s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.opacity = '0.9';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.opacity = '1';
-          }}
-        >
-          {bridgeCTA}
-        </a>
-      </div>
     </div>
   );
 }

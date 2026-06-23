@@ -430,11 +430,9 @@ export default function ResultPage() {
         {/* Section 4 — BridgeCard (platform next step) */}
         <BridgeCard
           bridgeText={activeBridgeText}
-          bridgeCTA={profileContent.bridgeCTA}
           firstAction={overlay.firstAction}
           accentColor={profileContent.accentColor}
           animationDelay={400}
-          vectorEmail={capturedEmail}
         />
 
         {/* Section 5 — Email Capture */}
