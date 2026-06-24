@@ -8,82 +8,134 @@ export default function LandingPage() {
   return (
     <PageWrapper>
       <div style={{ textAlign: 'center' }}>
+        {/* Eyebrow */}
+        <p
+          style={{
+            fontSize: '0.6875rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.12em',
+            color: 'var(--color-text-secondary)',
+            marginBottom: '1.5rem',
+            fontWeight: 500,
+          }}
+        >
+          Self-directed investors
+        </p>
+
+        {/* Headline */}
         <h1
           style={{
-            fontSize: 'clamp(2rem, 5vw, 3rem)',
+            fontSize: 'clamp(1.75rem, 5vw, 2.75rem)',
             fontWeight: 700,
             color: 'var(--color-text-primary)',
-            marginBottom: '0.5rem',
+            marginBottom: '0',
             letterSpacing: '-0.02em',
+            lineHeight: 1.2,
           }}
         >
-          Conviction to Clarity
+          You built something real.
         </h1>
-        <p
+        <h1
           style={{
-            fontSize: '1.125rem',
+            fontSize: 'clamp(1.75rem, 5vw, 2.75rem)',
+            fontWeight: 700,
             color: 'var(--color-primary)',
-            fontWeight: 500,
-            marginBottom: '2rem',
+            marginBottom: '2.5rem',
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2,
           }}
         >
-          Vector by Sovereign Signal
-        </p>
-        <p
-          style={{
-            fontSize: '1.0625rem',
-            lineHeight: '1.7',
-            color: 'var(--color-text-secondary)',
-            marginBottom: '3rem',
-            maxWidth: '480px',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }}
-        >
-          Thirteen questions. Your investor profile. A framework that fits the
-          world as it actually is.
-        </p>
-        {/* How Vector is different */}
+          Is it working hard enough for you?
+        </h1>
+
+        {/* Contrast block */}
         <div
           style={{
-            maxWidth: '640px',
+            maxWidth: '560px',
             marginLeft: 'auto',
             marginRight: 'auto',
-            marginBottom: '3rem',
-            textAlign: 'left',
+            marginBottom: '2.5rem',
           }}
         >
-          <h2
-            style={{
-              fontSize: '20px',
-              fontWeight: 700,
-              color: 'var(--color-text-primary)',
-              marginBottom: '24px',
-              textAlign: 'center',
-            }}
-          >
-            How Vector is different
-          </h2>
           {[
-            'Most financial tools start with the same question: how much risk can you tolerate? Vector starts somewhere different. It starts with what you believe.',
-            'Risk tolerance questionnaires produce a number. Vector produces a framework.',
-            'Robo-advisers slot you into a pre-built portfolio. Vector connects your worldview to how you think about your money.',
-            'Five minutes, no sign-up, no advice. Just clarity.',
-          ].map((paragraph, i) => (
-            <p
+            { left: 'A risk questionnaire', right: 'routes you to a product' },
+            { left: 'A managed fund statement', right: 'shows a number, not the real one' },
+            { left: 'Vector', right: 'maps what you actually believe about money' },
+          ].map((row, i) => (
+            <div
               key={i}
               style={{
-                fontSize: '15px',
-                lineHeight: 1.7,
-                color: 'var(--color-text-primary)',
-                marginBottom: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                marginBottom: '12px',
+                flexWrap: 'wrap',
               }}
             >
-              {paragraph}
-            </p>
+              <span
+                style={{
+                  fontSize: '0.9375rem',
+                  color: 'var(--color-text-secondary)',
+                  fontWeight: 500,
+                  textAlign: 'right',
+                  flex: '1 1 0',
+                  minWidth: '140px',
+                }}
+              >
+                {row.left}
+              </span>
+              <span
+                style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--color-text-muted)',
+                }}
+              >
+                →
+              </span>
+              <span
+                style={{
+                  fontSize: '0.9375rem',
+                  color: i === 2 ? 'var(--color-primary)' : 'var(--color-text-primary)',
+                  fontWeight: i === 2 ? 600 : 400,
+                  textAlign: 'left',
+                  flex: '1 1 0',
+                  minWidth: '140px',
+                }}
+              >
+                {row.right}
+              </span>
+            </div>
           ))}
         </div>
 
+        {/* Promise line */}
+        <p
+          style={{
+            fontSize: '0.9375rem',
+            color: 'var(--color-text-secondary)',
+            fontWeight: 400,
+            marginBottom: '0.25rem',
+          }}
+        >
+          Thirteen questions. Five minutes. No sign-up.
+        </p>
+        <p
+          style={{
+            fontSize: '1rem',
+            color: 'var(--color-text-primary)',
+            fontWeight: 500,
+            marginBottom: '2.5rem',
+            maxWidth: '520px',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            lineHeight: 1.6,
+          }}
+        >
+          Your investor philosophy — mapped and connected to institutional-grade intelligence.
+        </p>
+
+        {/* CTA button */}
         <button
           onClick={() => { trackQuizStarted(); navigate('/quiz'); }}
           style={{
@@ -104,8 +156,19 @@ export default function LandingPage() {
             e.currentTarget.style.opacity = '1';
           }}
         >
-          Begin →
+          Map my investor profile →
         </button>
+
+        {/* Below button */}
+        <p
+          style={{
+            fontSize: '0.8125rem',
+            color: 'var(--color-text-muted)',
+            marginTop: '0.75rem',
+          }}
+        >
+          Free · No sign-up · No advice
+        </p>
       </div>
     </PageWrapper>
   );
