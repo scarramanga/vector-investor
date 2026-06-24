@@ -45,7 +45,6 @@ export default function EmailCapture({
   capturedEmail,
   emailCaptureComplete,
   onComplete,
-  onSkip: _onSkip,
 }: EmailCaptureProps) {
   const [email, setEmail] = useState('');
   const [country, setCountry] = useState<Country | ''>('');
