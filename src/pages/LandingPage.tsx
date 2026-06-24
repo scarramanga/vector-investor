@@ -39,7 +39,7 @@ export default function LandingPage() {
           style={{
             fontSize: 'clamp(1.75rem, 5vw, 2.75rem)',
             fontWeight: 700,
-            color: 'var(--color-primary)',
+            color: 'var(--color-accent)',
             marginBottom: '2.5rem',
             letterSpacing: '-0.02em',
             lineHeight: 1.2,
@@ -96,7 +96,7 @@ export default function LandingPage() {
               <span
                 style={{
                   fontSize: '0.9375rem',
-                  color: i === 2 ? 'var(--color-primary)' : 'var(--color-text-primary)',
+                  color: i === 2 ? 'var(--color-accent)' : 'var(--color-text-primary)',
                   fontWeight: i === 2 ? 600 : 400,
                   textAlign: 'left',
                   flex: '1 1 0',
