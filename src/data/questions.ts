@@ -2,14 +2,14 @@ import type { Question } from '../types';
 
 export const questions: Question[] = [
   {
-    id: 1,
+    id: 5,
     layer: 1,
-    text: "When you think about your financial future, what feeling comes up most honestly?",
+    text: "You've probably heard that putting money in a broad market index fund is the smart default. What's your honest reaction to that?",
     options: [
-      { letter: 'A', text: "I feel reasonably settled. I've worked hard, built something, and while nothing's certain I think I'm on the right track.", personaSignal: 'comfortable-blind-spot' },
-      { letter: 'B', text: "I feel like something has shifted and I'm not sure my current approach reflects that.", personaSignal: 'awakening' },
-      { letter: 'C', text: "I feel like I'm doing things but I'm not sure they add up to anything coherent.", personaSignal: 'gut-trader' },
-      { letter: 'D', text: "I feel like I know what I should do but I can never quite pull the trigger.", personaSignal: 'swamped-analyst' }
+      { letter: 'A', text: "That sounds right to me. Low cost, diversified, proven track record. Makes sense.", personaSignal: 'comfortable-blind-spot' },
+      { letter: 'B', text: "I do that already but I wonder if it's the whole answer or just part of one.", personaSignal: 'gut-trader' },
+      { letter: 'C', text: "I've heard it but I'm not sure it accounts for everything going on in the world right now.", personaSignal: 'awakening' },
+      { letter: 'D', text: "I'm not sure any single answer is right for everyone — context has to matter.", personaSignal: 'swamped-analyst' }
     ]
   },
   {
@@ -48,14 +48,14 @@ export const questions: Question[] = [
     ]
   },
   {
-    id: 5,
+    id: 1,
     layer: 1,
-    text: "You've probably heard that putting money in a broad market index fund is the smart default. What's your honest reaction to that?",
+    text: "When you think about your financial future, what feeling comes up most honestly?",
     options: [
-      { letter: 'A', text: "That sounds right to me. Low cost, diversified, proven track record. Makes sense.", personaSignal: 'comfortable-blind-spot' },
-      { letter: 'B', text: "I do that already but I wonder if it's the whole answer or just part of one.", personaSignal: 'gut-trader' },
-      { letter: 'C', text: "I've heard it but I'm not sure it accounts for everything going on in the world right now.", personaSignal: 'awakening' },
-      { letter: 'D', text: "I'm not sure any single answer is right for everyone — context has to matter.", personaSignal: 'swamped-analyst' }
+      { letter: 'A', text: "I feel reasonably settled. I've worked hard, built something, and while nothing's certain I think I'm on the right track.", personaSignal: 'comfortable-blind-spot' },
+      { letter: 'B', text: "I feel like something has shifted and I'm not sure my current approach reflects that.", personaSignal: 'awakening' },
+      { letter: 'C', text: "I feel like I'm doing things but I'm not sure they add up to anything coherent.", personaSignal: 'gut-trader' },
+      { letter: 'D', text: "I feel like I know what I should do but I can never quite pull the trigger.", personaSignal: 'swamped-analyst' }
     ]
   },
   {
