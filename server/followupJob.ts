@@ -14,52 +14,10 @@ import { initDatabase, getFollowUpQueue, advanceFollowUpStatus } from './db.js';
 import { lookupStackMotiveUser } from './stackmotiveApi.js';
 import { generatePhilosophySignalBlock } from './macroSignals.js';
 import { sendEmail1TheMirror, sendEmail2TheGap, sendEmail3TheDecision } from './followupEmails.js';
+import { getRecommendedTier } from './tierRecommendation.js';
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-/**
- * Derive the recommended tier from persona + capital band using the same
- * mapping as the frontend tierRecommendations.ts.
- */
-function getRecommendedTier(persona: string, capitalBand: string): string {
-  const tierMap: Record<string, Record<string, string>> = {
-    'awakening': {
-      'emerging': 'Observer',
-      'building': 'Observer',
-      'established': 'Navigator',
-      'concentrated': 'Navigator',
-      'sovereign-capital': 'Navigator',
-      'sovereign-concentrated': 'Navigator',
-    },
-    'gut-trader': {
-      'emerging': 'Navigator',
-      'building': 'Navigator',
-      'established': 'Operator',
-      'concentrated': 'Operator',
-      'sovereign-capital': 'Operator',
-      'sovereign-concentrated': 'Operator',
-    },
-    'swamped-analyst': {
-      'emerging': 'Navigator',
-      'building': 'Navigator',
-      'established': 'Operator',
-      'concentrated': 'Operator',
-      'sovereign-capital': 'Operator',
-      'sovereign-concentrated': 'Operator',
-    },
-    'comfortable-blind-spot': {
-      'emerging': 'Navigator',
-      'building': 'Navigator',
-      'established': 'Navigator',
-      'concentrated': 'Navigator',
-      'sovereign-capital': 'Navigator',
-      'sovereign-concentrated': 'Operator',
-    },
-  };
-
-  return tierMap[persona]?.[capitalBand] || 'Observer';
 }
 
 async function main(): Promise<void> {
