@@ -16,7 +16,6 @@ interface EmailCaptureProps {
   capturedEmail?: string | null;
   emailCaptureComplete?: boolean;
   onComplete: (sessionToken: string | null, email: string | null, country: string | null, philosophy: string | null) => void;
-  onSkip: () => void;
 }
 
 type Country = 'NZ' | 'AU' | 'UK' | 'CA' | 'OTHER';

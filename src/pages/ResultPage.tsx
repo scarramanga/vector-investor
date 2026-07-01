@@ -451,9 +451,6 @@ export default function ResultPage() {
               setCapturedPhilosophy(philosophy);
               setEmailCaptureComplete(true);
             }}
-            onSkip={() => {
-              setEmailCaptureComplete(true);
-            }}
           />
         )}
 

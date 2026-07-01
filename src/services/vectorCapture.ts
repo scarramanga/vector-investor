@@ -15,11 +15,6 @@ export interface CaptureResponse {
   error?: string;
 }
 
-export interface SkipResponse {
-  status: 'skipped';
-  sessionToken?: string;
-}
-
 export interface KeepExistingResponse {
   status: 'kept_existing';
   profileId: number;
@@ -60,25 +55,6 @@ export async function keepExistingProfile(email: string): Promise<KeepExistingRe
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
-    });
-
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
-}
-
-export async function skipCapture(data: {
-  persona: string;
-  capitalBand: string;
-  payload: Record<string, unknown>;
-}): Promise<SkipResponse | null> {
-  try {
-    const res = await fetch('/api/vector/skip', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
     });
 
     if (!res.ok) return null;

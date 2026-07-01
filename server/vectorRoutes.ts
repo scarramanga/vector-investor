@@ -2,6 +2,7 @@ import express from 'express';
 import { findProfileByEmail, createProfile, replaceProfile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
 import { sendWelcomeEmail } from './email.js';
 import { ingestVectorProfile } from './stackmotiveApi.js';
+import { getRecommendedTier } from './tierRecommendation.js';
 import { verifyUnsubscribeToken } from './unsubscribe.js';
 import crypto from 'node:crypto';
 
@@ -155,7 +156,30 @@ router.post('/keep-existing', async (req: express.Request, res: express.Response
     await createSession(sessionToken, {
       persona: existing.persona,
       capitalBand: existing.capital_band,
-      payload: existing.payload as Record<string, unknown>,
+      payload: existing.payload,
+    });
+
+    // Defect 82: re-ingest the kept profile into StackMotive (non-blocking —
+    // mirrors the /capture ingest, built from the existing profile row).
+    // vector_recommended_tier is not stored on the row; derive it from
+    // persona + capital band via the shared getRecommendedTier map.
+    ingestVectorProfile({
+      email: existing.email,
+      vector_persona: existing.persona,
+      vector_capital_band: existing.capital_band,
+      vector_philosophy: existing.philosophy ?? null,
+      vector_recommended_tier: getRecommendedTier(existing.persona, existing.capital_band),
+      vector_country: existing.country ?? null,
+      vector_time_horizon: existing.payload['timeHorizon'] as string,
+      vector_friction_point: existing.payload['frictionPoint'] as string,
+      vector_desired_outcome: existing.payload['desiredOutcome'] as string,
+      vector_macro_awareness: existing.payload['macroAwareness'] as string,
+      vector_action_history: existing.payload['actionHistory'] as string,
+      vector_conviction_driver: existing.payload['convictionDriver'] as string,
+      vector_life_stage: existing.payload['lifeStage'] as string,
+      vector_adviser_managed: existing.payload['adviserManaged'] as boolean,
+    }).catch((err) => {
+      console.error('[vectorRoutes] Ingest error:', err);
     });
 
     res.json({
@@ -165,33 +189,6 @@ router.post('/keep-existing', async (req: express.Request, res: express.Response
     });
   } catch (err) {
     console.error('[vectorRoutes] Keep-existing error:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-/**
- * POST /api/vector/skip
- * User skipped email capture — store session for 72-hour TTL (Edge Case 3)
- */
-router.post('/skip', async (req: express.Request, res: express.Response): Promise<void> => {
-  const { persona, capitalBand, payload } = req.body as {
-    persona: string;
-    capitalBand: string;
-    payload: Record<string, unknown>;
-  };
-
-  if (!persona || !capitalBand || !payload) {
-    res.status(400).json({ error: 'Missing required fields' });
-    return;
-  }
-
-  try {
-    const sessionToken = crypto.randomUUID();
-    await createSession(sessionToken, { persona, capitalBand, payload });
-
-    res.json({ status: 'skipped', sessionToken });
-  } catch (err) {
-    console.error('[vectorRoutes] Skip error:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
