@@ -1,9 +1,25 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/layout/PageWrapper';
 import { trackQuizStarted } from '../services/analytics';
 
 export default function LandingPage() {
   const navigate = useNavigate();
+
+  // BL-3: capture UTM params from the landing URL into sessionStorage so they
+  // survive cross-route navigation and page refresh, and reach EmailCapture at
+  // conversion. First-touch wins — only write when at least one UTM is present.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const utm: Record<string, string> = {};
+    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach((key) => {
+      const val = params.get(key);
+      if (val) utm[key] = val;
+    });
+    if (Object.keys(utm).length > 0) {
+      sessionStorage.setItem('utm_params', JSON.stringify(utm));
+    }
+  }, []);
 
   return (
     <PageWrapper>

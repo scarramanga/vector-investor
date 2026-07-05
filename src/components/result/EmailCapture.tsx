@@ -68,6 +68,15 @@ export default function EmailCapture({
     setIsSubmitting(true);
     setError(null);
 
+    // BL-3: read UTM params captured on landing (sessionStorage); default to {}.
+    let utmParams: Record<string, string> = {};
+    try {
+      const storedUtm = sessionStorage.getItem('utm_params');
+      if (storedUtm) utmParams = JSON.parse(storedUtm) as Record<string, string>;
+    } catch {
+      utmParams = {};
+    }
+
     const result = await captureEmail({
       email: email.trim().toLowerCase(),
       country: country || null,
@@ -78,6 +87,7 @@ export default function EmailCapture({
       payload: answerPayload as unknown as Record<string, unknown>,
       tierName: tierRec.tierName,
       replaceExisting,
+      utmParams,
     });
 
     setIsSubmitting(false);
