@@ -38,6 +38,7 @@ export async function initDatabase(): Promise<void> {
       philosophy      TEXT,
       answers         JSONB NOT NULL,
       payload         JSONB NOT NULL,
+      utm_params      JSONB DEFAULT '{}',
       email_captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       email_skipped   BOOLEAN NOT NULL DEFAULT FALSE,
       follow_up_status TEXT NOT NULL DEFAULT 'queued',
@@ -58,6 +59,10 @@ export async function initDatabase(): Promise<void> {
   await db.query(`
     ALTER TABLE vector_profiles
     ADD COLUMN IF NOT EXISTS philosophy TEXT;
+  `);
+  await db.query(`
+    ALTER TABLE vector_profiles
+    ADD COLUMN IF NOT EXISTS utm_params JSONB DEFAULT '{}';
   `);
 
   await db.query(`
@@ -147,14 +152,15 @@ export async function createProfile(data: {
   philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
+  utm_params?: string;
 }): Promise<VectorProfileRow> {
   const db = getPool();
   // Set next_send_date to 3 days from now for first follow-up
   const result = await db.query<VectorProfileRow>(
-    `INSERT INTO vector_profiles (email, country, persona, capital_band, philosophy, answers, payload, next_send_date)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, NOW() + INTERVAL '3 days')
+    `INSERT INTO vector_profiles (email, country, persona, capital_band, philosophy, answers, payload, utm_params, next_send_date)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW() + INTERVAL '3 days')
      RETURNING *`,
-    [data.email, data.country, data.persona, data.capitalBand, data.philosophy, JSON.stringify(data.answers), JSON.stringify(data.payload)],
+    [data.email, data.country, data.persona, data.capitalBand, data.philosophy, JSON.stringify(data.answers), JSON.stringify(data.payload), data.utm_params ?? '{}'],
   );
   return result.rows[0]!;
 }
@@ -172,6 +178,7 @@ export async function replaceProfile(existingId: number, newData: {
   philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
+  utm_params?: string;
 }): Promise<VectorProfileRow> {
   const db = getPool();
   const client = await db.connect();
@@ -193,10 +200,10 @@ export async function replaceProfile(existingId: number, newData: {
 
     // Create new active profile
     const result = await client.query<VectorProfileRow>(
-      `INSERT INTO vector_profiles (email, country, persona, capital_band, philosophy, answers, payload, next_send_date)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, NOW() + INTERVAL '3 days')
+      `INSERT INTO vector_profiles (email, country, persona, capital_band, philosophy, answers, payload, utm_params, next_send_date)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW() + INTERVAL '3 days')
        RETURNING *`,
-      [newData.email, newData.country, newData.persona, newData.capitalBand, newData.philosophy, JSON.stringify(newData.answers), JSON.stringify(newData.payload)],
+      [newData.email, newData.country, newData.persona, newData.capitalBand, newData.philosophy, JSON.stringify(newData.answers), JSON.stringify(newData.payload), newData.utm_params ?? '{}'],
     );
 
     await client.query('COMMIT');

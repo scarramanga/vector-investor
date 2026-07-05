@@ -68,6 +68,7 @@ export async function ingestVectorProfile(data: {
   vector_conviction_driver: string;
   vector_life_stage: string;
   vector_adviser_managed: boolean;
+  utm_params?: Record<string, string>;
 }): Promise<boolean> {
   const token = process.env['STACKMOTIVE_TOKEN'];
   if (!token) {

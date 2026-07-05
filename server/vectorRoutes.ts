@@ -18,6 +18,7 @@ interface CaptureRequest {
   payload: Record<string, unknown>;
   tierName: string;
   replaceExisting?: boolean;
+  utmParams?: Record<string, string>;
 }
 
 /**
@@ -68,6 +69,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
         philosophy: body.philosophy,
         answers: body.answers,
         payload: body.payload,
+        utm_params: JSON.stringify(body.utmParams || {}),
       });
     } else {
       // New profile
@@ -79,6 +81,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
         philosophy: body.philosophy,
         answers: body.answers,
         payload: body.payload,
+        utm_params: JSON.stringify(body.utmParams || {}),
       });
     }
 
@@ -106,6 +109,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       vector_conviction_driver: body.payload['convictionDriver'] as string,
       vector_life_stage: body.payload['lifeStage'] as string,
       vector_adviser_managed: body.payload['adviserManaged'] as boolean,
+      utm_params: body.utmParams || {},
     }).catch((err) => {
       console.error('[vectorRoutes] Ingest error:', err);
     });

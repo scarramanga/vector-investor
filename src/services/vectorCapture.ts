@@ -31,6 +31,7 @@ export async function captureEmail(data: {
   payload: Record<string, unknown>;
   tierName: string;
   replaceExisting?: boolean;
+  utmParams?: Record<string, string>;
 }): Promise<CaptureResponse> {
   try {
     const res = await fetch('/api/vector/capture', {
