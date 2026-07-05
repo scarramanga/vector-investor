@@ -58,7 +58,7 @@ export default function QuizPage() {
 
   return (
     <PageWrapper>
-      <ProgressBar current={currentIndex + 1} total={questions.length} />
+      {currentIndex >= 2 && <ProgressBar current={currentIndex + 1} total={questions.length} />}
       <QuestionCard
         question={currentQuestion}
         selectedLetter={selectedLetter}
