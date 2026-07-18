@@ -38,9 +38,7 @@ After the reframe observation, add one final short paragraph (2-3 sentences maxi
 - Use observation language only — never "you should", "we recommend", "consider doing"
 - Never mention financial advice or investment recommendations
 
-For users with low conviction scores or early-stage profiles: reference Thesis Strength and Conviction Calibration.
-For users with moderate conviction scores: reference Conviction Intelligence and Your Journey.
-For users with high conviction scores: reference Conviction Intelligence and Signal Literacy.
+Name the Investor Conviction Profile section most relevant to what this person declared in the quiz: Conviction Intelligence and Your Journey, or Conviction Intelligence and Signal Literacy. Reference the section by name. Do not present a numeric score or rating for this person's conviction. Vector maps the philosophy they declared, not a number.
 
 Example bridge paragraph (do not use verbatim — generate fresh each time):
 "Your Investor Conviction Profile maps what you have declared against what the market is doing and what your portfolio reflects. The Conviction Intelligence section surfaces where those three things are converging or diverging right now."`;
