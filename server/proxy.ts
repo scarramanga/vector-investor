@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import Anthropic from '@anthropic-ai/sdk';
 import { buildSystemPrompt } from './promptBuilder.js';
-import { VECTOR_MODEL } from './llmModel.js';
+import { PROSE_MODEL } from './llmModel.js';
 import { initDatabase } from './db.js';
 import vectorRoutes from './vectorRoutes.js';
 
@@ -22,7 +22,7 @@ app.use('/api/vector', vectorRoutes);
 
 const PORT = parseInt(process.env['PORT'] || '3001', 10);
 const API_KEY = process.env['VECTOR_ANTHROPIC_API_KEY'] || '';
-const MODEL = VECTOR_MODEL;
+const MODEL = PROSE_MODEL;
 
 if (!API_KEY) {
   console.warn('[proxy] VECTOR_ANTHROPIC_API_KEY is not set. All API calls will return fallback.');

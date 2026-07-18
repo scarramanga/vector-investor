@@ -6,7 +6,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { fetchMacroData } from './stackmotiveApi.js';
-import { VECTOR_MODEL } from './llmModel.js';
+import { PROSE_MODEL } from './llmModel.js';
 
 /**
  * Generate a philosophy-specific macro signal block using Claude.
@@ -19,7 +19,7 @@ export async function generatePhilosophySignalBlock(philosophy: string): Promise
     return null;
   }
 
-  const model = VECTOR_MODEL;
+  const model = PROSE_MODEL;
 
   let macroData;
   try {
