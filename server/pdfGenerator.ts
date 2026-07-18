@@ -25,7 +25,7 @@ import {
   timeHorizonLabels,
 } from './profileData.js';
 import type { PersonaType, CapitalBand } from './profileData.js';
-import { VECTOR_MODEL } from './llmModel.js';
+import { PROSE_MODEL } from './llmModel.js';
 
 export interface PdfInput {
   persona: string;
@@ -61,7 +61,7 @@ async function fetchAiContent(
   payload: Record<string, unknown>,
 ): Promise<{ recognition: string; reframe: string } | null> {
   const apiKey = (process.env['VECTOR_ANTHROPIC_API_KEY'] || '').trim();
-  const model = VECTOR_MODEL;
+  const model = PROSE_MODEL;
 
   if (!apiKey) {
     console.warn('[pdfGenerator] VECTOR_ANTHROPIC_API_KEY not set or empty. Using static content.');
