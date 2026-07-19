@@ -19,6 +19,9 @@ interface CaptureRequest {
   tierName: string;
   replaceExisting?: boolean;
   utmParams?: Record<string, string>;
+  // Vector "seed" prose — the Recognition / Reframe paragraphs the user saw.
+  recognition?: string;
+  reframe?: string;
 }
 
 /**
@@ -109,6 +112,8 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       vector_conviction_driver: body.payload['convictionDriver'] as string,
       vector_life_stage: body.payload['lifeStage'] as string,
       vector_adviser_managed: body.payload['adviserManaged'] as boolean,
+      recognition: body.recognition ?? '',
+      reframe: body.reframe ?? '',
       utm_params: body.utmParams || {},
     }).catch((err) => {
       console.error('[vectorRoutes] Ingest error:', err);

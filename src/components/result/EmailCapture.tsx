@@ -15,6 +15,11 @@ interface EmailCaptureProps {
   animationDelay: number;
   capturedEmail?: string | null;
   emailCaptureComplete?: boolean;
+  // Vector "seed" prose (Recognition / Reframe) the user saw on screen; forwarded
+  // to StackMotive as additive onboarding context. Null when the LLM narrative was
+  // unavailable — sent as "" (StackMotive treats absent/blank identically).
+  recognition?: string | null;
+  reframe?: string | null;
   onComplete: (sessionToken: string | null, email: string | null, country: string | null, philosophy: string | null) => void;
 }
 
@@ -43,6 +48,8 @@ export default function EmailCapture({
   animationDelay,
   capturedEmail,
   emailCaptureComplete,
+  recognition,
+  reframe,
   onComplete,
 }: EmailCaptureProps) {
   const [email, setEmail] = useState('');
@@ -88,6 +95,8 @@ export default function EmailCapture({
       tierName: tierRec.tierName,
       replaceExisting,
       utmParams,
+      recognition: recognition ?? '',
+      reframe: reframe ?? '',
     });
 
     setIsSubmitting(false);

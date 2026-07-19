@@ -68,6 +68,11 @@ export async function ingestVectorProfile(data: {
   vector_conviction_driver: string;
   vector_life_stage: string;
   vector_adviser_managed: boolean;
+  // Vector "seed" prose (additive onboarding context, never a primary_theme).
+  // Optional: omitted when unavailable (e.g. the keep-existing re-ingest of a
+  // stored profile, which holds no prose). StackMotive treats absent as blank.
+  recognition?: string;
+  reframe?: string;
   utm_params?: Record<string, string>;
 }): Promise<boolean> {
   const token = process.env['STACKMOTIVE_TOKEN'];

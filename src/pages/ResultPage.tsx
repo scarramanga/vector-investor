@@ -445,6 +445,8 @@ export default function ResultPage() {
             animationDelay={450}
             capturedEmail={capturedEmail}
             emailCaptureComplete={emailCaptureComplete}
+            recognition={dynamicRecognition ?? staticRecognition}
+            reframe={dynamicReframe ?? staticReframe}
             onComplete={(_sessionToken, email, country, philosophy) => {
               setCapturedEmail(email);
               setCapturedCountry(country);
