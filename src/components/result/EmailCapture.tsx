@@ -419,6 +419,14 @@ export default function EmailCapture({
           </select>
         </div>
 
+        {/* Declaration-spine disclosure (ruling 2026-07-23): the quiz
+            result becomes the user's declared philosophy in StackMotive;
+            changes to it are recorded. COPY IS PLACEHOLDER — PENDING
+            ANDY'S RULING ON WORDING. */}
+        <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
+          Your philosophy becomes part of your StackMotive profile; changes to it are recorded.
+        </p>
+
         {/* Submit button */}
         <button
           onClick={() => handleSubmit()}
