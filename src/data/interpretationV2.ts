@@ -127,6 +127,17 @@ const VALUE_PHRASES: Record<string, Record<string, string>> = {
   },
 };
 
+// GAP-267: beginner learning-interest option ids -> readable topic labels.
+// These become learning-interest beliefs (never declarations) and seed the
+// guided learning path downstream.
+const LEARNING_INTEREST_PHRASES: Record<string, string> = {
+  'how-markets-work': 'how markets work',
+  'diversification-index': 'diversification and index funds',
+  'company-analysis': 'analysing a company',
+  'long-term-themes': 'long-term themes',
+  'managing-risk': 'managing risk',
+};
+
 const DIMENSION_LABELS: Record<DimensionKey, string> = {
   experience: 'Experience',
   purpose: 'Purpose',
@@ -300,6 +311,14 @@ function classifyBeliefs(route: RouteId, answers: V2Answer[], answeredBy: Answer
     beliefs.push({ theme, status, evidence: ['explicitBelief'] });
   } else if (belief?.text && belief.text.trim()) {
     beliefs.push({ theme: belief.text.trim(), status: exploring ? 'learning-interest' : 'considering', evidence: ['explicitBelief', 'belief-text'] });
+  }
+
+  // Beginner learning interests -> learning-interest beliefs (never confirmed).
+  const li = answerFor(answers, 'learningInterests');
+  for (const id of li?.selectedOptionIds ?? []) {
+    if (NOT_ESTABLISHED.has(`learningInterests:${id}`)) continue;
+    const theme = LEARNING_INTEREST_PHRASES[id] ?? id.replace(/-/g, ' ');
+    beliefs.push({ theme, status: 'learning-interest', evidence: ['learningInterests'] });
   }
   return beliefs;
 }

@@ -20,6 +20,7 @@ function visibleQuestions(route: RouteId | null): V2Question[] {
   if (!route) return [];
   return QUESTIONS_V2.filter((q) => {
     if (q.skipWhenRouteEstablishes && (route === 'learning' || route === 'adviser-led')) return false;
+    if (q.showForRoutes && !q.showForRoutes.includes(route)) return false;
     return true;
   });
 }
