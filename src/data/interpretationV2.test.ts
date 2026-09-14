@@ -177,3 +177,18 @@ describe('confirmation boundary', () => {
     expect(confirmProfile(p).beliefs[0].status).toBe('learning-interest');
   });
 });
+
+describe('GAP-267 beginner learning interests', () => {
+  it('selected interests become learning-interest beliefs (never confirmed)', () => {
+    const p = interpret('learning', A({ learningInterests: ['diversification-index', 'managing-risk'] }));
+    const li = p.beliefs.filter((b) => b.evidence.includes('learningInterests'));
+    expect(li.map((b) => b.theme).sort()).toEqual(['diversification and index funds', 'managing risk']);
+    expect(li.every((b) => b.status === 'learning-interest')).toBe(true);
+    // even after confirmation they stay learning-interest (not a declaration)
+    expect(confirmProfile(p).beliefs.every((b) => b.status !== 'confirmed')).toBe(true);
+  });
+  it('the "just getting started" option is not-established, adds no interest', () => {
+    const p = interpret('learning', A({ learningInterests: ['getting-started'] }));
+    expect(p.beliefs.filter((b) => b.evidence.includes('learningInterests'))).toHaveLength(0);
+  });
+});

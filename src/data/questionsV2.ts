@@ -182,6 +182,23 @@ export const QUESTIONS_V2: V2Question[] = [
     ],
   },
   {
+    id: 'learningInterests',
+    topic: 'Learning interests',
+    text: 'What would you like to learn about?',
+    help: 'Pick any that interest you. We use this to choose which examples to show you first, never to tell you what to buy.',
+    multiSelect: true,
+    // Beginner-only (GAP-267): feeds the guided learning path; experienced routes never see it.
+    showForRoutes: ['learning', 'developing'],
+    options: [
+      { id: 'how-markets-work', text: 'How markets work.' },
+      { id: 'diversification-index', text: 'Diversification and index funds.' },
+      { id: 'company-analysis', text: 'How to analyse a company.' },
+      { id: 'long-term-themes', text: 'Long-term themes (AI, energy, and the like).' },
+      { id: 'managing-risk', text: 'Managing risk and protecting capital.' },
+      { id: 'getting-started', text: 'Just getting started, show me the basics.', notEstablished: true },
+    ],
+  },
+  {
     id: 'supportNeeds',
     topic: 'Support',
     text: 'What, if anything, would improve your current process?',
