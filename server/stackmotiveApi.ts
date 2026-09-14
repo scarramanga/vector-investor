@@ -51,7 +51,7 @@ export async function lookupStackMotiveUser(email: string): Promise<StackMotiveU
 
 /**
  * Ingest a Vector profile into StackMotive so the /welcome page can find it.
- * Non-blocking — logs success or failure but never throws.
+ * Non-blocking - logs success or failure but never throws.
  */
 export async function ingestVectorProfile(data: {
   email: string;
@@ -101,6 +101,49 @@ export async function ingestVectorProfile(data: {
     return true;
   } catch (err) {
     console.error(`[stackmotive] Ingest error for ${data.email}:`, err);
+    return false;
+  }
+}
+
+/**
+ * GAP-267: ingest a Vector v2 profile into StackMotive (/api/vector/ingest-v2).
+ * Confirmed beliefs (canonical philosophy names) become declared themes;
+ * exploratory interests are carried to the separate store. Non-blocking.
+ */
+export async function ingestVectorProfileV2(data: {
+  email: string;
+  questionnaire_version: string;
+  interpretation_version: string;
+  route: string;
+  answered_by: string;
+  confirmed_beliefs: string[];
+  exploratory_interests: string[];
+  vector_country?: string | null;
+  vector_recommended_tier?: string | null;
+  recognition?: string;
+  reframe?: string;
+  utm_params?: Record<string, string>;
+}): Promise<boolean> {
+  const token = process.env['STACKMOTIVE_TOKEN'];
+  if (!token) {
+    console.warn('[stackmotive] STACKMOTIVE_TOKEN is not set. Skipping v2 ingest.');
+    return false;
+  }
+  try {
+    const res = await fetch(`${STACKMOTIVE_BASE}/api/vector/ingest-v2`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!res.ok) {
+      console.error(`[stackmotive] v2 ingest failed for ${data.email}: ${res.status} ${res.statusText}`);
+      return false;
+    }
+    console.log(`[stackmotive] v2 ingest successful for ${data.email}`);
+    return true;
+  } catch (err) {
+    console.error(`[stackmotive] v2 ingest error for ${data.email}:`, err);
     return false;
   }
 }
