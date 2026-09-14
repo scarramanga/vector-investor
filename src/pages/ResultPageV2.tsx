@@ -6,9 +6,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/layout/PageWrapper';
 import { confirmProfile, interpret } from '../data/interpretationV2';
-import type { AnsweredBy, RouteId, V2Answer } from '../types/v2';
+import type { AnsweredBy, RouteId, V2Answer, V2Profile } from '../types/v2';
 import { clearSession } from '../services/quizSessionV2';
 import { trackV2 } from '../services/analyticsV2';
+import { buildV2CapturePayload, captureV2 } from '../services/vectorCaptureV2';
 
 interface ResultState {
   route: RouteId;
@@ -21,6 +22,8 @@ export default function ResultPageV2() {
   const location = useLocation();
   const state = location.state as ResultState | null;
   const [confirmed, setConfirmed] = useState(false);
+  const [confirmedProfile, setConfirmedProfile] = useState<V2Profile | null>(null);
+  const [email, setEmail] = useState('');
 
   const profile = useMemo(() => {
     if (!state?.route) return null;
@@ -43,9 +46,18 @@ export default function ResultPageV2() {
 
   function handleConfirm() {
     if (!profile) return;
-    confirmProfile(profile); // promotes stated beliefs to confirmed (never for a proxy)
+    // promotes stated beliefs to confirmed (never for a proxy)
+    setConfirmedProfile(confirmProfile(profile));
     trackV2.profileConfirmed();
     setConfirmed(true);
+  }
+
+  async function handleContinueToStackMotive() {
+    if (confirmedProfile && email.trim()) {
+      await captureV2(buildV2CapturePayload(confirmedProfile, email));
+    }
+    trackV2.handoff();
+    window.location.href = 'https://app.stackmotiveapp.com/welcome';
   }
 
   function handleCorrect() {
@@ -93,8 +105,18 @@ export default function ResultPageV2() {
           <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--color-text-primary)' }}>
             Confirmed. You can carry this profile into StackMotive, where you decide what, if anything, to declare.
           </p>
+          <label style={{ display: 'block', marginTop: 12, fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
+            Your email (optional, to carry this profile across)
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              style={{ display: 'block', width: '100%', marginTop: 6, padding: 10, borderRadius: 'var(--radius-md)', border: '1px solid var(--color-border)', fontSize: '0.9rem' }}
+            />
+          </label>
           <div style={{ display: 'flex', gap: 12, marginTop: 12 }}>
-            <button onClick={() => { trackV2.handoff(); window.location.href = 'https://app.stackmotiveapp.com/welcome'; }} style={primaryBtn}>
+            <button onClick={handleContinueToStackMotive} style={primaryBtn}>
               Continue in StackMotive
             </button>
             <button onClick={handleStartOver} style={secondaryBtn}>Start over</button>

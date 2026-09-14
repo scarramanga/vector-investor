@@ -1,12 +1,49 @@
 import express from 'express';
 import { findProfileByEmail, createProfile, replaceProfile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
 import { sendWelcomeEmail } from './email.js';
-import { ingestVectorProfile } from './stackmotiveApi.js';
+import { ingestVectorProfile, ingestVectorProfileV2 } from './stackmotiveApi.js';
 import { getRecommendedTier } from './tierRecommendation.js';
 import { verifyUnsubscribeToken } from './unsubscribe.js';
 import crypto from 'node:crypto';
 
 const router = express.Router();
+
+// GAP-267 Phase 1: v2 capture. Forwards the confirmed v2 profile to StackMotive
+// (/api/vector/ingest-v2). Confirmed beliefs (canonical philosophy names) become
+// declared themes; exploratory interests go to the separate store. The Vector-DB
+// profile row + follow-up email (persona-based) are a deliberate follow-up.
+interface CaptureV2Request {
+  email: string;
+  questionnaire_version: string;
+  interpretation_version: string;
+  route: string;
+  answered_by?: string;
+  confirmed_beliefs?: string[];
+  exploratory_interests?: string[];
+  vector_country?: string | null;
+}
+
+router.post('/capture-v2', async (req: express.Request, res: express.Response): Promise<void> => {
+  const body = req.body as CaptureV2Request;
+  if (!body.email || !body.questionnaire_version || !body.interpretation_version || !body.route) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
+  }
+  const email = body.email.trim().toLowerCase();
+  ingestVectorProfileV2({
+    email,
+    questionnaire_version: body.questionnaire_version,
+    interpretation_version: body.interpretation_version,
+    route: body.route,
+    answered_by: body.answered_by ?? 'self',
+    confirmed_beliefs: body.confirmed_beliefs ?? [],
+    exploratory_interests: body.exploratory_interests ?? [],
+    vector_country: body.vector_country ?? null,
+  }).catch((err) => {
+    console.error('[vectorRoutes] v2 ingest error:', err);
+  });
+  res.json({ status: 'captured' });
+});
 
 interface CaptureRequest {
   email: string;
@@ -19,7 +56,7 @@ interface CaptureRequest {
   tierName: string;
   replaceExisting?: boolean;
   utmParams?: Record<string, string>;
-  // Vector "seed" prose — the Recognition / Reframe paragraphs the user saw.
+  // Vector "seed" prose - the Recognition / Reframe paragraphs the user saw.
   recognition?: string;
   reframe?: string;
 }
@@ -63,7 +100,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
 
     let profile;
     if (existing && body.replaceExisting) {
-      // Edge Case 1: User chose new profile — move old to history
+      // Edge Case 1: User chose new profile - move old to history
       profile = await replaceProfile(existing.id, {
         email,
         country: body.country,
@@ -96,7 +133,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       payload: body.payload,
     });
 
-    // Ingest profile into StackMotive (non-blocking — don't fail the capture response)
+    // Ingest profile into StackMotive (non-blocking - don't fail the capture response)
     ingestVectorProfile({
       email,
       vector_persona: body.persona,
@@ -119,7 +156,7 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       console.error('[vectorRoutes] Ingest error:', err);
     });
 
-    // Send welcome email with PDF attachment (non-blocking — don't fail the request if email fails)
+    // Send welcome email with PDF attachment (non-blocking - don't fail the request if email fails)
     sendWelcomeEmail({
       email,
       persona: body.persona,
@@ -168,7 +205,7 @@ router.post('/keep-existing', async (req: express.Request, res: express.Response
       payload: existing.payload,
     });
 
-    // Defect 82: re-ingest the kept profile into StackMotive (non-blocking —
+    // Defect 82: re-ingest the kept profile into StackMotive (non-blocking -
     // mirrors the /capture ingest, built from the existing profile row).
     // vector_recommended_tier is not stored on the row; derive it from
     // persona + capital band via the shared getRecommendedTier map.
