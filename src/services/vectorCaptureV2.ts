@@ -10,6 +10,7 @@
 
 import type { V2Profile } from '../types/v2';
 import { beliefToCanonicalPhilosophy } from '../data/beliefPhilosophyMap';
+import { matchExploreThemes } from '../data/exploreMatch';
 
 export interface V2CapturePayload {
   email: string;
@@ -20,6 +21,15 @@ export interface V2CapturePayload {
   confirmed_beliefs: string[];
   exploratory_interests: string[];
   vector_country?: string | null;
+  // GAP-267 Phase 2 (Part 5): the deterministic readout + explore themes, so the
+  // server can render the v2 PDF report without recomputing the interpretation.
+  readout: {
+    told: string[];
+    interpretation: string[];
+    unclear: string[];
+    next_step: string;
+  };
+  explore_themes: { name: string; tagline: string; example: string | null }[];
 }
 
 export function buildV2CapturePayload(
@@ -43,6 +53,12 @@ export function buildV2CapturePayload(
     }
   }
 
+  const explore = matchExploreThemes(profile.beliefs).map((m) => ({
+    name: m.theme.name,
+    tagline: m.theme.tagline,
+    example: m.example ? `${m.example.name} (${m.example.ticker}, ${m.example.exchange})` : null,
+  }));
+
   return {
     email: email.trim(),
     questionnaire_version: profile.questionnaireVersion,
@@ -52,6 +68,13 @@ export function buildV2CapturePayload(
     confirmed_beliefs: [...new Set(confirmed)],
     exploratory_interests: [...new Set(exploratory)],
     vector_country: opts?.country ?? null,
+    readout: {
+      told: profile.readout.told,
+      interpretation: profile.readout.interpretation,
+      unclear: profile.readout.unclear,
+      next_step: profile.readout.nextStep,
+    },
+    explore_themes: explore,
   };
 }
 

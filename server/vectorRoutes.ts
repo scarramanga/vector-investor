@@ -1,6 +1,6 @@
 import express from 'express';
 import { findProfileByEmail, createProfile, replaceProfile, createV2Profile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
-import { sendWelcomeEmail } from './email.js';
+import { sendWelcomeEmail, sendV2WelcomeEmail } from './email.js';
 import { ingestVectorProfile, ingestVectorProfileV2 } from './stackmotiveApi.js';
 import { getRecommendedTier } from './tierRecommendation.js';
 import { verifyUnsubscribeToken } from './unsubscribe.js';
@@ -21,6 +21,15 @@ interface CaptureV2Request {
   confirmed_beliefs?: string[];
   exploratory_interests?: string[];
   vector_country?: string | null;
+  // GAP-267 Phase 2 (Part 5): the deterministic readout + explore themes, used
+  // to render the v2 PDF report attached to the welcome email.
+  readout?: {
+    told: string[];
+    interpretation: string[];
+    unclear: string[];
+    next_step: string;
+  };
+  explore_themes?: { name: string; tagline: string; example: string | null }[];
 }
 
 router.post('/capture-v2', async (req: express.Request, res: express.Response): Promise<void> => {
@@ -57,6 +66,17 @@ router.post('/capture-v2', async (req: express.Request, res: express.Response): 
   }).catch((err) => {
     console.error('[vectorRoutes] v2 profile row error:', err);
   });
+  // GAP-267 Phase 2 (Part 5): send the v2 welcome email with the deterministic
+  // readout PDF (non-blocking, like the v1 welcome email).
+  if (body.readout) {
+    sendV2WelcomeEmail({
+      email,
+      readout: body.readout,
+      exploreThemes: body.explore_themes ?? [],
+    }).catch((err) => {
+      console.error('[vectorRoutes] v2 welcome email error:', err);
+    });
+  }
   res.json({ status: 'captured' });
 });
 
