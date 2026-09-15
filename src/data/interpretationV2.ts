@@ -333,14 +333,19 @@ function buildReadout(
   const get = (k: DimensionKey) => dims.find((d) => d.key === k)!;
   const known = (k: DimensionKey) => get(k).value !== null;
 
-  // 1. What you told us - only established dimensions.
+  // 1. What you told us - only established dimensions. Every answer that the
+  // interpretation or unclear sections lean on must appear here, so each
+  // conclusion traces to an answer the reader can actually see.
   const told: string[] = [];
   if (known('objective')) told.push(`The main job of this money is ${get('objective').value}.`);
   if (known('timeHorizon')) told.push(`Your time horizon is ${get('timeHorizon').value}.`);
   if (known('decisionMethod')) told.push(`You choose investments using ${get('decisionMethod').value}.`);
-  if (known('monitoring')) told.push(`You review ${get('monitoring').value}.`);
+  if (known('recentBehaviour')) told.push(`Your most recent investment decision was driven by ${get('recentBehaviour').value}.`);
+  if (known('explicitBelief')) told.push(`The reason you expect your approach to work: ${get('explicitBelief').value}.`);
   if (known('holdingRationale')) told.push(`Your reason for owning something is ${get('holdingRationale').value}.`);
   if (known('reconsideration')) told.push(`You would reconsider on: ${get('reconsideration').value}.`);
+  if (known('monitoring')) told.push(`You review ${get('monitoring').value}.`);
+  if (known('uncertaintyResponse')) told.push(`When uncertain, you have ${get('uncertaintyResponse').value}.`);
 
   // 2. Our interpretation - each line answer-anchored; conservative.
   const interpretation: string[] = [];
@@ -391,23 +396,23 @@ function chooseNextStep(optId: (qid: string) => string | undefined, unknowns: Di
   const support = optId('supportNeeds');
   switch (support) {
     case 'clearer-reasons':
-      return 'A useful next step: write a one-line reason for each thing you own.';
+      return 'Write a one-line reason for each thing you own.';
     case 'clearer-review':
-      return 'A useful next step: decide, per holding, what evidence would make you reconsider it.';
+      return 'Decide, per holding, what evidence would make you reconsider it.';
     case 'organisation':
-      return 'A useful next step: gather your holdings in one place so you can see them together.';
+      return 'Gather your holdings in one place so you can see them together.';
     case 'understanding':
-      return 'A useful next step: explore the ideas behind the approaches that interest you.';
+      return 'Explore the ideas behind the approaches that interest you.';
     case 'less-info':
-      return 'A useful next step: narrow what you monitor to the few things that would actually change a decision.';
+      return 'Narrow what you monitor to the few things that would actually change a decision.';
     case 'adviser-conversations':
-      return 'A useful next step: take this profile into your next adviser conversation.';
+      return 'Take this profile into your next adviser conversation.';
     default:
       break;
   }
-  if (unknowns.includes('reconsideration')) return 'A useful next step: decide what would make you reconsider a holding.';
-  if (unknowns.includes('explicitBelief')) return 'A useful next step: put into words why you expect your approach to work.';
-  return 'A useful next step: review this profile and see which parts you would like to sharpen.';
+  if (unknowns.includes('reconsideration')) return 'Decide what would make you reconsider a holding.';
+  if (unknowns.includes('explicitBelief')) return 'Put into words why you expect your approach to work.';
+  return 'Review this profile and see which parts you would like to sharpen.';
 }
 
 // Confirmation step. Marks the readout confirmed and promotes stated
