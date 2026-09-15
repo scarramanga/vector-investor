@@ -12,7 +12,7 @@ import type { StackMotiveUser } from './stackmotiveApi.js';
 
 let resend: Resend | null = null;
 
-function getResend(): Resend | null {
+export function getResend(): Resend | null {
   if (!resend) {
     const apiKey = process.env['VECTOR_RESEND_API_KEY'];
     if (!apiKey) {
@@ -31,10 +31,10 @@ function formatPersonaLabel(persona: string): string {
     .join(' ');
 }
 
-const SENDER = 'Vector by Sovereign Signal <vector@sovereignassets.org>';
-const BCC = 'andy@sovereignassets.org';
+export const SENDER = 'Vector by Sovereign Signal <vector@sovereignassets.org>';
+export const BCC = 'andy@sovereignassets.org';
 
-function emailFooter(unsubscribeUrl: string): string {
+export function emailFooter(unsubscribeUrl: string): string {
   return `
     <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;" />
     <p style="font-size: 12px; color: #999; line-height: 1.6;">
@@ -45,11 +45,11 @@ function emailFooter(unsubscribeUrl: string): string {
     </p>`;
 }
 
-function wrapHtml(body: string): string {
+export function wrapHtml(body: string): string {
   return `<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 24px; color: #1a1a2e;">${body}</div>`;
 }
 
-function ctaButton(label: string): string {
+export function ctaButton(label: string): string {
   return `<div style="text-align: center; margin: 32px 0;">
     <a href="https://www.stackmotiveapp.com" style="display: inline-block; padding: 14px 32px; font-size: 15px; font-weight: 600; color: #fff; background-color: #6366f1; border-radius: 8px; text-decoration: none;">
       ${label}
@@ -57,11 +57,11 @@ function ctaButton(label: string): string {
   </div>`;
 }
 
-function p(text: string): string {
+export function p(text: string): string {
   return `<p style="font-size: 15px; line-height: 1.7; color: #333; margin-bottom: 16px;">${text}</p>`;
 }
 
-function signoff(unsubscribeUrl: string): string {
+export function signoff(unsubscribeUrl: string): string {
   return `${p('Andy<br/>Sovereign Assets')}${emailFooter(unsubscribeUrl)}`;
 }
 

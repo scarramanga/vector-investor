@@ -1,5 +1,5 @@
 import express from 'express';
-import { findProfileByEmail, createProfile, replaceProfile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
+import { findProfileByEmail, createProfile, replaceProfile, createV2Profile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
 import { sendWelcomeEmail } from './email.js';
 import { ingestVectorProfile, ingestVectorProfileV2 } from './stackmotiveApi.js';
 import { getRecommendedTier } from './tierRecommendation.js';
@@ -30,17 +30,32 @@ router.post('/capture-v2', async (req: express.Request, res: express.Response): 
     return;
   }
   const email = body.email.trim().toLowerCase();
+  const confirmedBeliefs = body.confirmed_beliefs ?? [];
+  const exploratoryInterests = body.exploratory_interests ?? [];
   ingestVectorProfileV2({
     email,
     questionnaire_version: body.questionnaire_version,
     interpretation_version: body.interpretation_version,
     route: body.route,
     answered_by: body.answered_by ?? 'self',
-    confirmed_beliefs: body.confirmed_beliefs ?? [],
-    exploratory_interests: body.exploratory_interests ?? [],
+    confirmed_beliefs: confirmedBeliefs,
+    exploratory_interests: exploratoryInterests,
     vector_country: body.vector_country ?? null,
   }).catch((err) => {
     console.error('[vectorRoutes] v2 ingest error:', err);
+  });
+  // GAP-267 Phase 2: write a Vector-DB v2 profile row so the user enters the
+  // follow-up queue (persona-less; keyed off philosophy themes or interests).
+  createV2Profile({
+    email,
+    country: body.vector_country ?? null,
+    route: body.route,
+    questionnaireVersion: body.questionnaire_version,
+    philosophyThemes: confirmedBeliefs,
+    exploratoryInterests: exploratoryInterests,
+    payload: { interpretation_version: body.interpretation_version, answered_by: body.answered_by ?? 'self' },
+  }).catch((err) => {
+    console.error('[vectorRoutes] v2 profile row error:', err);
   });
   res.json({ status: 'captured' });
 });
@@ -200,8 +215,8 @@ router.post('/keep-existing', async (req: express.Request, res: express.Response
     // Create session token for the existing profile
     const sessionToken = crypto.randomUUID();
     await createSession(sessionToken, {
-      persona: existing.persona,
-      capitalBand: existing.capital_band,
+      persona: existing.persona ?? '',
+      capitalBand: existing.capital_band ?? '',
       payload: existing.payload,
     });
 
@@ -211,10 +226,10 @@ router.post('/keep-existing', async (req: express.Request, res: express.Response
     // persona + capital band via the shared getRecommendedTier map.
     ingestVectorProfile({
       email: existing.email,
-      vector_persona: existing.persona,
-      vector_capital_band: existing.capital_band,
+      vector_persona: existing.persona ?? '',
+      vector_capital_band: existing.capital_band ?? '',
       vector_philosophy: existing.philosophy ?? null,
-      vector_recommended_tier: getRecommendedTier(existing.persona, existing.capital_band),
+      vector_recommended_tier: getRecommendedTier(existing.persona ?? '', existing.capital_band ?? ''),
       vector_country: existing.country ?? null,
       vector_time_horizon: existing.payload['timeHorizon'] as string,
       vector_friction_point: existing.payload['frictionPoint'] as string,
