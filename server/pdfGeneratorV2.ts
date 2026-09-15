@@ -58,12 +58,12 @@ export async function generateV2ProfilePdf(input: V2PdfInput): Promise<string | 
 
     function section(title: string, items: string[]): void {
       if (!items.length) return;
-      y += 6;
+      y += 4;
       checkPageBreak(14);
-      text(title, 13, [17, 24, 39], 'bold', 7);
+      text(title, 13, [17, 24, 39], 'bold', 6.5);
       for (const item of items) {
-        text('-  ' + item, 11, [51, 51, 51], 'normal', 5.5);
-        y += 1.5;
+        text('-  ' + item, 11, [51, 51, 51], 'normal', 5.2);
+        y += 1;
       }
     }
 
@@ -102,36 +102,38 @@ export async function generateV2ProfilePdf(input: V2PdfInput): Promise<string | 
     section('What remains unclear', input.readout.unclear);
 
     if (input.readout.next_step) {
-      y += 6;
+      y += 4;
       checkPageBreak(16);
-      text('A useful next step', 13, [17, 24, 39], 'bold', 7);
-      text(input.readout.next_step, 11, [51, 51, 51], 'normal', 5.5);
+      text('A useful next step', 13, [17, 24, 39], 'bold', 6.5);
+      text(input.readout.next_step, 11, [51, 51, 51], 'normal', 5.2);
     }
 
     if (input.exploreThemes.length) {
-      y += 6;
+      y += 4;
       checkPageBreak(16);
-      text('Where you might explore next', 13, [17, 24, 39], 'bold', 7);
+      text('Where you might explore next', 13, [17, 24, 39], 'bold', 6.5);
       for (const theme of input.exploreThemes) {
         checkPageBreak(14);
-        text(theme.name, 11, [17, 24, 39], 'bold', 5.5);
-        text(theme.tagline, 10, [51, 51, 51], 'normal', 5);
+        text(theme.name, 11, [17, 24, 39], 'bold', 5.2);
+        text(theme.tagline, 10, [51, 51, 51], 'normal', 4.8);
         if (theme.example) {
           text(
             'For example: ' + theme.example + ' - shown to illustrate the theme, not as a recommendation.',
             9,
             [107, 114, 128],
             'normal',
-            4.5,
+            4.4,
           );
         }
-        y += 2.5;
+        y += 1.5;
       }
     }
 
     // --- Footer / legal ---
+    // Tight section spacing keeps a typical profile on one page, so the footer
+    // sits below the content. Only a very long profile pushes it to page two.
     y += 8;
-    checkPageBreak(16);
+    checkPageBreak(20);
     doc.setDrawColor(229, 231, 235);
     doc.line(marginLeft, y, pageWidth - marginLeft, y);
     y += 6;
