@@ -10,6 +10,7 @@ import type { AnsweredBy, RouteId, V2Answer, V2Profile } from '../types/v2';
 import { clearSession } from '../services/quizSessionV2';
 import { trackV2 } from '../services/analyticsV2';
 import { buildV2CapturePayload, captureV2 } from '../services/vectorCaptureV2';
+import ExploreSection from '../components/result/ExploreSection';
 
 interface ResultState {
   route: RouteId;
@@ -89,6 +90,8 @@ export default function ResultPageV2() {
         <strong style={{ fontSize: '0.95rem', color: 'var(--color-text-primary)' }}>A useful next step</strong>
         <p style={{ margin: '6px 0 0', fontSize: '0.95rem', color: 'var(--color-text-secondary)' }}>{r.nextStep}</p>
       </div>
+
+      <ExploreSection profile={profile} />
 
       {!confirmed ? (
         <div style={{ marginTop: 24 }}>
