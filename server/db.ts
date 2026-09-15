@@ -65,6 +65,19 @@ export async function initDatabase(): Promise<void> {
     ADD COLUMN IF NOT EXISTS utm_params JSONB DEFAULT '{}';
   `);
 
+  // GAP-267 Phase 2: v2 questionnaire profiles carry no persona/capital_band.
+  // Follow-up keys off the declared philosophy themes (experienced) or the
+  // learning interests (beginners) instead.
+  await db.query(`
+    ALTER TABLE vector_profiles ALTER COLUMN persona DROP NOT NULL;
+    ALTER TABLE vector_profiles ALTER COLUMN capital_band DROP NOT NULL;
+    ALTER TABLE vector_profiles ADD COLUMN IF NOT EXISTS profile_version TEXT NOT NULL DEFAULT 'v1';
+    ALTER TABLE vector_profiles ADD COLUMN IF NOT EXISTS route TEXT;
+    ALTER TABLE vector_profiles ADD COLUMN IF NOT EXISTS questionnaire_version TEXT;
+    ALTER TABLE vector_profiles ADD COLUMN IF NOT EXISTS philosophy_themes JSONB;
+    ALTER TABLE vector_profiles ADD COLUMN IF NOT EXISTS exploratory_interests JSONB;
+  `);
+
   await db.query(`
     CREATE TABLE IF NOT EXISTS vector_profile_history (
       id              SERIAL PRIMARY KEY,
@@ -111,8 +124,8 @@ export interface VectorProfileRow {
   id: number;
   email: string;
   country: string | null;
-  persona: string;
-  capital_band: string;
+  persona: string | null;
+  capital_band: string | null;
   philosophy: string | null;
   answers: Record<string, unknown>;
   payload: Record<string, unknown>;
@@ -125,6 +138,12 @@ export interface VectorProfileRow {
   unsubscribe_requested: boolean;
   created_at: Date;
   updated_at: Date;
+  // GAP-267 Phase 2 (v2). profile_version defaults 'v1' for legacy rows.
+  profile_version: string;
+  route: string | null;
+  questionnaire_version: string | null;
+  philosophy_themes: string[] | null;
+  exploratory_interests: string[] | null;
 }
 
 /**
@@ -161,6 +180,46 @@ export async function createProfile(data: {
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW() + INTERVAL '3 days')
      RETURNING *`,
     [data.email, data.country, data.persona, data.capitalBand, data.philosophy, JSON.stringify(data.answers), JSON.stringify(data.payload), data.utm_params ?? '{}'],
+  );
+  return result.rows[0]!;
+}
+
+/**
+ * GAP-267 Phase 2: create a v2 profile row so v2 questionnaire users enter the
+ * follow-up queue. v2 profiles carry no persona/capital_band; follow-up keys off
+ * the declared philosophy themes (experienced) or learning interests (beginners).
+ * Any prior active profile for the email is deactivated first (a re-take supersedes).
+ */
+export async function createV2Profile(data: {
+  email: string;
+  country: string | null;
+  route: string;
+  questionnaireVersion: string;
+  philosophyThemes: string[];
+  exploratoryInterests: string[];
+  payload: Record<string, unknown>;
+}): Promise<VectorProfileRow> {
+  const db = getPool();
+  await db.query('UPDATE vector_profiles SET is_active = FALSE WHERE email = $1 AND is_active = TRUE', [data.email]);
+  // philosophy (scalar) mirrors the first declared theme so the macro signal
+  // block, which keys off a single philosophy, still works for v2.
+  const philosophy = data.philosophyThemes[0] ?? null;
+  const result = await db.query<VectorProfileRow>(
+    `INSERT INTO vector_profiles
+       (email, country, persona, capital_band, philosophy, profile_version, route,
+        questionnaire_version, philosophy_themes, exploratory_interests, answers, payload, next_send_date)
+     VALUES ($1, $2, NULL, NULL, $3, 'v2', $4, $5, $6, $7, '{}', $8, NOW() + INTERVAL '3 days')
+     RETURNING *`,
+    [
+      data.email,
+      data.country,
+      philosophy,
+      data.route,
+      data.questionnaireVersion,
+      JSON.stringify(data.philosophyThemes),
+      JSON.stringify(data.exploratoryInterests),
+      JSON.stringify(data.payload),
+    ],
   );
   return result.rows[0]!;
 }
