@@ -153,7 +153,7 @@ export default function LandingPage() {
 
         {/* CTA button */}
         <button
-          onClick={() => { trackQuizStarted(); navigate('/quiz'); }}
+          onClick={() => { trackQuizStarted(); navigate('/quiz-v2'); }}
           style={{
             padding: '0.875rem 2.5rem',
             fontSize: '1rem',
