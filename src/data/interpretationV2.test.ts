@@ -178,6 +178,32 @@ describe('confirmation boundary', () => {
   });
 });
 
+describe('readout defensibility: shown evidence covers cited answers', () => {
+  it('surfaces the answers the interpretation and unclear sections lean on', () => {
+    // A thesis-led profile that reported a price-driven recent decision and
+    // repeated delay: both feed the interpretation/unclear, so both must appear
+    // in "what you told us".
+    const p = interpret('regular', A({
+      decisionMethod: 'thesis',
+      recentBehaviour: 'price',
+      uncertaintyResponse: 'repeatedly-delayed',
+      explicitBelief: 'structural-change',
+    }));
+    const told = p.readout.told.join(' ');
+    expect(told).toMatch(/most recent investment decision was driven by price movement/i);
+    expect(told).toMatch(/when uncertain, you have repeatedly delayed/i);
+    expect(told).toMatch(/you expect your approach to work: exposure to structural change/i);
+    // and the interpretation still cites them (trace is now visible)
+    expect(p.readout.interpretation.join(' ')).toMatch(/repeatedly delaying/i);
+  });
+
+  it('the next step is a clean sentence, not double-prefixed with its own header', () => {
+    const p = interpret('regular', A({ supportNeeds: 'understanding' }));
+    expect(p.readout.nextStep).not.toMatch(/^A useful next step:/i);
+    expect(p.readout.nextStep).toBe('Explore the ideas behind the approaches that interest you.');
+  });
+});
+
 describe('GAP-267 beginner learning interests', () => {
   it('selected interests become learning-interest beliefs (never confirmed)', () => {
     const p = interpret('learning', A({ learningInterests: ['diversification-index', 'managing-risk'] }));
