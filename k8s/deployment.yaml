@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: vector-frontend
-          image: registry.digitalocean.com/docr-prod/vector-frontend:bb43603
+          image: registry.digitalocean.com/docr-prod/vector-frontend:ea1e464
           env:
             - name: STACKMOTIVE_TOKEN
               valueFrom:
