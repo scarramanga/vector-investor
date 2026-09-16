@@ -5,7 +5,6 @@
 
 import { describe, expect, it } from 'vitest';
 import { confirmProfile, interpret } from './interpretationV2';
-import { calculateProfile } from './scoring';
 import type { V2Answer } from '../types/v2';
 
 // Build answers concisely: { questionId: 'optId' } or { questionId: ['a','b'] }.
@@ -156,12 +155,8 @@ describe('scenario 11: conflicting answers surface a clarification', () => {
   });
 });
 
-describe('scenario 12: existing legacy (v1) profile still works', () => {
-  it('v1 calculateProfile is untouched and still returns a persona', () => {
-    const legacy = calculateProfile([{ questionId: 11, selectedLetter: 'C', personaSignal: 'swamped-analyst' }]);
-    expect(legacy.persona).toBe('swamped-analyst');
-  });
-});
+// GAP-270: the v1 quiz/scoring chain is retired; its regression guard
+// (scenario 12, "v1 calculateProfile is untouched") is removed with it.
 
 // --- confirmation boundary --------------------------------------------------
 

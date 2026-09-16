@@ -1,6 +1,6 @@
 import express from 'express';
 import { findProfileByEmail, createProfile, replaceProfile, createV2Profile, createSession, cleanExpiredSessions, unsubscribeByEmail } from './db.js';
-import { sendWelcomeEmail, sendV2WelcomeEmail } from './email.js';
+import { sendV2WelcomeEmail } from './email.js';
 import { ingestVectorProfile, ingestVectorProfileV2 } from './stackmotiveApi.js';
 import { getRecommendedTier } from './tierRecommendation.js';
 import { verifyUnsubscribeToken } from './unsubscribe.js';
@@ -191,17 +191,9 @@ router.post('/capture', async (req: express.Request, res: express.Response): Pro
       console.error('[vectorRoutes] Ingest error:', err);
     });
 
-    // Send welcome email with PDF attachment (non-blocking - don't fail the request if email fails)
-    sendWelcomeEmail({
-      email,
-      persona: body.persona,
-      capitalBand: body.capitalBand,
-      tierName: body.tierName,
-      payload: body.payload,
-    }).catch((err) => {
-      console.error('[vectorRoutes] Welcome email error:', err);
-    });
-
+    // GAP-270: the v1 AI-prose PDF welcome email is retired. This legacy
+    // /capture route is no longer reached from the client (the browser flow is
+    // v2 only); it ingests and returns without sending the v1 PDF.
     res.json({
       status: 'captured',
       profileId: profile.id,
