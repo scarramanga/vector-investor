@@ -1,5 +1,3 @@
-import type { PersonaType, CapitalBand } from '../types';
-
 export type ThemeId = 'debasement' | 'technology' | 'energy' | 'digital';
 export type BucketId = 'foundation' | 'growth' | 'conviction';
 export type ExchangeId = 'ASX' | 'NZX' | 'NYSE' | 'LSE' | 'CRYPTO';
@@ -23,7 +21,6 @@ export interface Theme {
   name: string;
   tagline: string;
   stackmotiveHook: string;
-  personaContext: Record<PersonaType, string>;
 }
 
 export interface Bucket {
@@ -61,85 +58,30 @@ export const buckets: Bucket[] = [
   }
 ];
 
-export const allocationSuggestions: Record<string, AllocationSuggestion> = {
-  'awakening-emerging': { foundation: 50, growth: 40, conviction: 10, label: 'Awakening / Emerging' },
-  'awakening-building': { foundation: 45, growth: 40, conviction: 15, label: 'Awakening / Building' },
-  'awakening-established': { foundation: 40, growth: 40, conviction: 20, label: 'Awakening / Established' },
-  'awakening-concentrated': { foundation: 55, growth: 35, conviction: 10, label: 'Awakening / Concentrated' },
-  'awakening-sovereign-capital': { foundation: 40, growth: 40, conviction: 20, label: 'Awakening / Sovereign Capital' },
-  'awakening-sovereign-concentrated': { foundation: 50, growth: 40, conviction: 10, label: 'Awakening / Sovereign Concentrated' },
-  'gut-trader-emerging': { foundation: 30, growth: 40, conviction: 30, label: 'Gut Trader / Emerging' },
-  'gut-trader-building': { foundation: 30, growth: 40, conviction: 30, label: 'Gut Trader / Building' },
-  'gut-trader-established': { foundation: 30, growth: 40, conviction: 30, label: 'Gut Trader / Established' },
-  'gut-trader-concentrated': { foundation: 40, growth: 35, conviction: 25, label: 'Gut Trader / Concentrated' },
-  'gut-trader-sovereign-capital': { foundation: 30, growth: 40, conviction: 30, label: 'Gut Trader / Sovereign Capital' },
-  'gut-trader-sovereign-concentrated': { foundation: 35, growth: 40, conviction: 25, label: 'Gut Trader / Sovereign Concentrated' },
-  'swamped-analyst-emerging': { foundation: 40, growth: 50, conviction: 10, label: 'Swamped Analyst / Emerging' },
-  'swamped-analyst-building': { foundation: 40, growth: 50, conviction: 10, label: 'Swamped Analyst / Building' },
-  'swamped-analyst-established': { foundation: 40, growth: 50, conviction: 10, label: 'Swamped Analyst / Established' },
-  'swamped-analyst-concentrated': { foundation: 50, growth: 40, conviction: 10, label: 'Swamped Analyst / Concentrated' },
-  'swamped-analyst-sovereign-capital': { foundation: 40, growth: 50, conviction: 10, label: 'Swamped Analyst / Sovereign Capital' },
-  'swamped-analyst-sovereign-concentrated': { foundation: 45, growth: 45, conviction: 10, label: 'Swamped Analyst / Sovereign Concentrated' },
-  'comfortable-blind-spot-emerging': { foundation: 50, growth: 40, conviction: 10, label: 'Comfortable Blind Spot / Emerging' },
-  'comfortable-blind-spot-building': { foundation: 55, growth: 35, conviction: 10, label: 'Comfortable Blind Spot / Building' },
-  'comfortable-blind-spot-established': { foundation: 55, growth: 35, conviction: 10, label: 'Comfortable Blind Spot / Established' },
-  'comfortable-blind-spot-concentrated': { foundation: 60, growth: 35, conviction: 5, label: 'Comfortable Blind Spot / Concentrated' },
-  'comfortable-blind-spot-sovereign-capital': { foundation: 50, growth: 40, conviction: 10, label: 'Comfortable Blind Spot / Sovereign Capital' },
-  'comfortable-blind-spot-sovereign-concentrated': { foundation: 50, growth: 40, conviction: 10, label: 'Comfortable Blind Spot / Sovereign Concentrated' }
-};
-
-export function getAllocationKey(persona: PersonaType, capitalBand: CapitalBand): string {
-  return `${persona}-${capitalBand}`;
-}
-
 export const themes: Theme[] = [
   {
     id: 'debasement',
     name: 'Monetary Debasement',
-    tagline: 'Hard assets, gold, miners, and Bitcoin as the purest expression of the thesis.',
-    stackmotiveHook: 'StackMotive tracks institutional flow in gold and mining equities. See what the smart money is doing before you research further.',
-    personaContext: {
-      'awakening': 'This is where your worldview most directly expresses as a portfolio position. A natural starting point.',
-      'gut-trader': 'This is the framework underneath the instinct. Hard assets give your portfolio an anchor.',
-      'swamped-analyst': 'Start here. One instrument, one thesis, one decision. Everything else follows.',
-      'comfortable-blind-spot': 'This is the gap most common in a property-heavy portfolio. Liquid hard asset exposure alongside illiquid property.'
-    }
+    tagline: 'Hard assets: gold, miners, and Bitcoin.',
+    stackmotiveHook: 'StackMotive tracks institutional flow in gold and mining equities. See where institutional money is positioned before you research further.'
   },
   {
     id: 'technology',
     name: 'Technological Transformation',
     tagline: 'AI infrastructure, platform dominance, and the businesses reshaping productivity.',
-    stackmotiveHook: 'StackMotive surfaces institutional positioning in technology equities — the moves retail investors don\'t normally see.',
-    personaContext: {
-      'awakening': 'Technology transformation is a separate but complementary conviction. Worth understanding even if it\'s not your first move.',
-      'gut-trader': 'You\'re probably already here. The question is whether the allocation reflects a considered thesis.',
-      'swamped-analyst': 'One ETF covers this theme entirely. NDQ.ASX or USF.NZX. That\'s enough.',
-      'comfortable-blind-spot': 'These are the growth themes many investors with your profile add once Foundation gaps are addressed.'
-    }
+    stackmotiveHook: 'StackMotive surfaces institutional positioning in technology equities from reported filings and flow data.'
   },
   {
     id: 'energy',
     name: 'Energy Transition and Scarcity',
     tagline: 'Traditional energy with transition optionality, uranium, and renewables infrastructure.',
-    stackmotiveHook: 'StackMotive monitors whale and block trades in energy equities across ASX and global markets.',
-    personaContext: {
-      'awakening': 'Energy sits at the intersection of scarcity and transition — relevant context regardless of where you start.',
-      'gut-trader': 'Energy has both commodity scarcity and transition dynamics working simultaneously. Worth a considered position.',
-      'swamped-analyst': 'One energy position is sufficient. Don\'t over-research this.',
-      'comfortable-blind-spot': 'Energy provides both income and inflation protection — relevant at your capital level.'
-    }
+    stackmotiveHook: 'StackMotive monitors whale and block trades in energy equities across ASX and global markets.'
   },
   {
     id: 'digital',
     name: 'Digital Assets as Infrastructure',
     tagline: 'Bitcoin, Ethereum, and the emerging digital financial architecture.',
-    stackmotiveHook: 'StackMotive tracks institutional crypto flow and on-chain signals alongside traditional market data.',
-    personaContext: {
-      'awakening': 'Digital assets are the debasement thesis taken to its logical conclusion. Worth understanding the argument.',
-      'gut-trader': 'If you\'re already in crypto, the framework matters as much as the holdings.',
-      'swamped-analyst': 'Bitcoin only if you have explicit conviction. Otherwise this theme can wait.',
-      'comfortable-blind-spot': 'Bitcoin specifically has properties property doesn\'t — liquid, portable, fixed supply. Worth understanding the argument.'
-    }
+    stackmotiveHook: 'StackMotive tracks institutional crypto flow and on-chain signals alongside traditional market data.'
   }
 ];
 
@@ -296,7 +238,7 @@ export const instruments: Instrument[] = [
     ticker: 'CSL',
     name: 'CSL Limited',
     exchange: 'ASX',
-    thesis: 'One of the highest quality businesses on the ASX. Global biotech with pricing power and long-term compounding characteristics.',
+    thesis: 'ASX-listed global biotech with international revenue across plasma-derived therapies and vaccines. Shown to illustrate the theme, not a rating.',
     access: ['Sharesies', 'CommSec'],
     volatility: 'Medium',
     bucket: 'growth',
@@ -364,7 +306,7 @@ export const instruments: Instrument[] = [
     ticker: 'GDX',
     name: 'VanEck Gold Miners ETF',
     exchange: 'NYSE',
-    thesis: 'Diversified gold miner exposure. When gold moves, miners move further. Leveraged expression of the debasement thesis.',
+    thesis: 'Diversified gold-miner exposure. Miners have historically moved more than gold itself, in both directions.',
     access: ['Hatch'],
     volatility: 'High',
     bucket: 'conviction',
@@ -375,7 +317,7 @@ export const instruments: Instrument[] = [
     ticker: 'GDXJ',
     name: 'VanEck Junior Gold Miners ETF',
     exchange: 'NYSE',
-    thesis: 'Junior gold miner exposure. Higher risk, higher potential reward than GDX. For investors with strong debasement conviction.',
+    thesis: 'Junior gold-miner exposure. Historically higher volatility than GDX, in both directions.',
     access: ['Hatch'],
     volatility: 'High',
     bucket: 'conviction',
@@ -554,7 +496,7 @@ export const instruments: Instrument[] = [
     ticker: 'BTC',
     name: 'Bitcoin (Direct)',
     exchange: 'CRYPTO',
-    thesis: 'Fixed supply digital asset. The purest expression of the monetary debasement thesis. Direct holding via crypto exchange.',
+    thesis: 'Fixed-supply digital asset held directly via a crypto exchange. Often discussed in the context of the monetary-debasement theme.',
     access: ['Direct exchange'],
     volatility: 'High',
     bucket: 'conviction',
@@ -565,7 +507,7 @@ export const instruments: Instrument[] = [
     ticker: 'EETH',
     name: 'Global X 21Shares Ethereum ETF',
     exchange: 'ASX',
-    thesis: 'Regulated ASX-listed Ethereum exposure. A bet on decentralised infrastructure becoming the backbone of digital finance.',
+    thesis: 'Regulated ASX-listed Ethereum exposure. Relevant to the decentralised-infrastructure theme.',
     access: ['Sharesies', 'CommSec'],
     volatility: 'High',
     bucket: 'conviction',
