@@ -51,7 +51,7 @@ Paragraph 1, Recognition. Write directly to this person in second person. Refere
 
 Paragraph 2, Reframe. Offer a single perspective shift that connects what they believe to something they may not have considered. Frame it as an invitation to think differently, not an instruction to act. Use language like "it may be worth considering" or "one question worth sitting with" rather than "you need to" or "you should." This paragraph should leave the reader curious, not pressured.
 
-Length: 150 to 250 words total. No headings, no bullet points, no lists. Flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Do not use em dashes. Do not use exclamation marks.
+Length: 150 to 250 words total. No headings, no bullet points, no lists. Flowing prose. Do not mention Vector, StackMotive, or any product by name. Do not give financial advice. Do not recommend specific securities. Never rate or score any security or this person's conviction, never predict a price or market direction, never suggest an allocation, a number of asset classes to hold, or any portfolio change, and never introduce a view the reader did not express. Reflect only the worldview they declared: this document is a mirror, not advice. Do not use em dashes. Do not use exclamation marks.
 
 Remember: this document may be read by someone who did not take the quiz. It must make sense and feel respectful without any additional context.
 
