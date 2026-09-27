@@ -4,8 +4,10 @@
 // place rather than asking again. Nothing here is invented: only the quoted
 // words are pre-filled, as the "another reason / in your own words" answer.
 
-import type { V2Answer } from '../types/v2';
+import type { RouteId, V2Answer } from '../types/v2';
 import type { DoorPayload } from './stackAiChat';
+
+const VECTOR_ROUTES: readonly RouteId[] = ['learning', 'developing', 'regular', 'established'];
 
 const KEY = 'vector_chat_preload';
 
@@ -14,12 +16,24 @@ export interface ChatPreload {
   belief: string | null;
   sellRule: string | null;
   sellRuleKind: 'rule' | 'gap' | null;
+  // 'Which best describes you?', when the engine could judge it from their words.
+  vectorRoute: RouteId | null;
+  vectorRouteCitation: string | null;
 }
 
 export function preloadFromDoor(token: string, payload: DoorPayload | undefined | null): ChatPreload {
   const kind = payload?.sell_rule_kind === 'rule' || payload?.sell_rule_kind === 'gap' ? payload.sell_rule_kind : null;
+  const route = (VECTOR_ROUTES as readonly string[]).includes(String(payload?.vector_route ?? ''))
+    ? (payload!.vector_route as RouteId)
+    : null;
+  const routeCitation = typeof payload?.vector_route_citation === 'string' && payload.vector_route_citation.trim()
+    ? payload.vector_route_citation.trim()
+    : null;
   return {
     token,
+    // a route only counts with the words that earned it; otherwise Vector asks
+    vectorRoute: route && routeCitation ? route : null,
+    vectorRouteCitation: route && routeCitation ? routeCitation : null,
     belief: typeof payload?.belief === 'string' && payload.belief.trim() ? payload.belief.trim() : null,
     sellRule: typeof payload?.sell_rule === 'string' && payload.sell_rule.trim() ? payload.sell_rule.trim() : null,
     sellRuleKind: kind,
