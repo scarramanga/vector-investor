@@ -5,6 +5,8 @@ import DiscoveryPage from './pages/DiscoveryPage';
 // quiz flow. The landing page routes to /quiz-v2.
 import QuizPageV2 from './pages/QuizPageV2';
 import ResultPageV2 from './pages/ResultPageV2';
+// Stack AI page (Ripen spec, Build 2): the conversational front door, by token.
+import ChatPage from './pages/ChatPage';
 
 export default function App() {
   return (
@@ -14,6 +16,7 @@ export default function App() {
         <Route path="/quiz-v2" element={<QuizPageV2 />} />
         <Route path="/result-v2" element={<ResultPageV2 />} />
         <Route path="/discovery" element={<DiscoveryPage />} />
+        <Route path="/chat" element={<ChatPage />} />
       </Routes>
     </BrowserRouter>
   );

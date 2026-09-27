@@ -3,7 +3,7 @@
 // first step, back navigation, answer changes, session persistence, and
 // step-distinguished analytics that never carry answer content.
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import PageWrapper from '../components/layout/PageWrapper';
 import { QUESTIONS_V2, ROUTE_QUESTION } from '../data/questionsV2';
 import type { AnsweredBy, RouteId, V2Answer, V2Question } from '../types/v2';
@@ -15,6 +15,7 @@ import {
   type QuizSessionV2,
 } from '../services/quizSessionV2';
 import { trackV2 } from '../services/analyticsV2';
+import { answersFromPreload, loadPreload, type ChatPreload } from '../services/chatPreload';
 
 function visibleQuestions(route: RouteId | null): V2Question[] {
   if (!route) return [];
@@ -25,9 +26,31 @@ function visibleQuestions(route: RouteId | null): V2Question[] {
   });
 }
 
+// Stack AI page (Ripen spec, Build 2): a Vector door arrives with a pre-load,
+// the prospect's belief and sell rule in their own words. Those answers are in
+// place before the first question, and the first step shows them so the person
+// sees their words waiting rather than being asked again. Router state wins;
+// sessionStorage covers a refresh.
+function preloadedSession(preload: ChatPreload | null, now: number): QuizSessionV2 {
+  const base = loadSession(now);
+  if (!preload) return base;
+  const given = answersFromPreload(preload);
+  if (given.length === 0) return base;
+  const alreadyIn = given.every((g) => base.answers.some((a) => a.questionId === g.questionId && a.text === g.text));
+  if (alreadyIn) return base;
+  let answers = base.answers;
+  for (const g of given) answers = upsertAnswer(answers, g);
+  return { ...base, answers };
+}
+
 export default function QuizPageV2() {
   const navigate = useNavigate();
-  const [session, setSession] = useState<QuizSessionV2>(() => loadSession(Date.now()));
+  const location = useLocation();
+  const [preload] = useState<ChatPreload | null>(() => {
+    const fromState = (location.state as { preload?: ChatPreload } | null)?.preload;
+    return fromState ?? loadPreload();
+  });
+  const [session, setSession] = useState<QuizSessionV2>(() => preloadedSession(preload, Date.now()));
 
   useEffect(() => {
     trackV2.quizArrived();
@@ -92,6 +115,9 @@ export default function QuizPageV2() {
     });
   }
 
+  const preloadedIds = useMemo(() => new Set(preload ? answersFromPreload(preload).map((a) => a.questionId) : []), [preload]);
+  const preAnswered = question ? preloadedIds.has(question.id) && answersById.has(question.id) : false;
+
   const canContinue = onRoute ? Boolean(session.route) : (currentAnswer?.selectedOptionIds.length ?? 0) > 0;
   const isLast = !onRoute && index === totalSteps - 1;
 
@@ -114,7 +140,9 @@ export default function QuizPageV2() {
 
   function handleRestart() {
     clearSession();
-    setSession(loadSession(0));
+    // Starting over clears this questionnaire's answers; what came from the
+    // conversation stays in place, because it was said there, not here.
+    setSession(preloadedSession(preload, 0));
   }
 
   return (
@@ -134,6 +162,27 @@ export default function QuizPageV2() {
           Step {index + 1} of {totalSteps}
         </div>
       </div>
+
+      {onRoute && preload && (preload.belief || preload.sellRule) && (
+        <div
+          role="note"
+          aria-label="Already answered from your conversation with Stack AI"
+          style={{ marginBottom: '1.25rem', padding: '0.9rem 1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--color-accent)', background: 'var(--color-surface)' }}
+        >
+          <div style={{ fontSize: '0.6875rem', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--color-accent)', fontWeight: 600, marginBottom: 6 }}>
+            Already answered, in your words
+          </div>
+          {preload.belief && (
+            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--color-text-primary)', fontStyle: 'italic' }}>“{preload.belief}”</p>
+          )}
+          {preload.sellRule && (
+            <p style={{ margin: preload.belief ? '6px 0 0' : 0, fontSize: '0.95rem', color: 'var(--color-text-primary)', fontStyle: 'italic' }}>“{preload.sellRule}”</p>
+          )}
+          <p style={{ margin: '8px 0 0', fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>
+            From your conversation with Stack AI. You can change these when you reach them.
+          </p>
+        </div>
+      )}
 
       {onRoute ? (
         <fieldset style={{ border: 'none', padding: 0, margin: 0 }}>
@@ -164,6 +213,11 @@ export default function QuizPageV2() {
             {question.text}
           </legend>
           {question.help && <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: 16 }}>{question.help}</p>}
+          {preAnswered && currentAnswer?.text && (
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-accent)', marginBottom: 12 }}>
+              Answered from your conversation: <em style={{ color: 'var(--color-text-primary)' }}>“{currentAnswer.text}”</em>
+            </p>
+          )}
           {question.options.map((o) => (
             <OptionRow
               key={o.id}
