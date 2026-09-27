@@ -9,6 +9,7 @@ import { buildSystemPrompt } from './promptBuilder.js';
 import { PROSE_MODEL } from './llmModel.js';
 import { initDatabase } from './db.js';
 import vectorRoutes from './vectorRoutes.js';
+import chatRoutes, { stackAiApiBase } from './chatRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +20,9 @@ app.use(express.json());
 
 // Vector email capture and profile routes
 app.use('/api/vector', vectorRoutes);
+
+// Stack AI page: relay to the conversation API (base URL from STACKAI_API_BASE)
+app.use('/api/chat', chatRoutes);
 
 const PORT = parseInt(process.env['PORT'] || '3001', 10);
 const API_KEY = process.env['VECTOR_ANTHROPIC_API_KEY'] || '';
@@ -142,4 +146,5 @@ app.listen(PORT, () => {
   console.log(`[proxy] Model: ${MODEL}`);
   console.log(`[proxy] API key configured: ${!!API_KEY}`);
   console.log(`[proxy] Database configured: ${!!DB_URL}`);
+  console.log(`[proxy] Stack AI API base: ${stackAiApiBase()}`);
 });

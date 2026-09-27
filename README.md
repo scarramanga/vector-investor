@@ -72,6 +72,17 @@ export default defineConfig([
 ])
 ```
 
+## Stack AI page (`/chat`)
+
+`/chat?token=...` is the conversational front door: a prospect arrives from a link in Andy's email with a token, talks to Stack AI, and is offered a door (Vector, the platform, or a call) when their own words earn it. The page holds no state. It reads the token from the URL, calls the conversation API through this server (`/api/chat/:token` for history and reopen, `/api/chat/:token/message` for a streamed reply), and renders what comes back: the reply played out word by word with a cursor, a thinking indicator before the first word, and a door card when the stream carries one. An unavailable token shows the API's fixed message as a plain page.
+
+- **Config:** `STACKAI_API_BASE` is the conversation API's base URL. Default `http://127.0.0.1:8790` (a local engine). Set it in `vector-secrets` when the API is deployed.
+- **Vector door:** opens `/quiz-v2` in place with the token; the belief and sell rule from the card's payload are already in place as answers, shown in the person's own words (the "Another reason" answer to the belief question, and "a predefined rule" under what would change their mind when a rule was stated).
+- **Platform door:** opens `https://app.stackmotiveapp.com/welcome?token=...`.
+- **Reopen:** an email link back to `/chat?token=...` restores the whole conversation from the API before the person types.
+
+The engine's API contract (Ripen spec, PR 3): `GET /conversation/{token}` and `POST /conversation/{token}/message` (text/plain stream, then `<<door>>{json}` on the last line when a door was earned).
+
 ## Deploying to production
 
 The `vector-frontend` container image is published to DigitalOcean Container Registry (DOCR) under `registry.digitalocean.com/docr-prod/vector-frontend`. The same image is consumed by two workloads in the `vector-prod` namespace: the `vector-frontend` Deployment and the `vector-followup-job` CronJob. Both manifests must reference the same image tag.
