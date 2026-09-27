@@ -35,12 +35,15 @@ function preloadedSession(preload: ChatPreload | null, now: number): QuizSession
   const base = loadSession(now);
   if (!preload) return base;
   const given = answersFromPreload(preload);
-  if (given.length === 0) return base;
+  // the route question, pre-answered from the conversation when the engine
+  // could judge it in their words; a route already chosen here is kept
+  const route = base.route ?? preload.vectorRoute ?? null;
+  if (given.length === 0 && route === base.route) return base;
   const alreadyIn = given.every((g) => base.answers.some((a) => a.questionId === g.questionId && a.text === g.text));
-  if (alreadyIn) return base;
+  if (alreadyIn && route === base.route) return base;
   let answers = base.answers;
   for (const g of given) answers = upsertAnswer(answers, g);
-  return { ...base, answers };
+  return { ...base, answers, route };
 }
 
 export default function QuizPageV2() {
@@ -163,7 +166,7 @@ export default function QuizPageV2() {
         </div>
       </div>
 
-      {onRoute && preload && (preload.belief || preload.sellRule) && (
+      {onRoute && preload && (preload.belief || preload.sellRule || preload.vectorRoute) && (
         <div
           role="note"
           aria-label="Already answered from your conversation with Stack AI"
@@ -190,6 +193,11 @@ export default function QuizPageV2() {
             {ROUTE_QUESTION.text}
           </legend>
           <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: 16 }}>{ROUTE_QUESTION.help}</p>
+          {preload?.vectorRoute && session.route === preload.vectorRoute && preload.vectorRouteCitation && (
+            <p style={{ fontSize: '0.875rem', color: 'var(--color-accent)', marginBottom: 12 }}>
+              Answered from your conversation: <em style={{ color: 'var(--color-text-primary)' }}>“{preload.vectorRouteCitation}”</em>
+            </p>
+          )}
           {ROUTE_QUESTION.options.map((o) => (
             <OptionRow
               key={o.id}

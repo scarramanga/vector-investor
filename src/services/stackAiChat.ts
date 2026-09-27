@@ -12,6 +12,10 @@ export interface DoorPayload {
   belief_reason?: string | null;
   sell_rule?: string | null;
   sell_rule_kind?: 'rule' | 'gap' | string | null;
+  // Vector's own first question, judged by the engine from the person's words
+  // and cited; omitted when it could not say, so Vector asks.
+  vector_route?: 'learning' | 'developing' | 'regular' | 'established' | string | null;
+  vector_route_citation?: string | null;
   [key: string]: unknown;
 }
 
